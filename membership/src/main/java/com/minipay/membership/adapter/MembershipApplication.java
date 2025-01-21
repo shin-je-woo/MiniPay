@@ -1,13 +1,12 @@
-package com.minipay;
+package com.minipay.membership.adapter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MiniPayApplication {
+public class MembershipApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MiniPayApplication.class, args);
+        SpringApplication.run(MembershipApplication.class, args);
     }
-
 }
