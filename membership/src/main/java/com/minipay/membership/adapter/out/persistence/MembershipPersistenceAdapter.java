@@ -1,13 +1,16 @@
 package com.minipay.membership.adapter.out.persistence;
 
-import com.minipay.membership.application.port.out.RegisterMembershipPort;
+import com.minipay.membership.application.port.out.CreateMembershipPort;
+import com.minipay.membership.application.port.out.FindMembershipPort;
 import com.minipay.membership.domain.Membership;
 import common.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class MembershipPersistenceAdapter implements RegisterMembershipPort {
+public class MembershipPersistenceAdapter implements CreateMembershipPort, FindMembershipPort {
 
     private final SpringDataMembershipRepository membershipRepository;
     private final MembershipMapper membershipMapper;
@@ -30,5 +33,11 @@ public class MembershipPersistenceAdapter implements RegisterMembershipPort {
         membershipRepository.save(membershipJpaEntity);
 
         return membershipMapper.mapToDomain(membershipJpaEntity);
+    }
+
+    @Override
+    public Optional<Membership> findMember(Membership.MembershipId membershipId) {
+        return membershipRepository.findById(Long.parseLong(membershipId.id()))
+                .map(membershipMapper::mapToDomain);
     }
 }

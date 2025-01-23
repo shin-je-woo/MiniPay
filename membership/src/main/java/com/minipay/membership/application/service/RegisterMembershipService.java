@@ -2,7 +2,7 @@ package com.minipay.membership.application.service;
 
 import com.minipay.membership.application.port.in.RegisterMembershipCommand;
 import com.minipay.membership.application.port.in.RegisterMembershipUseCase;
-import com.minipay.membership.application.port.out.RegisterMembershipPort;
+import com.minipay.membership.application.port.out.CreateMembershipPort;
 import com.minipay.membership.domain.Membership;
 import common.UseCase;
 import jakarta.transaction.Transactional;
@@ -13,11 +13,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegisterMembershipService implements RegisterMembershipUseCase {
 
-    private final RegisterMembershipPort registerMembershipPort;
+    private final CreateMembershipPort createMembershipPort;
 
     @Override
     public Membership registerMembership(RegisterMembershipCommand command) {
-        return registerMembershipPort.createMembership(
+        return createMembershipPort.createMembership(
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),
                 new Membership.MembershipAddress(command.getAddress()),

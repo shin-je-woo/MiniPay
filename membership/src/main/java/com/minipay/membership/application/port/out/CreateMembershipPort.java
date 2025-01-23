@@ -2,7 +2,7 @@ package com.minipay.membership.application.port.out;
 
 import com.minipay.membership.domain.Membership;
 
-public interface RegisterMembershipPort {
+public interface CreateMembershipPort {
     Membership createMembership(
             Membership.MembershipName membershipName,
             Membership.MembershipEmail membershipEmail,
