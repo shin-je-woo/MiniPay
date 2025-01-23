@@ -1,4 +1,4 @@
-package com.minipay.membership.adapter;
+package com.minipay.membership;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
