@@ -1,10 +1,10 @@
 package com.minipay.membership.application.service;
 
+import com.minipay.common.UseCase;
 import com.minipay.membership.application.port.in.RegisterMembershipCommand;
 import com.minipay.membership.application.port.in.RegisterMembershipUseCase;
 import com.minipay.membership.application.port.out.CreateMembershipPort;
 import com.minipay.membership.domain.Membership;
-import common.UseCase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

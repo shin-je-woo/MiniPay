@@ -1,8 +1,8 @@
 package com.minipay.membership.adapter.in.web;
 
+import com.minipay.common.WebAdapter;
 import com.minipay.membership.application.port.in.GetMembershipQuery;
 import com.minipay.membership.domain.Membership;
-import common.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

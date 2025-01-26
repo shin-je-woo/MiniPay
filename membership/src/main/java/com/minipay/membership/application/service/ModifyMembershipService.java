@@ -1,12 +1,12 @@
 package com.minipay.membership.application.service;
 
+import com.minipay.common.DomainNotFoundException;
+import com.minipay.common.UseCase;
 import com.minipay.membership.application.port.in.ModifyMembershipCommand;
 import com.minipay.membership.application.port.in.ModifyMembershipUseCase;
 import com.minipay.membership.application.port.out.FindMembershipPort;
 import com.minipay.membership.application.port.out.ModifyMembershipPort;
 import com.minipay.membership.domain.Membership;
-import common.DomainNotFoundException;
-import common.UseCase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

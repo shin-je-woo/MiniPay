@@ -1,10 +1,10 @@
 package com.minipay.membership.adapter.out.persistence;
 
+import com.minipay.common.PersistenceAdapter;
 import com.minipay.membership.application.port.out.CreateMembershipPort;
 import com.minipay.membership.application.port.out.FindMembershipPort;
 import com.minipay.membership.application.port.out.ModifyMembershipPort;
 import com.minipay.membership.domain.Membership;
-import common.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;

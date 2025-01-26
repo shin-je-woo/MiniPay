@@ -1,7 +1,7 @@
 package com.minipay.membership.adapter.out.persistence;
 
+import com.minipay.common.DomainMapper;
 import com.minipay.membership.domain.Membership;
-import common.DomainMapper;
 
 @DomainMapper
 public class MembershipMapper {

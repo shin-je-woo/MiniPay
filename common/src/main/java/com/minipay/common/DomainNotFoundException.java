@@ -1,4 +1,4 @@
-package common;
+package com.minipay.common;
 
 public class DomainNotFoundException extends RuntimeException {
 
