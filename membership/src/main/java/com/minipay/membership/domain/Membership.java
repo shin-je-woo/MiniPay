@@ -14,7 +14,24 @@ public class Membership {
     private final boolean isValid;
     private final boolean isCorp;
 
-    public static Membership generateMember(
+    public static Membership withoutId(
+            MembershipName membershipName,
+            MembershipEmail membershipEmail,
+            MembershipAddress membershipAddress,
+            MembershipIsValid membershipIsValid,
+            MembershipIsCorp membershipIsCorp
+    ) {
+        return new Membership(
+                null,
+                membershipName.name,
+                membershipEmail.email,
+                membershipAddress.address,
+                membershipIsValid.isValid,
+                membershipIsCorp.isCorp
+        );
+    }
+
+    public static Membership withId(
             MembershipId membershipId,
             MembershipName membershipName,
             MembershipEmail membershipEmail,

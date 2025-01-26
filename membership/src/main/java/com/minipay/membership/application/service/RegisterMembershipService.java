@@ -17,12 +17,13 @@ public class RegisterMembershipService implements RegisterMembershipUseCase {
 
     @Override
     public Membership registerMembership(RegisterMembershipCommand command) {
-        return createMembershipPort.createMembership(
+        Membership membership = Membership.withoutId(
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),
                 new Membership.MembershipAddress(command.getAddress()),
                 new Membership.MembershipIsValid(command.isValid()),
                 new Membership.MembershipIsCorp(command.isCorp())
         );
+        return createMembershipPort.createMembership(membership);
     }
 }

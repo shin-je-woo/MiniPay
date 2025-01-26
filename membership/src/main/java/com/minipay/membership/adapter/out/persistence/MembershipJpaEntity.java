@@ -8,8 +8,10 @@ import lombok.*;
 
 @Getter
 @Entity
+@Builder
 @ToString
 @Table(name = "membership")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MembershipJpaEntity {
 
@@ -26,13 +28,4 @@ public class MembershipJpaEntity {
     private boolean isValid;
 
     private boolean isCorp;
-
-    @Builder
-    public MembershipJpaEntity(String name, String email, String address, boolean isValid, boolean isCorp) {
-        this.name = name;
-        this.email = email;
-        this.address = address;
-        this.isValid = isValid;
-        this.isCorp = isCorp;
-    }
 }

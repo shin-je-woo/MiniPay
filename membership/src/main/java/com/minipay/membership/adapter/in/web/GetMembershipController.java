@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class GetMembershipController {
+
     private final GetMembershipQuery getMembershipQuery;
 
     @GetMapping("/membership/{membershipId}")

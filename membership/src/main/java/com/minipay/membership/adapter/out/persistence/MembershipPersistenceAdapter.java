@@ -2,6 +2,7 @@ package com.minipay.membership.adapter.out.persistence;
 
 import com.minipay.membership.application.port.out.CreateMembershipPort;
 import com.minipay.membership.application.port.out.FindMembershipPort;
+import com.minipay.membership.application.port.out.ModifyMembershipPort;
 import com.minipay.membership.domain.Membership;
 import common.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
@@ -10,26 +11,22 @@ import java.util.Optional;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class MembershipPersistenceAdapter implements CreateMembershipPort, FindMembershipPort {
+public class MembershipPersistenceAdapter implements CreateMembershipPort, ModifyMembershipPort, FindMembershipPort {
 
     private final SpringDataMembershipRepository membershipRepository;
     private final MembershipMapper membershipMapper;
 
     @Override
-    public Membership createMembership(
-            Membership.MembershipName membershipName,
-            Membership.MembershipEmail membershipEmail,
-            Membership.MembershipAddress membershipAddress,
-            Membership.MembershipIsValid membershipIsValid,
-            Membership.MembershipIsCorp membershipIsCorp
-    ) {
-        MembershipJpaEntity membershipJpaEntity = MembershipJpaEntity.builder()
-                .name(membershipName.name())
-                .email(membershipEmail.email())
-                .address(membershipAddress.address())
-                .isValid(membershipIsValid.isValid())
-                .isCorp(membershipIsCorp.isCorp())
-                .build();
+    public Membership createMembership(Membership membership) {
+        MembershipJpaEntity membershipJpaEntity = membershipMapper.mapToJpaEntity(membership);
+        membershipRepository.save(membershipJpaEntity);
+
+        return membershipMapper.mapToDomain(membershipJpaEntity);
+    }
+
+    @Override
+    public Membership modifyMembership(Membership membership) {
+        MembershipJpaEntity membershipJpaEntity = membershipMapper.mapToJpaEntity(membership);
         membershipRepository.save(membershipJpaEntity);
 
         return membershipMapper.mapToDomain(membershipJpaEntity);

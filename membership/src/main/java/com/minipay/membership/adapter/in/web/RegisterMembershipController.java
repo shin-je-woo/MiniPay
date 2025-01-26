@@ -5,6 +5,7 @@ import com.minipay.membership.application.port.in.RegisterMembershipUseCase;
 import com.minipay.membership.domain.Membership;
 import common.WebAdapter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ public class RegisterMembershipController {
     private final RegisterMembershipUseCase registerMembershipUseCase;
 
     @PostMapping("/membership")
-    public Membership registerMembership(@RequestBody RegisterMembershipRequest request) {
+    public ResponseEntity<Membership> registerMembership(@RequestBody RegisterMembershipRequest request) {
         RegisterMembershipCommand command = RegisterMembershipCommand.builder()
                 .name(request.name())
                 .email(request.email())
@@ -25,7 +26,6 @@ public class RegisterMembershipController {
                 .isValid(true)
                 .isCorp(request.isCorp())
                 .build();
-
-        return registerMembershipUseCase.registerMembership(command);
+        return ResponseEntity.ok(registerMembershipUseCase.registerMembership(command));
     }
 }
