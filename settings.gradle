@@ -1,3 +1,4 @@
 rootProject.name = 'mini-pay'
 include 'membership'
 include 'common'
+include 'banking'

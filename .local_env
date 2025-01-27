@@ -1,0 +1,3 @@
+SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/minipay?useSSL=false&allowPublicKeyRetrieval=true
+SPRING_DATASOURCE_USERNAME=minipay_user
+SPRING_DATASOURCE_PASSWORD=minipay_password
