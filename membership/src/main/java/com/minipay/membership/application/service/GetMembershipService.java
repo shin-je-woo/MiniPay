@@ -16,8 +16,8 @@ public class GetMembershipService implements GetMembershipQuery {
     private final FindMembershipPort findMembershipPort;
 
     @Override
-    public Membership getMembership(String memberId) {
-        return findMembershipPort.findMember(new Membership.MembershipId(memberId))
-                .orElseThrow(() -> new DomainNotFoundException("memberId: " + memberId + " not found"));
+    public Membership getMembership(Long membershipId) {
+        return findMembershipPort.findMember(new Membership.MembershipId(membershipId))
+                .orElseThrow(() -> new DomainNotFoundException("memberId: " + membershipId + " not found"));
     }
 }

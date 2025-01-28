@@ -20,7 +20,7 @@ public class ModifyMembershipController {
 
     @PutMapping("/membership/{membershipId}")
     public ResponseEntity<Membership> modifyMembership(
-            @PathVariable String membershipId,
+            @PathVariable Long membershipId,
             @RequestBody ModifyMembershipRequest request
     ) {
         ModifyMembershipCommand command = ModifyMembershipCommand.builder()
@@ -28,8 +28,6 @@ public class ModifyMembershipController {
                 .name(request.name())
                 .email(request.email())
                 .address(request.address())
-                .isValid(request.isValid())
-                .isCorp(request.isCorp())
                 .build();
         return ResponseEntity.ok(modifyMembershipUseCase.modifyMembership(command));
     }

@@ -3,5 +3,5 @@ package com.minipay.membership.application.port.in;
 import com.minipay.membership.domain.Membership;
 
 public interface GetMembershipQuery {
-    Membership getMembership(String membershipId);
+    Membership getMembership(Long membershipId);
 }

@@ -34,7 +34,7 @@ public class MembershipPersistenceAdapter implements CreateMembershipPort, Modif
 
     @Override
     public Optional<Membership> findMember(Membership.MembershipId membershipId) {
-        return membershipRepository.findById(Long.parseLong(membershipId.id()))
+        return membershipRepository.findById(membershipId.value())
                 .map(membershipMapper::mapToDomain);
     }
 }

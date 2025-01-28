@@ -22,13 +22,10 @@ public class ModifyMembershipService implements ModifyMembershipUseCase {
     public Membership modifyMembership(ModifyMembershipCommand command) {
         Membership membership = findMembershipPort.findMember(new Membership.MembershipId(command.getMembershipId()))
                 .orElseThrow(() -> new DomainNotFoundException("Membership not found"));
-        Membership modifiedMembership = Membership.withId(
-                new Membership.MembershipId(membership.getMembershipId()),
+        Membership modifiedMembership = membership.changeInfo(
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),
-                new Membership.MembershipAddress(command.getAddress()),
-                new Membership.MembershipIsValid(command.isValid()),
-                new Membership.MembershipIsCorp(command.isCorp())
+                new Membership.MembershipAddress(command.getAddress())
         );
 
         return modifyMembershipPort.modifyMembership(modifiedMembership);

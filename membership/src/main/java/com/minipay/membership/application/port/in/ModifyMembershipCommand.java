@@ -1,7 +1,6 @@
 package com.minipay.membership.application.port.in;
 
 import com.minipay.common.SelfValidating;
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -13,8 +12,7 @@ import lombok.Getter;
 public class ModifyMembershipCommand extends SelfValidating<ModifyMembershipCommand> {
 
     @NotNull
-    @NotBlank
-    private final String membershipId;
+    private final Long membershipId;
 
     @NotNull
     @NotBlank
@@ -28,19 +26,12 @@ public class ModifyMembershipCommand extends SelfValidating<ModifyMembershipComm
     @NotBlank
     private final String address;
 
-    @AssertTrue
-    private final boolean isValid;
-
-    private final boolean isCorp;
-
     @Builder
-    public ModifyMembershipCommand(String membershipId, String name, String email, String address, boolean isValid, boolean isCorp) {
+    public ModifyMembershipCommand(Long membershipId, String name, String email, String address) {
         this.membershipId = membershipId;
         this.name = name;
         this.email = email;
         this.address = address;
-        this.isValid = isValid;
-        this.isCorp = isCorp;
 
         this.validateSelf();
     }

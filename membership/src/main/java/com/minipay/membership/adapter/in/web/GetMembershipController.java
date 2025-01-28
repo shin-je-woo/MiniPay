@@ -17,7 +17,7 @@ public class GetMembershipController {
     private final GetMembershipQuery getMembershipQuery;
 
     @GetMapping("/membership/{membershipId}")
-    public ResponseEntity<Membership> getMembership(@PathVariable String membershipId) {
+    public ResponseEntity<Membership> getMembership(@PathVariable Long membershipId) {
         Membership membership = getMembershipQuery.getMembership(membershipId);
         return ResponseEntity.ok(membership);
     }

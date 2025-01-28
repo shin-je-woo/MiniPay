@@ -24,15 +24,15 @@ class RegisterMembershipControllerTest {
 
     @Test
     void registerMembership() throws Exception {
-        RegisterMembershipRequest request = new RegisterMembershipRequest("name", "email", "address", false);
+        RegisterMembershipRequest request = new RegisterMembershipRequest("name", "email@email.com", "address", true);
 
         Membership expectedMembership = Membership.withId(
-                new Membership.MembershipId("1"),
+                new Membership.MembershipId(1L),
                 new Membership.MembershipName(request.name()),
                 new Membership.MembershipEmail(request.email()),
                 new Membership.MembershipAddress(request.address()),
-                new Membership.MembershipIsValid(true),
-                new Membership.MembershipIsCorp(request.isCorp())
+                true,
+                true
         );
 
         mockMvc.perform(

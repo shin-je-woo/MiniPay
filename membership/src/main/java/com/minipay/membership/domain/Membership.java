@@ -1,69 +1,79 @@
 package com.minipay.membership.domain;
 
+import com.minipay.common.DomainRuleException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.util.StringUtils;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Membership {
-    private final String membershipId;
-    private final String name;
-    private final String email;
-    private final String address;
+    private final MembershipId membershipId;
+    private final MembershipName name;
+    private final MembershipEmail email;
+    private final MembershipAddress address;
     private final boolean isValid;
     private final boolean isCorp;
 
-    public static Membership withoutId(
-            MembershipName membershipName,
-            MembershipEmail membershipEmail,
-            MembershipAddress membershipAddress,
-            MembershipIsValid membershipIsValid,
-            MembershipIsCorp membershipIsCorp
+    public static Membership create(
+            MembershipName name,
+            MembershipEmail email,
+            MembershipAddress address,
+            boolean isValid,
+            boolean isCorp
     ) {
-        return new Membership(
-                null,
-                membershipName.name,
-                membershipEmail.email,
-                membershipAddress.address,
-                membershipIsValid.isValid,
-                membershipIsCorp.isCorp
-        );
+        return new Membership(null, name, email, address, isValid, isCorp);
     }
 
     public static Membership withId(
             MembershipId membershipId,
-            MembershipName membershipName,
-            MembershipEmail membershipEmail,
-            MembershipAddress membershipAddress,
-            MembershipIsValid membershipIsValid,
-            MembershipIsCorp membershipIsCorp
+            MembershipName name,
+            MembershipEmail email,
+            MembershipAddress address,
+            boolean isValid,
+            boolean isCorp
     ) {
-        return new Membership(
-                membershipId.id,
-                membershipName.name,
-                membershipEmail.email,
-                membershipAddress.address,
-                membershipIsValid.isValid,
-                membershipIsCorp.isCorp
-        );
+        return new Membership(membershipId, name, email, address, isValid, isCorp);
     }
 
-    public record MembershipId(String id) {
+    public Membership changeInfo(
+            MembershipName name,
+            MembershipEmail email,
+            MembershipAddress address
+    ) {
+        return new Membership(this.membershipId, name, email, address, this.isValid, this.isCorp);
     }
 
-    public record MembershipName(String name) {
+    public record MembershipId(Long value) {
+        public MembershipId {
+            if (value == null) {
+                throw new DomainRuleException("MembershipId is null");
+            }
+        }
     }
 
-    public record MembershipEmail(String email) {
+    public record MembershipName(String value) {
+        public MembershipName {
+            if (!StringUtils.hasText(value) || value.length() > 20) {
+                throw new DomainRuleException("membershipName is empty or too long");
+            }
+        }
     }
 
-    public record MembershipAddress(String address) {
+    public record MembershipEmail(String value) {
+        public MembershipEmail {
+            if (!StringUtils.hasText(value) || !value.matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+                throw new DomainRuleException("membershipEmail value is not matched email format");
+            }
+        }
     }
 
-    public record MembershipIsValid(boolean isValid) {
-    }
-
-    public record MembershipIsCorp(boolean isCorp) {
+    public record MembershipAddress(String value) {
+        public MembershipAddress {
+            if (!StringUtils.hasText(value) || value.length() > 50) {
+                throw new DomainRuleException("membershipAddress value is empty or too long");
+            }
+        }
     }
 }

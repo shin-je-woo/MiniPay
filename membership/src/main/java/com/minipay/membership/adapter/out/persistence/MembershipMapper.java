@@ -7,22 +7,22 @@ import com.minipay.membership.domain.Membership;
 public class MembershipMapper {
 
     Membership mapToDomain(MembershipJpaEntity membershipJpaEntity) {
-        return  Membership.withId(
-                new Membership.MembershipId(String.valueOf(membershipJpaEntity.getMembershipId())),
+        return Membership.withId(
+                new Membership.MembershipId(membershipJpaEntity.getMembershipId()),
                 new Membership.MembershipName(membershipJpaEntity.getName()),
                 new Membership.MembershipEmail(membershipJpaEntity.getEmail()),
                 new Membership.MembershipAddress(membershipJpaEntity.getAddress()),
-                new Membership.MembershipIsValid(membershipJpaEntity.isValid()),
-                new Membership.MembershipIsCorp(membershipJpaEntity.isCorp())
+                membershipJpaEntity.isValid(),
+                membershipJpaEntity.isCorp()
         );
     }
 
     MembershipJpaEntity mapToJpaEntity(Membership membership) {
         return MembershipJpaEntity.builder()
-                .membershipId(membership.getMembershipId() == null ? null : Long.parseLong(membership.getMembershipId()))
-                .name(membership.getName())
-                .email(membership.getEmail())
-                .address(membership.getAddress())
+                .membershipId(membership.getMembershipId() == null ? null : membership.getMembershipId().value())
+                .name(membership.getName().value())
+                .email(membership.getEmail().value())
+                .address(membership.getAddress().value())
                 .isValid(membership.isValid())
                 .isCorp(membership.isCorp())
                 .build();
