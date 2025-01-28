@@ -14,7 +14,7 @@ public class MembershipJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long membershipId;
+    private Long id;
 
     private String name;
 

@@ -11,18 +11,21 @@ public class BankAccountMapper {
         return BankAccount.withId(
                 new BankAccount.BankAccountId(bankAccount.getId()),
                 new BankAccount.OwnerId(bankAccount.getOwnerId()),
-                bankAccount.getBankName(),
-                bankAccount.getAccountNumber(),
-                bankAccount.getLinkedStatusIsValid()
+                new BankAccount.LinkedBankAccount(
+                        bankAccount.getBankName(),
+                        bankAccount.getAccountNumber(),
+                        bankAccount.getLinkedStatusIsValid()
+                )
         );
     }
 
     public BankAccountJpaEntity mapToJpaEntity(BankAccount bankAccount) {
         return BankAccountJpaEntity.builder()
+                .id(bankAccount.getBankAccountId() == null ? null : bankAccount.getBankAccountId().value())
                 .ownerId(bankAccount.getOwnerId().value())
-                .bankName(bankAccount.getBankName())
-                .accountNumber(bankAccount.getAccountNumber())
-                .linkedStatusIsValid(bankAccount.isLinkedStatusIsValid())
+                .bankName(bankAccount.getLinkedBankAccount().bankName())
+                .accountNumber(bankAccount.getLinkedBankAccount().accountNumber())
+                .linkedStatusIsValid(bankAccount.getLinkedBankAccount().linkedStatusIsValid())
                 .build();
     }
 }
