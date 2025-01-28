@@ -1,0 +1,7 @@
+package com.minipay.banking.application.port.in;
+
+import com.minipay.banking.domain.BankAccount;
+
+public interface RegisterBankAccountUseCase {
+     BankAccount registerBankAccount(RegisterBankAccountCommand command);
+}
