@@ -36,6 +36,13 @@ public class TransferMoney {
         return new TransferMoney(transferMoneyId, fromAccount, toAccount, moneyAmount, status);
     }
 
+    public TransferMoney changeStatus(TransferMoneyStatus status) {
+        if (status == null) {
+            throw new DomainRuleException("status can't be null");
+        }
+        return new TransferMoney(this.transferMoneyId, this.fromFirmBankingAccount, this.toFirmBankingAccount, this.moneyAmount, status);
+    }
+
     public record TransferMoneyId(Long value) {
         public TransferMoneyId {
             if (value == null) {
