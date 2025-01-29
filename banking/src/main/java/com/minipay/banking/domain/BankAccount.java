@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankAccount {
+
     private final BankAccountId bankAccountId;
     private final OwnerId ownerId;
     private final LinkedBankAccount linkedBankAccount;
@@ -48,6 +49,9 @@ public class BankAccount {
         public LinkedBankAccount {
             if (!StringUtils.hasText(bankName) || !StringUtils.hasText(accountNumber)) {
                 throw new DomainRuleException("bankName or accountNumber is empty");
+            }
+            if (!accountNumber.matches("\\d{10,16}")) {
+                throw new DomainRuleException("invalid bank account number");
             }
         }
     }

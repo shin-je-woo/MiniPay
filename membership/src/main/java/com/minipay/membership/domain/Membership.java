@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Membership {
+
     private final MembershipId membershipId;
     private final MembershipName name;
     private final MembershipEmail email;
