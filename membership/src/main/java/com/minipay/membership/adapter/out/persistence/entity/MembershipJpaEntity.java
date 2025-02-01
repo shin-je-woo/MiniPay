@@ -1,4 +1,4 @@
-package com.minipay.membership.adapter.out.persistence;
+package com.minipay.membership.adapter.out.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

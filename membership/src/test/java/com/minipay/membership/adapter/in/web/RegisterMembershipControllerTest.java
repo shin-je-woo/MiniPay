@@ -1,6 +1,7 @@
 package com.minipay.membership.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.minipay.membership.adapter.in.web.request.RegisterMembershipRequest;
 import com.minipay.membership.domain.Membership;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

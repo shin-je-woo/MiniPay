@@ -1,12 +1,13 @@
-package com.minipay.membership.adapter.out.persistence;
+package com.minipay.membership.adapter.out.persistence.mapper;
 
 import com.minipay.common.DomainMapper;
+import com.minipay.membership.adapter.out.persistence.entity.MembershipJpaEntity;
 import com.minipay.membership.domain.Membership;
 
 @DomainMapper
 public class MembershipMapper {
 
-    Membership mapToDomain(MembershipJpaEntity membershipJpaEntity) {
+    public Membership mapToDomain(MembershipJpaEntity membershipJpaEntity) {
         return Membership.withId(
                 new Membership.MembershipId(membershipJpaEntity.getId()),
                 new Membership.MembershipName(membershipJpaEntity.getName()),
@@ -17,7 +18,7 @@ public class MembershipMapper {
         );
     }
 
-    MembershipJpaEntity mapToJpaEntity(Membership membership) {
+    public MembershipJpaEntity mapToJpaEntity(Membership membership) {
         return MembershipJpaEntity.builder()
                 .id(membership.getMembershipId() == null ? null : membership.getMembershipId().value())
                 .name(membership.getName().value())

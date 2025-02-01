@@ -1,4 +1,4 @@
-package com.minipay.banking.adapter.in.web;
+package com.minipay.banking.adapter.in.web.request;
 
 public record RegisterBankAccountRequest(
         Long membershipId,

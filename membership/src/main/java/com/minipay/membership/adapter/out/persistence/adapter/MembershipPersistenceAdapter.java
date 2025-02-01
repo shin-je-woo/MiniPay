@@ -1,6 +1,9 @@
-package com.minipay.membership.adapter.out.persistence;
+package com.minipay.membership.adapter.out.persistence.adapter;
 
 import com.minipay.common.PersistenceAdapter;
+import com.minipay.membership.adapter.out.persistence.repository.SpringDataMembershipRepository;
+import com.minipay.membership.adapter.out.persistence.entity.MembershipJpaEntity;
+import com.minipay.membership.adapter.out.persistence.mapper.MembershipMapper;
 import com.minipay.membership.application.port.out.CreateMembershipPort;
 import com.minipay.membership.application.port.out.FindMembershipPort;
 import com.minipay.membership.application.port.out.ModifyMembershipPort;

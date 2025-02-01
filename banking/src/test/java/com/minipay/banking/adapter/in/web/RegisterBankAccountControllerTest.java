@@ -1,6 +1,7 @@
 package com.minipay.banking.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.minipay.banking.adapter.in.web.request.RegisterBankAccountRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

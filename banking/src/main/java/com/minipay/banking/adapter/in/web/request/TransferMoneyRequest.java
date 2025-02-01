@@ -1,4 +1,4 @@
-package com.minipay.banking.adapter.in.web;
+package com.minipay.banking.adapter.in.web.request;
 
 import java.math.BigDecimal;
 
