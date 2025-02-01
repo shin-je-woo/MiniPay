@@ -16,10 +16,9 @@ public class MemberMoney {
 
     public static MemberMoney create(
             MembershipId membershipId,
-            BankAccountId bankAccountId,
-            Money balance
+            BankAccountId bankAccountId
     ) {
-        return new MemberMoney(null, membershipId, bankAccountId, balance);
+        return new MemberMoney(null, membershipId, bankAccountId, Money.ZERO);
     }
 
     public static MemberMoney withId(
@@ -29,11 +28,6 @@ public class MemberMoney {
             Money balance
     ) {
         return new MemberMoney(memberMoneyId, membershipId, bankAccountId, balance);
-    }
-
-    public MemberMoney increaseBalance(Money money) {
-        Money newMoney = this.balance.add(money);
-        return new MemberMoney(this.memberMoneyId, this.membershipId, this.bankAccountId, newMoney);
     }
 
     public record MemberMoneyId(Long value) {

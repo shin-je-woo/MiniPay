@@ -5,10 +5,10 @@ import com.minipay.common.DomainRuleException;
 import java.math.BigDecimal;
 
 public record Money(
-        BigDecimal amount
+        BigDecimal value
 ) {
     public Money {
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
+        if (value == null || value.compareTo(BigDecimal.ZERO) < 0) {
             throw new DomainRuleException("money is less than zero");
         }
     }
@@ -16,10 +16,14 @@ public record Money(
     public static Money ZERO = new Money(BigDecimal.ZERO);
 
     public Money add(Money money) {
-        return new Money(this.amount.add(money.amount));
+        return new Money(this.value.add(money.value));
     }
 
     public Money subtract(Money money) {
-        return new Money(this.amount.subtract(money.amount));
+        return new Money(this.value.subtract(money.value));
+    }
+
+    public boolean isNegative() {
+        return value.compareTo(BigDecimal.ZERO) < 0;
     }
 }
