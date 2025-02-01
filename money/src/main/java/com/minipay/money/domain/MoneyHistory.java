@@ -22,15 +22,11 @@ public class MoneyHistory {
             MemberMoney.MemberMoneyId memberMoneyId,
             ChangeType changeType,
             Money amount,
-            Money currentBalance
+            Money afterBalance
     ) {
         if (changeType == null) {
             throw new DomainRuleException("changeType can't be null");
         }
-
-        Money afterBalance = changeType == ChangeType.INCREASE
-                ? currentBalance.add(amount)
-                : currentBalance.subtract(amount);
 
         return new MoneyHistory(null, memberMoneyId, changeType, amount, afterBalance, LocalDateTime.now());
     }

@@ -30,6 +30,16 @@ public class MemberMoney {
         return new MemberMoney(memberMoneyId, membershipId, bankAccountId, balance);
     }
 
+    public MemberMoney increaseBalance(Money money) {
+        if (money == null || money.isNegative()) {
+            throw new DomainRuleException("money is null or negative");
+        }
+
+        Money newMoney = this.balance.add(money);
+
+        return new MemberMoney(this.memberMoneyId, this.membershipId, this.bankAccountId, newMoney);
+    }
+
     public record MemberMoneyId(Long value) {
         public MemberMoneyId {
             if (value == null) {
