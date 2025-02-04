@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### minipay ###
-/db/data/
+.data/
