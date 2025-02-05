@@ -19,3 +19,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  kafka:
+    bootstrap-servers: ${KAFKA_CLUSTER_BOOTSTRAP_SERVERS}
+    producer:
+      acks: all
