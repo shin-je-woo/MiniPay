@@ -3,7 +3,7 @@ package com.minipay.money;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.minipay.money", "com.minipay.common"})
 public class MoneyApplication {
 
     public static void main(String[] args) {

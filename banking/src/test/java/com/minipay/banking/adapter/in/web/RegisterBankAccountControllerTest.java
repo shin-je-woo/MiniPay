@@ -28,7 +28,7 @@ class RegisterBankAccountControllerTest {
         RegisterBankAccountRequest request = new RegisterBankAccountRequest(
                 1L,
                 "국민은행",
-                "101019181-111"
+                "101013311123"
         );
 
         mockMvc.perform(
