@@ -1,6 +1,6 @@
 package com.minipay.membership.adapter.in.web.controller;
 
-import com.minipay.common.WebAdapter;
+import com.minipay.common.annotation.WebAdapter;
 import com.minipay.membership.adapter.in.web.request.ModifyMembershipRequest;
 import com.minipay.membership.application.port.in.ModifyMembershipCommand;
 import com.minipay.membership.application.port.in.ModifyMembershipUseCase;

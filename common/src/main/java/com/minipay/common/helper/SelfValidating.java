@@ -1,4 +1,4 @@
-package com.minipay.common;
+package com.minipay.common.helper;
 
 import jakarta.validation.*;
 

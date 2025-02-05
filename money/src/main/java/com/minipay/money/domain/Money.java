@@ -1,6 +1,6 @@
 package com.minipay.money.domain;
 
-import com.minipay.common.DomainRuleException;
+import com.minipay.common.exception.DomainRuleException;
 
 import java.math.BigDecimal;
 

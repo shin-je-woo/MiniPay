@@ -4,7 +4,7 @@ import com.minipay.banking.application.port.in.RequestTransferMoneyUseCase;
 import com.minipay.banking.application.port.in.TransferMoneyCommand;
 import com.minipay.banking.application.port.out.*;
 import com.minipay.banking.domain.TransferMoney;
-import com.minipay.common.UseCase;
+import com.minipay.common.annotation.UseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

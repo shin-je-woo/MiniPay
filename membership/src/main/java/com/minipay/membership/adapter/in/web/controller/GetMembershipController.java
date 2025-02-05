@@ -1,6 +1,6 @@
 package com.minipay.membership.adapter.in.web.controller;
 
-import com.minipay.common.WebAdapter;
+import com.minipay.common.annotation.WebAdapter;
 import com.minipay.membership.application.port.in.GetMembershipQuery;
 import com.minipay.membership.domain.Membership;
 import lombok.RequiredArgsConstructor;

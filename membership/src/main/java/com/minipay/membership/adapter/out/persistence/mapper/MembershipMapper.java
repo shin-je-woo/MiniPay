@@ -1,6 +1,6 @@
 package com.minipay.membership.adapter.out.persistence.mapper;
 
-import com.minipay.common.DomainMapper;
+import com.minipay.common.annotation.DomainMapper;
 import com.minipay.membership.adapter.out.persistence.entity.MembershipJpaEntity;
 import com.minipay.membership.domain.Membership;
 

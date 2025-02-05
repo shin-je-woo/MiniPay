@@ -6,7 +6,7 @@ import com.minipay.banking.application.port.out.ExternalBankAccountInfo;
 import com.minipay.banking.application.port.out.CreateBankAccountPort;
 import com.minipay.banking.application.port.out.FetchBankAccountInfoPort;
 import com.minipay.banking.domain.BankAccount;
-import com.minipay.common.UseCase;
+import com.minipay.common.annotation.UseCase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

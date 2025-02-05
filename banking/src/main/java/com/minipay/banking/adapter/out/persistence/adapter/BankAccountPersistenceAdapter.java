@@ -5,7 +5,7 @@ import com.minipay.banking.adapter.out.persistence.mapper.BankAccountMapper;
 import com.minipay.banking.adapter.out.persistence.repository.SpringDataBankAccountRepository;
 import com.minipay.banking.application.port.out.CreateBankAccountPort;
 import com.minipay.banking.domain.BankAccount;
-import com.minipay.common.PersistenceAdapter;
+import com.minipay.common.annotation.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter

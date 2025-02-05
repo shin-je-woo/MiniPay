@@ -1,7 +1,7 @@
 package com.minipay.membership.application.service;
 
-import com.minipay.common.DomainNotFoundException;
-import com.minipay.common.Query;
+import com.minipay.common.exception.DomainNotFoundException;
+import com.minipay.common.annotation.Query;
 import com.minipay.membership.application.port.in.GetMembershipQuery;
 import com.minipay.membership.application.port.out.FindMembershipPort;
 import com.minipay.membership.domain.Membership;

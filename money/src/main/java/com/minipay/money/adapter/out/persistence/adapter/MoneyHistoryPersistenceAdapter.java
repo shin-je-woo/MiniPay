@@ -1,6 +1,6 @@
 package com.minipay.money.adapter.out.persistence.adapter;
 
-import com.minipay.common.PersistenceAdapter;
+import com.minipay.common.annotation.PersistenceAdapter;
 import com.minipay.money.adapter.out.persistence.entity.MoneyHistoryJpaEntity;
 import com.minipay.money.adapter.out.persistence.mapper.MoneyHistoryMapper;
 import com.minipay.money.adapter.out.persistence.repository.SpringDataMoneyHistoryRepository;

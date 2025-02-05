@@ -1,4 +1,4 @@
-package com.minipay.common;
+package com.minipay.common.annotation;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;

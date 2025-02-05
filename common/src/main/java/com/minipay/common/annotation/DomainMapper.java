@@ -1,4 +1,4 @@
-package com.minipay.common;
+package com.minipay.common.annotation;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-public @interface WebAdapter {
+public @interface DomainMapper {
 
     @AliasFor(annotation = Component.class)
     String value() default "";

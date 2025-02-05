@@ -2,7 +2,7 @@ package com.minipay.banking.adapter.out.bank;
 
 import com.minipay.banking.application.port.out.*;
 import com.minipay.banking.domain.TransferMoney;
-import com.minipay.common.ExternalSystemAdapter;
+import com.minipay.common.annotation.ExternalSystemAdapter;
 
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;

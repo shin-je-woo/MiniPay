@@ -1,6 +1,6 @@
 package com.minipay.money.adapter.in.web.controller;
 
-import com.minipay.common.WebAdapter;
+import com.minipay.common.annotation.WebAdapter;
 import com.minipay.money.adapter.in.web.request.RegisterMemberMoneyRequest;
 import com.minipay.money.application.port.in.RegisterMemberMoneyCommand;
 import com.minipay.money.application.port.in.RegisterMemberMoneyUseCase;

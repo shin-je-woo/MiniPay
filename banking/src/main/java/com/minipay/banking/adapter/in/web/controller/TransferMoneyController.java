@@ -4,7 +4,7 @@ import com.minipay.banking.adapter.in.web.request.TransferMoneyRequest;
 import com.minipay.banking.application.port.in.RequestTransferMoneyUseCase;
 import com.minipay.banking.application.port.in.TransferMoneyCommand;
 import com.minipay.banking.domain.TransferMoney;
-import com.minipay.common.WebAdapter;
+import com.minipay.common.annotation.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

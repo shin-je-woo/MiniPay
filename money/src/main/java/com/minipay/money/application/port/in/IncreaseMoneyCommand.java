@@ -1,6 +1,6 @@
 package com.minipay.money.application.port.in;
 
-import com.minipay.common.SelfValidating;
+import com.minipay.common.helper.SelfValidating;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;

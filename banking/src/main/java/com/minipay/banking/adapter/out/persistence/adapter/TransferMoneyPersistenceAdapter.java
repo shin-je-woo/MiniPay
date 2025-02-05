@@ -6,7 +6,7 @@ import com.minipay.banking.adapter.out.persistence.repository.SpringDataTransfer
 import com.minipay.banking.application.port.out.CreateTransferMoneyPort;
 import com.minipay.banking.application.port.out.ModifyTransferMoneyPort;
 import com.minipay.banking.domain.TransferMoney;
-import com.minipay.common.PersistenceAdapter;
+import com.minipay.common.annotation.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter

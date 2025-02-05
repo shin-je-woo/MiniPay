@@ -2,7 +2,7 @@ package com.minipay.banking.adapter.out.persistence.mapper;
 
 import com.minipay.banking.adapter.out.persistence.entity.TransferMoneyJpaEntity;
 import com.minipay.banking.domain.TransferMoney;
-import com.minipay.common.DomainMapper;
+import com.minipay.common.annotation.DomainMapper;
 
 @DomainMapper
 public class TransferMoneyMapper {

@@ -1,7 +1,7 @@
 package com.minipay.money.adapter.out.persistence.adapter;
 
-import com.minipay.common.DataNotFoundException;
-import com.minipay.common.PersistenceAdapter;
+import com.minipay.common.exception.DataNotFoundException;
+import com.minipay.common.annotation.PersistenceAdapter;
 import com.minipay.money.adapter.out.persistence.entity.MemberMoneyJpaEntity;
 import com.minipay.money.adapter.out.persistence.mapper.MemberMoneyMapper;
 import com.minipay.money.adapter.out.persistence.repository.SpringDataMemberMoneyRepository;

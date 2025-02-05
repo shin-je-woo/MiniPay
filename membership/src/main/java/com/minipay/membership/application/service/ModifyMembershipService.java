@@ -1,7 +1,7 @@
 package com.minipay.membership.application.service;
 
-import com.minipay.common.DomainNotFoundException;
-import com.minipay.common.UseCase;
+import com.minipay.common.exception.DomainNotFoundException;
+import com.minipay.common.annotation.UseCase;
 import com.minipay.membership.application.port.in.ModifyMembershipCommand;
 import com.minipay.membership.application.port.in.ModifyMembershipUseCase;
 import com.minipay.membership.application.port.out.FindMembershipPort;

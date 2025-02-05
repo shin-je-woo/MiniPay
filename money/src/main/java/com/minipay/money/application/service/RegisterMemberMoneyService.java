@@ -1,6 +1,6 @@
 package com.minipay.money.application.service;
 
-import com.minipay.common.UseCase;
+import com.minipay.common.annotation.UseCase;
 import com.minipay.money.application.port.in.RegisterMemberMoneyCommand;
 import com.minipay.money.application.port.in.RegisterMemberMoneyUseCase;
 import com.minipay.money.application.port.out.CreateMemberMoneyPort;

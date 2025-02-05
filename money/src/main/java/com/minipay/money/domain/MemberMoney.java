@@ -1,6 +1,6 @@
 package com.minipay.money.domain;
 
-import com.minipay.common.DomainRuleException;
+import com.minipay.common.exception.DomainRuleException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
