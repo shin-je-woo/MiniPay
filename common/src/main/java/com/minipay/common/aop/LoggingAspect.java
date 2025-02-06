@@ -19,7 +19,7 @@ public class LoggingAspect {
     public void logBefore(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
         kafkaTemplate.send(
-                Topic.LOGGING.getName(),
+                Topic.LOGGING,
                 "logging",
                 methodName + " was called."
         );
