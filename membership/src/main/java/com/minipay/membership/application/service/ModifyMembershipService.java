@@ -1,7 +1,7 @@
 package com.minipay.membership.application.service;
 
-import com.minipay.common.exception.DomainNotFoundException;
 import com.minipay.common.annotation.UseCase;
+import com.minipay.common.exception.DataNotFoundException;
 import com.minipay.membership.application.port.in.ModifyMembershipCommand;
 import com.minipay.membership.application.port.in.ModifyMembershipUseCase;
 import com.minipay.membership.application.port.out.FindMembershipPort;
@@ -21,7 +21,7 @@ public class ModifyMembershipService implements ModifyMembershipUseCase {
     @Override
     public Membership modifyMembership(ModifyMembershipCommand command) {
         Membership membership = findMembershipPort.findMember(new Membership.MembershipId(command.getMembershipId()))
-                .orElseThrow(() -> new DomainNotFoundException("Membership not found"));
+                .orElseThrow(() -> new DataNotFoundException("Membership not found"));
         Membership modifiedMembership = membership.changeInfo(
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),

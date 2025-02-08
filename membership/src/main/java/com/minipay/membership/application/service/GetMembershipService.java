@@ -1,7 +1,7 @@
 package com.minipay.membership.application.service;
 
-import com.minipay.common.exception.DomainNotFoundException;
 import com.minipay.common.annotation.Query;
+import com.minipay.common.exception.DataNotFoundException;
 import com.minipay.membership.application.port.in.GetMembershipQuery;
 import com.minipay.membership.application.port.out.FindMembershipPort;
 import com.minipay.membership.domain.Membership;
@@ -18,6 +18,6 @@ public class GetMembershipService implements GetMembershipQuery {
     @Override
     public Membership getMembership(Long membershipId) {
         return findMembershipPort.findMember(new Membership.MembershipId(membershipId))
-                .orElseThrow(() -> new DomainNotFoundException("memberId: " + membershipId + " not found"));
+                .orElseThrow(() -> new DataNotFoundException("memberId: " + membershipId + " not found"));
     }
 }
