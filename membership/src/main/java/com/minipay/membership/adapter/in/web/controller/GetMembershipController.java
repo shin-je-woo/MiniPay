@@ -1,6 +1,7 @@
 package com.minipay.membership.adapter.in.web.controller;
 
 import com.minipay.common.annotation.WebAdapter;
+import com.minipay.membership.adapter.in.web.response.MembershipResponse;
 import com.minipay.membership.application.port.in.GetMembershipQuery;
 import com.minipay.membership.domain.Membership;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,9 @@ public class GetMembershipController {
     private final GetMembershipQuery getMembershipQuery;
 
     @GetMapping("/membership/{membershipId}")
-    public ResponseEntity<Membership> getMembership(@PathVariable Long membershipId) {
+    public ResponseEntity<MembershipResponse> getMembership(@PathVariable Long membershipId) {
         Membership membership = getMembershipQuery.getMembership(membershipId);
-        return ResponseEntity.ok(membership);
+
+        return ResponseEntity.ok(MembershipResponse.from(membership));
     }
 }

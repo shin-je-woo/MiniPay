@@ -4,16 +4,15 @@ import com.minipay.banking.application.port.out.*;
 import com.minipay.banking.domain.TransferMoney;
 import com.minipay.common.annotation.ExternalSystemAdapter;
 
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @ExternalSystemAdapter
-public class BankAccountApiAdapter implements FetchBankAccountInfoPort, RequestFirmBankingPort {
+public class BankAccountApiAdapter implements GetBankAccountInfoPort, RequestFirmBankingPort {
 
     @Override
-    public Optional<ExternalBankAccountInfo> fetchBankAccountInfo(String bankName, String accountNumber) {
+    public ExternalBankAccountInfo getBankAccountInfo(String bankName, String accountNumber) {
         // TODO 실제 은행계좌를 HTTP 를 통해 가져오기. 지금은 유효한 계좌정보 리턴하도록 Mocking
-        return Optional.of(new ExternalBankAccountInfo(bankName, accountNumber, true));
+        return new ExternalBankAccountInfo(bankName, accountNumber, true);
     }
 
     @Override

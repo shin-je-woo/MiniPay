@@ -2,6 +2,7 @@ package com.minipay.membership.adapter.in.web.controller;
 
 import com.minipay.common.annotation.WebAdapter;
 import com.minipay.membership.adapter.in.web.request.RegisterMembershipRequest;
+import com.minipay.membership.adapter.in.web.response.MembershipResponse;
 import com.minipay.membership.application.port.in.RegisterMembershipCommand;
 import com.minipay.membership.application.port.in.RegisterMembershipUseCase;
 import com.minipay.membership.domain.Membership;
@@ -19,7 +20,7 @@ public class RegisterMembershipController {
     private final RegisterMembershipUseCase registerMembershipUseCase;
 
     @PostMapping("/membership")
-    public ResponseEntity<Membership> registerMembership(@RequestBody RegisterMembershipRequest request) {
+    public ResponseEntity<MembershipResponse> registerMembership(@RequestBody RegisterMembershipRequest request) {
         RegisterMembershipCommand command = RegisterMembershipCommand.builder()
                 .name(request.name())
                 .email(request.email())
@@ -27,6 +28,8 @@ public class RegisterMembershipController {
                 .isValid(true)
                 .isCorp(request.isCorp())
                 .build();
-        return ResponseEntity.ok(registerMembershipUseCase.registerMembership(command));
+        Membership membership = registerMembershipUseCase.registerMembership(command);
+
+        return ResponseEntity.ok(MembershipResponse.from(membership));
     }
 }

@@ -2,6 +2,7 @@ package com.minipay.membership.adapter.in.web.controller;
 
 import com.minipay.common.annotation.WebAdapter;
 import com.minipay.membership.adapter.in.web.request.ModifyMembershipRequest;
+import com.minipay.membership.adapter.in.web.response.MembershipResponse;
 import com.minipay.membership.application.port.in.ModifyMembershipCommand;
 import com.minipay.membership.application.port.in.ModifyMembershipUseCase;
 import com.minipay.membership.domain.Membership;
@@ -20,7 +21,7 @@ public class ModifyMembershipController {
     private final ModifyMembershipUseCase modifyMembershipUseCase;
 
     @PutMapping("/membership/{membershipId}")
-    public ResponseEntity<Membership> modifyMembership(
+    public ResponseEntity<MembershipResponse> modifyMembership(
             @PathVariable Long membershipId,
             @RequestBody ModifyMembershipRequest request
     ) {
@@ -30,6 +31,8 @@ public class ModifyMembershipController {
                 .email(request.email())
                 .address(request.address())
                 .build();
-        return ResponseEntity.ok(modifyMembershipUseCase.modifyMembership(command));
+        Membership membership = modifyMembershipUseCase.modifyMembership(command);
+
+        return ResponseEntity.ok(MembershipResponse.from(membership));
     }
 }
