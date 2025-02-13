@@ -6,9 +6,8 @@ import lombok.*;
 @Getter
 @Entity
 @Builder
-@ToString
 @Table(name = "membership")
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MembershipJpaEntity {
 

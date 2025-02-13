@@ -1,6 +1,6 @@
 package com.minipay.global.consumer.logging;
 
-import com.minipay.common.enums.Topic;
+import com.minipay.common.event.EventType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class LoggingConsumer {
 
     @KafkaListener(
-            topics = {Topic.LOGGING},
+            topics = {EventType.LOGGING},
             groupId = "global-consumer.logging",
             concurrency = "3"
     )

@@ -9,6 +9,7 @@ public class BankAccountMapper {
 
     public BankAccount mapToDomain(BankAccountJpaEntity bankAccount) {
         return BankAccount.withId(
+                bankAccount.getUuid(),
                 new BankAccount.BankAccountId(bankAccount.getId()),
                 new BankAccount.OwnerId(bankAccount.getOwnerId()),
                 new BankAccount.LinkedBankAccount(
