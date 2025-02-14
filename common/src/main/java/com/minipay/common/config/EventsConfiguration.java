@@ -1,5 +1,6 @@
-package com.minipay.common.event;
+package com.minipay.common.config;
 
+import com.minipay.common.event.Events;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

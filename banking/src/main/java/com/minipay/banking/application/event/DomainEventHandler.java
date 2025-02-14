@@ -1,5 +1,7 @@
-package com.minipay.common.event;
+package com.minipay.banking.application.event;
 
+import com.minipay.banking.application.port.out.DomainEventPersistencePort;
+import com.minipay.common.event.DomainEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

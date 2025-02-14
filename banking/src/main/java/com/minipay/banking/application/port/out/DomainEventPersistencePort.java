@@ -1,4 +1,6 @@
-package com.minipay.common.event;
+package com.minipay.banking.application.port.out;
+
+import com.minipay.common.event.DomainEvent;
 
 import java.util.List;
 

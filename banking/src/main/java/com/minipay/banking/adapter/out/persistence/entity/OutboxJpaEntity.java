@@ -21,7 +21,7 @@ public class OutboxJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private UUID uuid;
+    private UUID eventUuid;
 
     @Lob
     private String serializedEvent;

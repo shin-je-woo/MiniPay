@@ -1,6 +1,5 @@
 package com.minipay.banking.domain;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.minipay.common.event.DomainEvent;
 import com.minipay.common.event.EventType;
 import lombok.*;
@@ -10,8 +9,8 @@ import java.util.UUID;
 @Getter
 public class BankAccountCreatedEvent extends DomainEvent {
 
-    private BankAccountCreatedEvent(UUID aggregateId, Payload payload) {
-        super(EventType.BANK_ACCOUNT_CREATED, "BankAccount", String.valueOf(aggregateId), payload);
+    private BankAccountCreatedEvent(String aggregateId, Payload payload) {
+        super(EventType.BANK_ACCOUNT_CREATED, "BankAccount", aggregateId, payload);
     }
 
     public static BankAccountCreatedEvent of(BankAccount bankAccount) {
@@ -23,7 +22,7 @@ public class BankAccountCreatedEvent extends DomainEvent {
                 .build();
 
         return new BankAccountCreatedEvent(
-                bankAccount.getUuid(),
+                String.valueOf(bankAccount.getUuid()),
                 payload
         );
     }
@@ -31,7 +30,6 @@ public class BankAccountCreatedEvent extends DomainEvent {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     public static class Payload {
         private UUID bankAccountUuid;
         private Long membershipId;

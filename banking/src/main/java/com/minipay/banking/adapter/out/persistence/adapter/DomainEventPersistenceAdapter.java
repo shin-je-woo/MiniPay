@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minipay.banking.adapter.out.persistence.entity.OutboxJpaEntity;
 import com.minipay.banking.adapter.out.persistence.repository.SpringDataOutboxRepository;
-import com.minipay.common.event.DomainEventPersistencePort;
+import com.minipay.banking.application.port.out.DomainEventPersistencePort;
 import com.minipay.common.annotation.PersistenceAdapter;
 import com.minipay.common.event.DomainEvent;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class DomainEventPersistenceAdapter implements DomainEventPersistencePort
     @Override
     public void save(DomainEvent domainEvent) {
         OutboxJpaEntity outboxJpaEntity = OutboxJpaEntity.builder()
-                .uuid(domainEvent.getUuid())
+                .eventUuid(domainEvent.getEventUuid())
                 .serializedEvent(objectMapper.writeValueAsString(domainEvent))
                 .published(false)
                 .build();
@@ -46,7 +46,7 @@ public class DomainEventPersistenceAdapter implements DomainEventPersistencePort
 
     @Override
     public void completeProcess(DomainEvent domainEvent) {
-        OutboxJpaEntity outbox = outboxRepository.findByUuid(domainEvent.getUuid());
+        OutboxJpaEntity outbox = outboxRepository.findByEventUuid(domainEvent.getEventUuid());
         outbox.markAsPublished();
 
         outboxRepository.save(outbox);
