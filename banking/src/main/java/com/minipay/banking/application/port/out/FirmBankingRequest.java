@@ -6,10 +6,10 @@ import java.math.BigDecimal;
 
 @Builder
 public record FirmBankingRequest(
-        String fromBankName,
-        String fromBankAccountNumber,
-        String toBankName,
-        String toBankAccountNumber,
+        String srcBankName,
+        String srcAccountNumber,
+        String destBankName,
+        String destAccountNumber,
         BigDecimal amount
 ) {
 }

@@ -1,5 +1,6 @@
 package com.minipay.banking.adapter.out.persistence.entity;
 
+import com.minipay.banking.domain.BankAccount;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,13 +18,15 @@ public class BankAccountJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private UUID uuid;
+    @Column(unique = true, nullable = false)
+    private UUID bankAccountId;
 
-    private Long ownerId;
+    private UUID membershipId;
 
     private String bankName;
 
     private String accountNumber;
 
-    private Boolean linkedStatusIsValid;
+    @Enumerated(EnumType.STRING)
+    private BankAccount.LinkedStatus linkedStatus;
 }

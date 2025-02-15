@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -17,9 +18,11 @@ public class MemberMoneyJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long membershipId;
+    private UUID memberMoneyId;
 
-    private Long bankAccountId;
+    private UUID membershipId;
+
+    private UUID bankAccountId;
 
     private BigDecimal balance;
 }

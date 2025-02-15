@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minipay.banking.application.port.out.DomainEventPublishPort;
 import com.minipay.common.constants.Topic;
+import com.minipay.common.event.AggregateType;
 import com.minipay.common.event.DomainEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,7 +23,7 @@ public class DomainEventPublishAdapter implements DomainEventPublishPort {
         try {
             kafkaTemplate.send(
                     generateTopic(domainEvent.getAggregateType()),
-                    domainEvent.getAggregateId(),
+                    domainEvent.getAggregateId().toString(),
                     objectMapper.writeValueAsString(domainEvent)
             );
         } catch (JsonProcessingException e) {
@@ -30,10 +31,10 @@ public class DomainEventPublishAdapter implements DomainEventPublishPort {
         }
     }
 
-    private String generateTopic(String aggregateType) {
+    private String generateTopic(AggregateType aggregateType) {
         return switch (aggregateType) {
-            case "BankAccount" -> Topic.BANK_ACCOUNT_EVENTS;
-            default -> "common.events.unknown";
+            case BANK_ACCOUNT -> Topic.BANK_ACCOUNT_EVENTS;
+            default -> Topic.UNKNOWN;
         };
     }
 }

@@ -11,7 +11,7 @@ public class MoneyHistoryMapper {
 
     public MoneyHistory mapToDomain(MoneyHistoryJpaEntity moneyHistory) {
         return MoneyHistory.withId(
-                new MoneyHistory.MoneyHistoryId(moneyHistory.getId()),
+                new MoneyHistory.MoneyHistoryId(moneyHistory.getMoneyHistoryId()),
                 new MemberMoney.MemberMoneyId(moneyHistory.getMemberMoneyId()),
                 moneyHistory.getChangeType(),
                 new Money(moneyHistory.getAmount()),
@@ -22,7 +22,7 @@ public class MoneyHistoryMapper {
 
     public MoneyHistoryJpaEntity mapToJpaEntity(MoneyHistory moneyHistory) {
         return MoneyHistoryJpaEntity.builder()
-                .id(moneyHistory.getMoneyHistoryId() == null ? null : moneyHistory.getMoneyHistoryId().value())
+                .moneyHistoryId(moneyHistory.getMoneyHistoryId().value())
                 .memberMoneyId(moneyHistory.getMemberMoneyId().value())
                 .changeType(moneyHistory.getChangeType())
                 .amount(moneyHistory.getAmount().value())

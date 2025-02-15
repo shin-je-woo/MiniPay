@@ -8,20 +8,21 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class IncreaseMoneyCommand extends SelfValidating<IncreaseMoneyCommand> {
 
     @NotNull
-    private final Long memberMoneyId;
+    private final UUID memberMoneyId;
 
     @NotNull
     @Positive
     private final BigDecimal amount;
 
     @Builder
-    public IncreaseMoneyCommand(Long memberMoneyId, BigDecimal amount) {
+    public IncreaseMoneyCommand(UUID memberMoneyId, BigDecimal amount) {
         this.memberMoneyId = memberMoneyId;
         this.amount = amount;
 

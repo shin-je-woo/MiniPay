@@ -4,9 +4,11 @@ import com.minipay.membership.domain.Membership;
 import lombok.AccessLevel;
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder(access = AccessLevel.PRIVATE)
 public record MembershipResponse(
-        Long membershipId,
+        UUID membershipId,
         String name,
         String email,
         String address,

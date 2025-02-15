@@ -21,7 +21,7 @@ public class RegisterMemberMoneyController {
     /**
      * TODO Money 등록은 Eventual Consistency 보장을 위해 이벤트 기반으로 변경해야 함
      */
-    @PostMapping("member-money")
+    @PostMapping("/member-money")
     ResponseEntity<MemberMoney> registerMemberMoney(@RequestBody RegisterMemberMoneyRequest request) {
         RegisterMemberMoneyCommand command = RegisterMemberMoneyCommand.builder()
                 .membershipId(request.membershipId())

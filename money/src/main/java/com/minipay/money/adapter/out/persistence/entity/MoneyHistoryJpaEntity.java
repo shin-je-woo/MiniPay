@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -19,8 +20,10 @@ public class MoneyHistoryJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private UUID moneyHistoryId;
+
     @Column(nullable = false, updatable = false)
-    private Long memberMoneyId;
+    private UUID memberMoneyId;
 
     @Enumerated(EnumType.STRING)
     private MoneyHistory.ChangeType changeType;

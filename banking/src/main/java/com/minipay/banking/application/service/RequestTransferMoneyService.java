@@ -3,6 +3,8 @@ package com.minipay.banking.application.service;
 import com.minipay.banking.application.port.in.RequestTransferMoneyUseCase;
 import com.minipay.banking.application.port.in.TransferMoneyCommand;
 import com.minipay.banking.application.port.out.*;
+import com.minipay.banking.domain.ExternalBankAccount;
+import com.minipay.banking.domain.Money;
 import com.minipay.banking.domain.TransferMoney;
 import com.minipay.common.annotation.UseCase;
 import lombok.RequiredArgsConstructor;
@@ -23,20 +25,26 @@ public class RequestTransferMoneyService implements RequestTransferMoneyUseCase 
         // TODO 송금을 위한 Lock?
         // TODO request 트랜잭션이랑 성공/실패 트랜잭션 분리 필요?
         // 1. 송금 요청을 저장 (요청 상태로)
-        TransferMoney transferMoney = TransferMoney.create(
-                new TransferMoney.FirmBankingAccount(command.getFromBankName(), command.getFromBankAccountNumber()),
-                new TransferMoney.FirmBankingAccount(command.getToBankName(), command.getToBankAccountNumber()),
-                new TransferMoney.MoneyAmount(command.getMoneyAmount())
+        TransferMoney transferMoney = TransferMoney.newInstance(
+                new ExternalBankAccount(
+                        new ExternalBankAccount.BankName(command.getSrcBankName()),
+                        new ExternalBankAccount.AccountNumber(command.getSrcAccountNumber())
+                ),
+                new ExternalBankAccount(
+                        new ExternalBankAccount.BankName(command.getDestBankName()),
+                        new ExternalBankAccount.AccountNumber(command.getDestAccountNumber())
+                ),
+                new Money(command.getAmount())
         );
         TransferMoney savedTransferMoney = createTransferMoneyPort.createTransferMoney(transferMoney);
 
         // 2. 외부 은행에 펌뱅킹 요청
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
-                .fromBankName(command.getFromBankName())
-                .fromBankAccountNumber(command.getFromBankAccountNumber())
-                .toBankName(command.getToBankName())
-                .toBankAccountNumber(command.getToBankAccountNumber())
-                .amount(command.getMoneyAmount())
+                .srcBankName(command.getSrcBankName())
+                .srcAccountNumber(command.getSrcAccountNumber())
+                .destBankName(command.getDestBankName())
+                .destAccountNumber(command.getDestAccountNumber())
+                .amount(command.getAmount())
                 .build();
         FirmBankingResult firmBankingResult = requestFirmBankingPort.requestFirmBanking(firmBankingRequest);
 

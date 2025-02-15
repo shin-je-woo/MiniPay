@@ -5,6 +5,7 @@ import com.minipay.common.annotation.MiniPayServiceAdapter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @MiniPayServiceAdapter
 @RequiredArgsConstructor
@@ -13,7 +14,7 @@ public class MembershipServiceAdapter implements GetMembershipPort {
     private final MembershipFeignClient membershipFeignClient;
 
     @Override
-    public boolean isValidMembership(Long membershipId) {
+    public boolean isValidMembership(UUID membershipId) {
         MembershipResponse membershipResponse = Objects.requireNonNull(membershipFeignClient.getMembership(membershipId).getBody());
         return membershipResponse.isValid();
     }

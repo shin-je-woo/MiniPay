@@ -29,7 +29,7 @@ public class MemberMoneyPersistenceAdapter implements
 
     @Override
     public MemberMoney loadMemberMoney(MemberMoney.MemberMoneyId memberMoneyId) {
-        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyRepository.findById(memberMoneyId.value())
+        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyRepository.findByMemberMoneyId(memberMoneyId.value())
                 .orElseThrow(() -> new DataNotFoundException("Member money not found"));
 
         return memberMoneyMapper.mapToDomain(memberMoneyJpaEntity);
@@ -37,7 +37,10 @@ public class MemberMoneyPersistenceAdapter implements
 
     @Override
     public MemberMoney updateMemberMoney(MemberMoney memberMoney) {
-        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyMapper.mapToJpaEntity(memberMoney);
+        MemberMoneyJpaEntity existingEntity = memberMoneyRepository.findByMemberMoneyId(memberMoney.getMemberMoneyId().value())
+                .orElseThrow(() -> new DataNotFoundException("Member money not found"));
+
+        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyMapper.mapToExistingJpaEntity(memberMoney, existingEntity.getId());
         memberMoneyRepository.save(memberMoneyJpaEntity);
 
         return memberMoneyMapper.mapToDomain(memberMoneyJpaEntity);

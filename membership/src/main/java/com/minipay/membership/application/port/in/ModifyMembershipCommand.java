@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class ModifyMembershipCommand extends SelfValidating<ModifyMembershipCommand> {
 
     @NotNull
-    private final Long membershipId;
+    private final UUID membershipId;
 
     @NotNull
     @NotBlank
@@ -27,7 +29,7 @@ public class ModifyMembershipCommand extends SelfValidating<ModifyMembershipComm
     private final String address;
 
     @Builder
-    public ModifyMembershipCommand(Long membershipId, String name, String email, String address) {
+    public ModifyMembershipCommand(UUID membershipId, String name, String email, String address) {
         this.membershipId = membershipId;
         this.name = name;
         this.email = email;

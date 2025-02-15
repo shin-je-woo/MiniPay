@@ -1,5 +1,6 @@
 package com.minipay.banking.domain;
 
+import com.minipay.common.event.AggregateType;
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.DomainEvent;
 import lombok.*;
@@ -9,21 +10,21 @@ import java.util.UUID;
 @Getter
 public class BankAccountEvent extends DomainEvent {
 
-    private BankAccountEvent(EventType eventType, String aggregateId, Payload payload) {
-        super(eventType.getValue(), "BankAccount", aggregateId, payload);
+    private BankAccountEvent(EventType eventType, UUID aggregateId, Payload payload) {
+        super(eventType, AggregateType.BANK_ACCOUNT, aggregateId, payload);
     }
 
     public static BankAccountEvent of(EventType eventType, BankAccount bankAccount) {
         Payload payload = Payload.builder()
-                .bankAccountUuid(bankAccount.getUuid())
-                .membershipId(bankAccount.getOwnerId().value())
-                .bankName(bankAccount.getLinkedBankAccount().bankName())
-                .accountNumber(bankAccount.getLinkedBankAccount().accountNumber())
+                .bankAccountId(bankAccount.getBankAccountId().value())
+                .membershipId(bankAccount.getMembershipId().value())
+                .bankName(bankAccount.getLinkedBankAccount().bankName().value())
+                .accountNumber(bankAccount.getLinkedBankAccount().accountNumber().value())
                 .build();
 
         return new BankAccountEvent(
                 eventType,
-                String.valueOf(bankAccount.getUuid()),
+                bankAccount.getBankAccountId().value(),
                 payload
         );
     }
@@ -32,8 +33,8 @@ public class BankAccountEvent extends DomainEvent {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Payload {
-        private UUID bankAccountUuid;
-        private Long membershipId;
+        private UUID bankAccountId;
+        private UUID membershipId;
         private String bankName;
         private String accountNumber;
     }

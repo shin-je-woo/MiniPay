@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -18,15 +19,17 @@ public class TransferMoneyJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fromBankName;
+    private UUID transferMoneyId;
 
-    private String fromBankAccountNumber;
+    private String srcBankName;
 
-    private String toBankName;
+    private String srcAccountNumber;
 
-    private String toBankAccountNumber;
+    private String destBankName;
 
-    private BigDecimal moneyAmount;
+    private String destAccountNumber;
+
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     private TransferMoney.TransferMoneyStatus status;

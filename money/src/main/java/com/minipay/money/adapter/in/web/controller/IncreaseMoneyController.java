@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @WebAdapter
 @RestController
 @RequiredArgsConstructor
@@ -22,9 +24,9 @@ public class IncreaseMoneyController {
     /**
      * TODO 권한 검사 필요할 듯
      */
-    @PostMapping("member-money/{memberMoneyId}/increase")
+    @PostMapping("/member-money/{memberMoneyId}/increase")
     ResponseEntity<MemberMoney> increaseMemberMoney(
-            @PathVariable Long memberMoneyId,
+            @PathVariable UUID memberMoneyId,
             @RequestBody IncreaseMoneyRequest request
     ) {
         IncreaseMoneyCommand command = IncreaseMoneyCommand.builder()

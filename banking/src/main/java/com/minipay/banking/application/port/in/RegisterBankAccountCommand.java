@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class RegisterBankAccountCommand extends SelfValidating<RegisterBankAccountCommand> {
 
     @NotNull
-    private final Long ownerId;
+    private final UUID membershipId;
 
     @NotNull
     @NotBlank
@@ -23,8 +25,8 @@ public class RegisterBankAccountCommand extends SelfValidating<RegisterBankAccou
     private final String bankAccountNumber;
 
     @Builder
-    public RegisterBankAccountCommand(Long ownerId, String bankName, String bankAccountNumber) {
-        this.ownerId = ownerId;
+    public RegisterBankAccountCommand(UUID membershipId, String bankName, String bankAccountNumber) {
+        this.membershipId = membershipId;
         this.bankName = bankName;
         this.bankAccountNumber = bankAccountNumber;
 

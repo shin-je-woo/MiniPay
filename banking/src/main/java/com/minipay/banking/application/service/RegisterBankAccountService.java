@@ -7,6 +7,7 @@ import com.minipay.banking.application.port.out.ExternalBankAccountInfo;
 import com.minipay.banking.application.port.out.GetBankAccountInfoPort;
 import com.minipay.banking.application.port.out.GetMembershipPort;
 import com.minipay.banking.domain.BankAccount;
+import com.minipay.banking.domain.ExternalBankAccount;
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.exception.BusinessException;
 import jakarta.transaction.Transactional;
@@ -24,7 +25,7 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
     @Override
     public BankAccount registerBankAccount(RegisterBankAccountCommand command) {
         // 1. 요청한 멤버쉽이 정상인지 확인
-        if (!getMembershipPort.isValidMembership(command.getOwnerId())) {
+        if (!getMembershipPort.isValidMembership(command.getMembershipId())) {
             throw new BusinessException("멤버쉽이 유효하지 않습니다.");
         }
 
@@ -39,14 +40,14 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
             throw new BusinessException("연결된 계좌의 상태가 유효하지 않습니다");
         }
 
-        BankAccount bankAccount = BankAccount.create(
-                new BankAccount.OwnerId(command.getOwnerId()),
-                new BankAccount.LinkedBankAccount(
-                        externalBankAccountInfo.bankName(),
-                        externalBankAccountInfo.accountNumber(),
-                        true
+        BankAccount bankAccount = BankAccount.newInstance(
+                new BankAccount.MembershipId(command.getMembershipId()),
+                new ExternalBankAccount(
+                        new ExternalBankAccount.BankName(externalBankAccountInfo.bankName()),
+                        new ExternalBankAccount.AccountNumber(externalBankAccountInfo.accountNumber())
                 )
         );
+
         return createBankAccountPort.createBankAccount(bankAccount);
     }
 }

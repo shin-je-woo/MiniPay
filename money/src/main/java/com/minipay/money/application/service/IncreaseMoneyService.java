@@ -33,7 +33,7 @@ public class IncreaseMoneyService implements IncreaseMoneyUseCase {
         MemberMoney memberMoney = loadMemberMoneyPort.loadMemberMoney(new MemberMoney.MemberMoneyId(command.getMemberMoneyId()));
         MemberMoney increasedMemberMoney = memberMoney.increaseBalance(new Money(command.getAmount()));
 
-        MoneyHistory moneyHistory = MoneyHistory.create(
+        MoneyHistory moneyHistory = MoneyHistory.newInstance(
                 increasedMemberMoney.getMemberMoneyId(),
                 MoneyHistory.ChangeType.INCREASE,
                 new Money(command.getAmount()),

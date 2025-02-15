@@ -17,31 +17,31 @@ public class TransferMoneyCommand extends SelfValidating<TransferMoneyCommand> {
 
     @NotNull
     @NotBlank
-    String fromBankName;
+    String srcBankName;
 
     @NotNull
     @NotBlank
-    String fromBankAccountNumber;
+    String srcAccountNumber;
 
     @NotNull
     @NotBlank
-    String toBankName;
+    String destBankName;
 
     @NotNull
     @NotBlank
-    String toBankAccountNumber;
+    String destAccountNumber;
 
     @NotNull
     @Positive
-    BigDecimal moneyAmount;
+    BigDecimal amount;
 
     @Builder
-    public TransferMoneyCommand(String fromBankName, String fromBankAccountNumber, String toBankName, String toBankAccountNumber, BigDecimal moneyAmount) {
-        this.fromBankName = fromBankName;
-        this.fromBankAccountNumber = fromBankAccountNumber;
-        this.toBankName = toBankName;
-        this.toBankAccountNumber = toBankAccountNumber;
-        this.moneyAmount = moneyAmount;
+    public TransferMoneyCommand(String srcBankName, String srcAccountNumber, String destBankName, String destAccountNumber, BigDecimal amount) {
+        this.srcBankName = srcBankName;
+        this.srcAccountNumber = srcAccountNumber;
+        this.destBankName = destBankName;
+        this.destAccountNumber = destAccountNumber;
+        this.amount = amount;
 
         this.validateSelf();
     }

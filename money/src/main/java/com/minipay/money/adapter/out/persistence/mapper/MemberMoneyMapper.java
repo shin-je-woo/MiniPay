@@ -10,7 +10,7 @@ public class MemberMoneyMapper {
 
     public MemberMoney mapToDomain(MemberMoneyJpaEntity memberMoney) {
         return MemberMoney.withId(
-                new MemberMoney.MemberMoneyId(memberMoney.getId()),
+                new MemberMoney.MemberMoneyId(memberMoney.getMemberMoneyId()),
                 new MemberMoney.MembershipId(memberMoney.getMembershipId()),
                 new MemberMoney.BankAccountId(memberMoney.getBankAccountId()),
                 new Money(memberMoney.getBalance())
@@ -19,7 +19,17 @@ public class MemberMoneyMapper {
 
     public MemberMoneyJpaEntity mapToJpaEntity(MemberMoney memberMoney) {
         return MemberMoneyJpaEntity.builder()
-                .id(memberMoney.getMemberMoneyId() == null ? null : memberMoney.getMemberMoneyId().value())
+                .memberMoneyId(memberMoney.getMemberMoneyId().value())
+                .membershipId(memberMoney.getMembershipId().value())
+                .bankAccountId(memberMoney.getBankAccountId().value())
+                .balance(memberMoney.getBalance().value())
+                .build();
+    }
+
+    public MemberMoneyJpaEntity mapToExistingJpaEntity(MemberMoney memberMoney, Long jpaEntityId) {
+        return MemberMoneyJpaEntity.builder()
+                .id(jpaEntityId)
+                .memberMoneyId(memberMoney.getMemberMoneyId().value())
                 .membershipId(memberMoney.getMembershipId().value())
                 .bankAccountId(memberMoney.getBankAccountId().value())
                 .balance(memberMoney.getBalance().value())

@@ -17,7 +17,7 @@ public class RegisterMembershipService implements RegisterMembershipUseCase {
 
     @Override
     public Membership registerMembership(RegisterMembershipCommand command) {
-        Membership membership = Membership.create(
+        Membership membership = Membership.newInstance(
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),
                 new Membership.MembershipAddress(command.getAddress()),

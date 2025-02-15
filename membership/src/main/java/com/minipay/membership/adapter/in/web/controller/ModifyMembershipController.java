@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @WebAdapter
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class ModifyMembershipController {
 
     @PutMapping("/membership/{membershipId}")
     public ResponseEntity<MembershipResponse> modifyMembership(
-            @PathVariable Long membershipId,
+            @PathVariable UUID membershipId,
             @RequestBody ModifyMembershipRequest request
     ) {
         ModifyMembershipCommand command = ModifyMembershipCommand.builder()

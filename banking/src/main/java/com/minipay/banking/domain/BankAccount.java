@@ -2,79 +2,63 @@ package com.minipay.banking.domain;
 
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
-import com.minipay.common.exception.DomainRuleException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankAccount {
 
-    private final UUID uuid;
     private final BankAccountId bankAccountId;
-    private final OwnerId ownerId;
-    private final LinkedBankAccount linkedBankAccount;
-
-    // Constructor
-    private BankAccount(BankAccountId bankAccountId, OwnerId ownerId, LinkedBankAccount linkedBankAccount) {
-        this.uuid = UUID.randomUUID();
-        this.bankAccountId = bankAccountId;
-        this.ownerId = ownerId;
-        this.linkedBankAccount = linkedBankAccount;
-
-        Events.raise(BankAccountEvent.of(EventType.BANK_ACCOUNT_CREATED, this));
-    }
-
-    private BankAccount(UUID uuid, BankAccountId bankAccountId, OwnerId ownerId, LinkedBankAccount linkedBankAccount) {
-        this.uuid = uuid;
-        this.bankAccountId = bankAccountId;
-        this.ownerId = ownerId;
-        this.linkedBankAccount = linkedBankAccount;
-    }
+    private final MembershipId membershipId;
+    private final ExternalBankAccount linkedBankAccount;
+    private final LinkedStatus linkedStatus;
 
     // Factory
-    public static BankAccount create(
-            OwnerId ownerId,
-            LinkedBankAccount linkedBankAccount
+    public static BankAccount newInstance(
+            MembershipId membershipId,
+            ExternalBankAccount externalBankAccount
     ) {
-        return new BankAccount(null, ownerId, linkedBankAccount);
+        BankAccount bankAccount = new BankAccount(BankAccountId.generate(), membershipId, externalBankAccount,LinkedStatus.VALID);
+        Events.raise(BankAccountEvent.of(EventType.BANK_ACCOUNT_CREATED, bankAccount));
+
+        return bankAccount;
     }
 
     public static BankAccount withId(
-            UUID uuid,
             BankAccountId bankAccountId,
-            OwnerId ownerId,
-            LinkedBankAccount linkedBankAccount
+            MembershipId membershipId,
+            ExternalBankAccount externalBankAccount,
+            LinkedStatus linkedStatus
     ) {
-        return new BankAccount(uuid, bankAccountId, ownerId, linkedBankAccount);
+        return new BankAccount(bankAccountId, membershipId, externalBankAccount, linkedStatus);
     }
 
     // VO
-    public record BankAccountId(Long value) {
+    public record BankAccountId(UUID value) {
         public BankAccountId {
             if (value == null) {
-                throw new DomainRuleException("bank account id is null");
+                throw new IllegalArgumentException("BankAccountId cannot be null");
             }
+        }
+
+        private static BankAccountId generate() {
+            return new BankAccountId(UUID.randomUUID());
         }
     }
 
-    public record OwnerId(Long value) {
-        public OwnerId {
+    public record MembershipId(UUID value) {
+        public MembershipId {
             if (value == null) {
-                throw new DomainRuleException("owner id is null");
+                throw new IllegalArgumentException("MembershipId cannot be null");
             }
         }
     }
 
-    public record LinkedBankAccount(String bankName, String accountNumber, boolean linkedStatusIsValid) {
-        public LinkedBankAccount {
-            if (!StringUtils.hasText(bankName) || !StringUtils.hasText(accountNumber)) {
-                throw new DomainRuleException("bankName or accountNumber is empty");
-            }
-            if (!accountNumber.matches("\\d{10,16}")) {
-                throw new DomainRuleException("invalid bank account number");
-            }
-        }
+    public enum LinkedStatus {
+        VALID, INVALID
     }
 }

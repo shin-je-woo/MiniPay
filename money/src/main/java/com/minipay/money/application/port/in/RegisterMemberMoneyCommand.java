@@ -6,18 +6,20 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class RegisterMemberMoneyCommand extends SelfValidating<RegisterMemberMoneyCommand> {
 
     @NotNull
-    private final Long membershipId;
+    private final UUID membershipId;
 
     @NotNull
-    private final Long bankAccountId;
+    private final UUID bankAccountId;
 
     @Builder
-    public RegisterMemberMoneyCommand(Long membershipId, Long bankAccountId) {
+    public RegisterMemberMoneyCommand(UUID membershipId, UUID bankAccountId) {
         this.membershipId = membershipId;
         this.bankAccountId = bankAccountId;
 

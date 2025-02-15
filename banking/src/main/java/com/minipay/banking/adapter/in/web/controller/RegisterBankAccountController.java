@@ -21,7 +21,7 @@ public class RegisterBankAccountController {
     @PostMapping("/bank-accounts")
     ResponseEntity<BankAccount> registerBankAccount(@RequestBody RegisterBankAccountRequest request) {
         RegisterBankAccountCommand command = RegisterBankAccountCommand.builder()
-                .ownerId(request.membershipId())
+                .membershipId(request.membershipId())
                 .bankName(request.bankName())
                 .bankAccountNumber(request.bankAccountNumber())
                 .build();

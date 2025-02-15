@@ -9,7 +9,7 @@ public class MembershipMapper {
 
     public Membership mapToDomain(MembershipJpaEntity membershipJpaEntity) {
         return Membership.withId(
-                new Membership.MembershipId(membershipJpaEntity.getId()),
+                new Membership.MembershipId(membershipJpaEntity.getMembershipId()),
                 new Membership.MembershipName(membershipJpaEntity.getName()),
                 new Membership.MembershipEmail(membershipJpaEntity.getEmail()),
                 new Membership.MembershipAddress(membershipJpaEntity.getAddress()),
@@ -20,7 +20,7 @@ public class MembershipMapper {
 
     public MembershipJpaEntity mapToJpaEntity(Membership membership) {
         return MembershipJpaEntity.builder()
-                .id(membership.getMembershipId() == null ? null : membership.getMembershipId().value())
+                .membershipId(membership.getMembershipId().value())
                 .name(membership.getName().value())
                 .email(membership.getEmail().value())
                 .address(membership.getAddress().value())

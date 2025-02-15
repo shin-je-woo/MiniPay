@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -18,7 +19,8 @@ public class MoneyHistory {
     private final Money afterBalance;
     private final LocalDateTime createdAt;
 
-    public static MoneyHistory create(
+    // Factory
+    public static MoneyHistory newInstance(
             MemberMoney.MemberMoneyId memberMoneyId,
             ChangeType changeType,
             Money amount,
@@ -28,7 +30,7 @@ public class MoneyHistory {
             throw new DomainRuleException("changeType can't be null");
         }
 
-        return new MoneyHistory(null, memberMoneyId, changeType, amount, afterBalance, LocalDateTime.now());
+        return new MoneyHistory(MoneyHistoryId.generate(), memberMoneyId, changeType, amount, afterBalance, LocalDateTime.now());
     }
 
     public static MoneyHistory withId(
@@ -42,11 +44,16 @@ public class MoneyHistory {
         return new MoneyHistory(moneyHistoryId, memberMoneyId, changeType, amount, afterBalance, createdAt);
     }
 
-    public record MoneyHistoryId(Long value) {
+    // VO
+    public record MoneyHistoryId(UUID value) {
         public MoneyHistoryId {
             if (value == null) {
                 throw new DomainRuleException("MoneyHistoryId can't be null");
             }
+        }
+
+        private static MoneyHistoryId generate() {
+            return new MoneyHistoryId(UUID.randomUUID());
         }
     }
 

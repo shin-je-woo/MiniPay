@@ -8,6 +8,8 @@ import com.minipay.membership.domain.Membership;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Query
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class GetMembershipService implements GetMembershipQuery {
     private final FindMembershipPort findMembershipPort;
 
     @Override
-    public Membership getMembership(Long membershipId) {
+    public Membership getMembership(UUID membershipId) {
         return findMembershipPort.findMember(new Membership.MembershipId(membershipId))
                 .orElseThrow(() -> new DataNotFoundException("memberId: " + membershipId + " not found"));
     }

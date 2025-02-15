@@ -21,11 +21,11 @@ public class TransferMoneyController {
     @PostMapping("/transfer-money")
     ResponseEntity<TransferMoney> transferMoney(@RequestBody TransferMoneyRequest request) {
         TransferMoneyCommand command = TransferMoneyCommand.builder()
-                .fromBankName(request.fromBankName())
-                .fromBankAccountNumber(request.fromBankAccountNumber())
-                .toBankName(request.toBankName())
-                .toBankAccountNumber(request.toBankAccountNumber())
-                .moneyAmount(request.moneyAmount())
+                .srcBankName(request.srcBankName())
+                .srcAccountNumber(request.srcAccountNumber())
+                .destBankName(request.destBankName())
+                .destAccountNumber(request.destAccountNumber())
+                .amount(request.amount())
                 .build();
 
         return ResponseEntity.ok(requestTransferMoneyUseCase.requestTransferMoney(command));

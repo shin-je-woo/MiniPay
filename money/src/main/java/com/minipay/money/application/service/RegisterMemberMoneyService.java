@@ -17,7 +17,7 @@ public class RegisterMemberMoneyService implements RegisterMemberMoneyUseCase {
 
     @Override
     public MemberMoney registerMemberMoney(RegisterMemberMoneyCommand command) {
-        MemberMoney memberMoney = MemberMoney.create(
+        MemberMoney memberMoney = MemberMoney.newInstance(
                 new MemberMoney.MembershipId(command.getMembershipId()),
                 new MemberMoney.BankAccountId(command.getBankAccountId())
         );

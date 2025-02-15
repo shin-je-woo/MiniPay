@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
+import java.util.UUID;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Membership {
@@ -17,14 +19,14 @@ public class Membership {
     private final boolean isValid;
     private final boolean isCorp;
 
-    public static Membership create(
+    public static Membership newInstance(
             MembershipName name,
             MembershipEmail email,
             MembershipAddress address,
             boolean isValid,
             boolean isCorp
     ) {
-        return new Membership(null, name, email, address, isValid, isCorp);
+        return new Membership(MembershipId.generate(), name, email, address, isValid, isCorp);
     }
 
     public static Membership withId(
@@ -46,11 +48,15 @@ public class Membership {
         return new Membership(this.membershipId, name, email, address, this.isValid, this.isCorp);
     }
 
-    public record MembershipId(Long value) {
+    public record MembershipId(UUID value) {
         public MembershipId {
             if (value == null) {
-                throw new DomainRuleException("MembershipId is null");
+                throw new IllegalArgumentException("MembershipId is null");
             }
+        }
+
+        private static MembershipId generate() {
+            return new MembershipId(UUID.randomUUID());
         }
     }
 

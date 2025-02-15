@@ -1,7 +1,9 @@
 package com.minipay.banking.adapter.out.service;
 
+import java.util.UUID;
+
 public record MembershipResponse(
-        Long membershipId,
+        UUID membershipId,
         String name,
         String email,
         String address,

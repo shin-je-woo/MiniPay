@@ -7,6 +7,7 @@ import com.minipay.banking.application.port.out.CreateTransferMoneyPort;
 import com.minipay.banking.application.port.out.ModifyTransferMoneyPort;
 import com.minipay.banking.domain.TransferMoney;
 import com.minipay.common.annotation.PersistenceAdapter;
+import com.minipay.common.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
@@ -26,7 +27,10 @@ public class TransferMoneyPersistenceAdapter implements CreateTransferMoneyPort,
 
     @Override
     public TransferMoney modifyTransferMoney(TransferMoney transferMoney) {
-        TransferMoneyJpaEntity transferMoneyJpaEntity = transferMoneyMapper.mapToJpaEntity(transferMoney);
+        TransferMoneyJpaEntity existingEntity = transferMoneyRepository.findByTransferMoneyId(transferMoney.getTransferMoneyId().value())
+                .orElseThrow(() -> new DataNotFoundException("transferMoneyId not found"));
+
+        TransferMoneyJpaEntity transferMoneyJpaEntity = transferMoneyMapper.mapToExistingJpaEntity(transferMoney, existingEntity.getId());
         transferMoneyRepository.save(transferMoneyJpaEntity);
 
         return transferMoneyMapper.mapToDomain(transferMoneyJpaEntity);
