@@ -1,5 +1,6 @@
 package com.minipay.banking.domain;
 
+import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
 import com.minipay.common.exception.DomainRuleException;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class BankAccount {
         this.ownerId = ownerId;
         this.linkedBankAccount = linkedBankAccount;
 
-        Events.raise(BankAccountCreatedEvent.of(this));
+        Events.raise(BankAccountEvent.of(EventType.BANK_ACCOUNT_CREATED, this));
     }
 
     private BankAccount(UUID uuid, BankAccountId bankAccountId, OwnerId ownerId, LinkedBankAccount linkedBankAccount) {

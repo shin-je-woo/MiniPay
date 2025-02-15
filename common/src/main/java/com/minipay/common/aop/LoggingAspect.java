@@ -1,6 +1,6 @@
 package com.minipay.common.aop;
 
-import com.minipay.common.event.EventType;
+import com.minipay.common.constants.Topic;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,7 +19,7 @@ public class LoggingAspect {
     public void logBefore(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
         kafkaTemplate.send(
-                EventType.LOGGING,
+                Topic.LOGGING,
                 "logging",
                 methodName + " was called."
         );
