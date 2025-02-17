@@ -7,7 +7,6 @@ import lombok.*;
 
 import java.util.UUID;
 
-@Getter
 public class BankAccountEvent extends DomainEvent {
 
     private BankAccountEvent(EventType eventType, UUID aggregateId, Payload payload) {
@@ -30,12 +29,11 @@ public class BankAccountEvent extends DomainEvent {
     }
 
     @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Payload {
-        private UUID bankAccountId;
-        private UUID membershipId;
-        private String bankName;
-        private String accountNumber;
+    public record Payload(
+            UUID bankAccountId,
+            UUID membershipId,
+            String bankName,
+            String accountNumber
+    ) {
     }
 }
