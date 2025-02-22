@@ -15,6 +15,7 @@ public class MoneyHistory {
     private final MoneyHistoryId moneyHistoryId;
     private final MemberMoney.MemberMoneyId memberMoneyId;
     private final ChangeType changeType;
+    private final ChangeStatus changeStatus;
     private final Money amount;
     private final Money afterBalance;
     private final LocalDateTime createdAt;
@@ -30,18 +31,19 @@ public class MoneyHistory {
             throw new DomainRuleException("changeType can't be null");
         }
 
-        return new MoneyHistory(MoneyHistoryId.generate(), memberMoneyId, changeType, amount, afterBalance, LocalDateTime.now());
+        return new MoneyHistory(MoneyHistoryId.generate(), memberMoneyId, changeType, ChangeStatus.REQUESTED, amount, afterBalance, LocalDateTime.now());
     }
 
     public static MoneyHistory withId(
             MoneyHistoryId moneyHistoryId,
             MemberMoney.MemberMoneyId memberMoneyId,
             ChangeType changeType,
+            ChangeStatus changeStatus,
             Money amount,
             Money afterBalance,
             LocalDateTime createdAt
     ) {
-        return new MoneyHistory(moneyHistoryId, memberMoneyId, changeType, amount, afterBalance, createdAt);
+        return new MoneyHistory(moneyHistoryId, memberMoneyId, changeType, changeStatus, amount, afterBalance, createdAt);
     }
 
     // VO
@@ -60,5 +62,11 @@ public class MoneyHistory {
     public enum ChangeType {
         INCREASE,
         DECREASE
+    }
+
+    public enum ChangeStatus {
+        REQUESTED,
+        SUCCEED,
+        FAILED
     }
 }

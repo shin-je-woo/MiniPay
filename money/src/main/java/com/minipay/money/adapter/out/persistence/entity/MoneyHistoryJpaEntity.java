@@ -28,6 +28,9 @@ public class MoneyHistoryJpaEntity {
     @Enumerated(EnumType.STRING)
     private MoneyHistory.ChangeType changeType;
 
+    @Enumerated(EnumType.STRING)
+    private MoneyHistory.ChangeStatus changeStatus;
+
     private BigDecimal amount;
 
     private BigDecimal afterBalance;

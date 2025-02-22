@@ -25,7 +25,7 @@ public class IncreaseMoneyController {
      * TODO 권한 검사 필요할 듯
      */
     @PostMapping("/member-money/{memberMoneyId}/increase")
-    ResponseEntity<MemberMoney> increaseMemberMoney(
+    ResponseEntity<MemberMoney> increaseMemberMoneyRequest(
             @PathVariable UUID memberMoneyId,
             @RequestBody IncreaseMoneyRequest request
     ) {
@@ -34,6 +34,6 @@ public class IncreaseMoneyController {
                 .amount(request.amount())
                 .build();
 
-        return ResponseEntity.ok(increaseMoneyUseCase.increaseMoney(command));
+        return ResponseEntity.ok(increaseMoneyUseCase.increaseMoneyRequest(command));
     }
 }

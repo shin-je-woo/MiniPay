@@ -14,6 +14,7 @@ public class MoneyHistoryMapper {
                 new MoneyHistory.MoneyHistoryId(moneyHistory.getMoneyHistoryId()),
                 new MemberMoney.MemberMoneyId(moneyHistory.getMemberMoneyId()),
                 moneyHistory.getChangeType(),
+                moneyHistory.getChangeStatus(),
                 new Money(moneyHistory.getAmount()),
                 new Money(moneyHistory.getAfterBalance()),
                 moneyHistory.getCreatedAt()
@@ -25,6 +26,7 @@ public class MoneyHistoryMapper {
                 .moneyHistoryId(moneyHistory.getMoneyHistoryId().value())
                 .memberMoneyId(moneyHistory.getMemberMoneyId().value())
                 .changeType(moneyHistory.getChangeType())
+                .changeStatus(moneyHistory.getChangeStatus())
                 .amount(moneyHistory.getAmount().value())
                 .afterBalance(moneyHistory.getAfterBalance().value())
                 .createdAt(moneyHistory.getCreatedAt())
