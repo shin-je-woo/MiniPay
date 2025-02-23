@@ -34,6 +34,6 @@ public class IncreaseMoneyController {
                 .amount(request.amount())
                 .build();
 
-        return ResponseEntity.ok(increaseMoneyUseCase.increaseMoneyRequest(command));
+        return ResponseEntity.ok(increaseMoneyUseCase.requestMoneyIncrease(command));
     }
 }

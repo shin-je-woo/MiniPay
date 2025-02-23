@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class IncreaseMoneyService implements IncreaseMoneyUseCase {
-    
+
     private final LoadMemberMoneyPort loadMemberMoneyPort;
     private final UpdateMemberMoneyPort updateMemberMoneyPort;
     private final CreateMoneyHistoryPort createMoneyHistoryPort;
     private final GetMembershipPort getMembershipPort;
 
     @Override
-    public MemberMoney increaseMoneyRequest(IncreaseMoneyCommand command) {
+    public MemberMoney requestMoneyIncrease(IncreaseMoneyCommand command) {
         MemberMoney memberMoney = loadMemberMoneyPort.loadMemberMoney(new MemberMoney.MemberMoneyId(command.getMemberMoneyId()));
 
         // 1. 고객 정보가 정상인지 확인 [멤버 서비스]
@@ -36,18 +36,12 @@ public class IncreaseMoneyService implements IncreaseMoneyUseCase {
         // 3. 법인 계좌 상태가 정상인지 확인 [뱅킹 서비스]
 
         // 4. 펌뱅킹 수행 (고객의 연동 계좌 -> 법인 계좌) [뱅킹 서비스]
-
-        // 5. 펌뱅킹 결과에 따라 Money 상태 update 및 History 저장
-        MemberMoney increasedMemberMoney = memberMoney.increaseBalance(new Money(command.getAmount()));
-
-        MoneyHistory moneyHistory = MoneyHistory.newInstance(
-                increasedMemberMoney.getMemberMoneyId(),
-                MoneyHistory.ChangeType.INCREASE,
-                new Money(command.getAmount()),
-                increasedMemberMoney.getBalance()
-        );
+        MoneyHistory moneyHistory = memberMoney.requestIncreaseMoney(new Money(command.getAmount()));
         createMoneyHistoryPort.createMoneyHistory(moneyHistory);
 
-        return updateMemberMoneyPort.updateMemberMoney(increasedMemberMoney);
+        // 5. 펌뱅킹 결과에 따라 Money 상태 update 및 History 저장
+//        MemberMoney increasedMemberMoney = memberMoney.increaseBalance(new Money(command.getAmount()));
+
+        return memberMoney;
     }
 }

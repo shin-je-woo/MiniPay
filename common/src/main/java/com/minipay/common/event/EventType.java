@@ -6,5 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum EventType {
-    BANK_ACCOUNT_CREATED
+    BANK_ACCOUNT_CREATED,
+    MEMBER_MONEY_INCREASE_REQUESTED
 }

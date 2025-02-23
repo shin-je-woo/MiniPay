@@ -1,5 +1,7 @@
 package com.minipay.money.domain;
 
+import com.minipay.common.event.EventType;
+import com.minipay.common.event.Events;
 import com.minipay.common.exception.DomainRuleException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -63,6 +65,22 @@ public class MemberMoney {
     }
 
     // Logic
+    public MoneyHistory requestIncreaseMoney(Money money) {
+        if (money.isNegative()) {
+            throw new DomainRuleException("증액하려는 금액은 음수일 수 없습니다.");
+        }
+
+        MoneyHistory moneyHistory = MoneyHistory.newInstance(
+                this.memberMoneyId,
+                MoneyHistory.ChangeType.INCREASE,
+                money,
+                this.balance
+        );
+
+        Events.raise(MemberMoneyEvent.of(EventType.MEMBER_MONEY_INCREASE_REQUESTED, this, moneyHistory));
+        return moneyHistory;
+    }
+
     public MemberMoney increaseBalance(Money money) {
         if (money == null || money.isNegative()) {
             throw new DomainRuleException("money is null or negative");
