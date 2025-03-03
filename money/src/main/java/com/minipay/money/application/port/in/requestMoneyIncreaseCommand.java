@@ -1,4 +1,4 @@
-package com.minipay.banking.application.port.in;
+package com.minipay.money.application.port.in;
 
 import com.minipay.common.helper.SelfValidating;
 import jakarta.validation.constraints.NotNull;
@@ -12,22 +12,18 @@ import java.util.UUID;
 
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class DepositMinipayMoneyCommand extends SelfValidating<DepositMinipayMoneyCommand> {
+public class requestMoneyIncreaseCommand extends SelfValidating<requestMoneyIncreaseCommand> {
 
     @NotNull
-    private final UUID bankAccountId;
-
-    @NotNull
-    private final UUID moneyHistoryId;
+    private final UUID memberMoneyId;
 
     @NotNull
     @Positive
     private final BigDecimal amount;
 
     @Builder
-    public DepositMinipayMoneyCommand(UUID bankAccountId, UUID moneyHistoryId, BigDecimal amount) {
-        this.bankAccountId = bankAccountId;
-        this.moneyHistoryId = moneyHistoryId;
+    public requestMoneyIncreaseCommand(UUID memberMoneyId, BigDecimal amount) {
+        this.memberMoneyId = memberMoneyId;
         this.amount = amount;
 
         this.validateSelf();

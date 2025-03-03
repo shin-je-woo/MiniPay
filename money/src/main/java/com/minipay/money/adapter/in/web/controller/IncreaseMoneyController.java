@@ -2,7 +2,7 @@ package com.minipay.money.adapter.in.web.controller;
 
 import com.minipay.common.annotation.WebAdapter;
 import com.minipay.money.adapter.in.web.request.IncreaseMoneyRequest;
-import com.minipay.money.application.port.in.IncreaseMoneyCommand;
+import com.minipay.money.application.port.in.requestMoneyIncreaseCommand;
 import com.minipay.money.application.port.in.IncreaseMoneyUseCase;
 import com.minipay.money.domain.MemberMoney;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class IncreaseMoneyController {
             @PathVariable UUID memberMoneyId,
             @RequestBody IncreaseMoneyRequest request
     ) {
-        IncreaseMoneyCommand command = IncreaseMoneyCommand.builder()
+        requestMoneyIncreaseCommand command = requestMoneyIncreaseCommand.builder()
                 .memberMoneyId(memberMoneyId)
                 .amount(request.amount())
                 .build();

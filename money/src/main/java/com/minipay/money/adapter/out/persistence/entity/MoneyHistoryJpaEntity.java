@@ -36,4 +36,6 @@ public class MoneyHistoryJpaEntity {
     private BigDecimal afterBalance;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

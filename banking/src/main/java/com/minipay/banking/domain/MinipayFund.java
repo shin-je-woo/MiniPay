@@ -1,7 +1,5 @@
 package com.minipay.banking.domain;
 
-import com.minipay.common.event.EventType;
-import com.minipay.common.event.Events;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +22,7 @@ public class MinipayFund {
             @NonNull BankAccount.BankAccountId bankAccountId,
             @NonNull Money money
     ) {
-        MinipayFund minipayFund = new MinipayFund(MinipayFundId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.DEPOSIT, money);
-        Events.raise(MinipayFundEvent.of(EventType.MINIPAY_FUND_DEPOSITED, minipayFund));
-        
-        return minipayFund;
+        return new MinipayFund(MinipayFundId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.DEPOSIT, money);
     }
 
     public static MinipayFund withId(

@@ -43,6 +43,7 @@ public class MemberMoneyEventConsumer {
     private void handleIncreaseMoneyRequestedEvent(MemberMoneyEventPayload payload) {
         DepositMinipayMoneyCommand command = DepositMinipayMoneyCommand.builder()
                 .bankAccountId(payload.bankAccountId())
+                .moneyHistoryId(payload.moneyHistoryId())
                 .amount(payload.amount())
                 .build();
         depositMinipayFundUseCase.deposit(command);

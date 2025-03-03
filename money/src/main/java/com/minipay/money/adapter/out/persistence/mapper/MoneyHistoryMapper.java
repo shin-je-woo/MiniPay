@@ -6,6 +6,8 @@ import com.minipay.money.domain.MemberMoney;
 import com.minipay.money.domain.Money;
 import com.minipay.money.domain.MoneyHistory;
 
+import java.util.Optional;
+
 @DomainMapper
 public class MoneyHistoryMapper {
 
@@ -16,8 +18,9 @@ public class MoneyHistoryMapper {
                 moneyHistory.getChangeType(),
                 moneyHistory.getChangeStatus(),
                 new Money(moneyHistory.getAmount()),
-                new Money(moneyHistory.getAfterBalance()),
-                moneyHistory.getCreatedAt()
+                Optional.ofNullable(moneyHistory.getAfterBalance()).map(Money::new).orElse(null),
+                moneyHistory.getCreatedAt(),
+                moneyHistory.getUpdatedAt()
         );
     }
 
@@ -28,8 +31,23 @@ public class MoneyHistoryMapper {
                 .changeType(moneyHistory.getChangeType())
                 .changeStatus(moneyHistory.getChangeStatus())
                 .amount(moneyHistory.getAmount().value())
-                .afterBalance(moneyHistory.getAfterBalance().value())
+                .afterBalance(Optional.ofNullable(moneyHistory.getAfterBalance()).map(Money::value).orElse(null))
                 .createdAt(moneyHistory.getCreatedAt())
+                .updatedAt(moneyHistory.getUpdatedAt())
+                .build();
+    }
+
+    public MoneyHistoryJpaEntity mapToExistingJpaEntity(MoneyHistory moneyHistory, Long jpaEntityId) {
+        return MoneyHistoryJpaEntity.builder()
+                .id(jpaEntityId)
+                .moneyHistoryId(moneyHistory.getMoneyHistoryId().value())
+                .memberMoneyId(moneyHistory.getMemberMoneyId().value())
+                .changeType(moneyHistory.getChangeType())
+                .changeStatus(moneyHistory.getChangeStatus())
+                .amount(moneyHistory.getAmount().value())
+                .afterBalance(Optional.ofNullable(moneyHistory.getAfterBalance()).map(Money::value).orElse(null))
+                .createdAt(moneyHistory.getCreatedAt())
+                .updatedAt(moneyHistory.getUpdatedAt())
                 .build();
     }
 }

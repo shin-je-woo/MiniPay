@@ -19,19 +19,19 @@ public class MoneyHistory {
     private final Money amount;
     private final Money afterBalance;
     private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
     // Factory
     public static MoneyHistory newInstance(
             MemberMoney.MemberMoneyId memberMoneyId,
             ChangeType changeType,
-            Money amount,
-            Money afterBalance
+            Money amount
     ) {
         if (changeType == null) {
             throw new DomainRuleException("changeType can't be null");
         }
 
-        return new MoneyHistory(MoneyHistoryId.generate(), memberMoneyId, changeType, ChangeStatus.REQUESTED, amount, afterBalance, LocalDateTime.now());
+        return new MoneyHistory(MoneyHistoryId.generate(), memberMoneyId, changeType, ChangeStatus.REQUESTED, amount, null, LocalDateTime.now(), LocalDateTime.now());
     }
 
     public static MoneyHistory withId(
@@ -41,9 +41,10 @@ public class MoneyHistory {
             ChangeStatus changeStatus,
             Money amount,
             Money afterBalance,
-            LocalDateTime createdAt
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
     ) {
-        return new MoneyHistory(moneyHistoryId, memberMoneyId, changeType, changeStatus, amount, afterBalance, createdAt);
+        return new MoneyHistory(moneyHistoryId, memberMoneyId, changeType, changeStatus, amount, afterBalance, createdAt, updatedAt);
     }
 
     // VO
@@ -68,5 +69,10 @@ public class MoneyHistory {
         REQUESTED,
         SUCCEED,
         FAILED
+    }
+
+    // Logic
+    public MoneyHistory succeed(MemberMoney memberMoney) {
+        return new MoneyHistory(moneyHistoryId, memberMoneyId, changeType, ChangeStatus.SUCCEED, amount, memberMoney.getBalance(), createdAt, LocalDateTime.now());
     }
 }

@@ -14,10 +14,11 @@ public class MinipayFundEvent extends DomainEvent {
         super(eventType, AggregateType.MINIPAY_FUND, aggregateId, payload);
     }
 
-    public static MinipayFundEvent of(EventType eventType, MinipayFund minipayFund) {
+    public static MinipayFundEvent of(EventType eventType, MinipayFund minipayFund, UUID moneyHistoryId) {
         MinipayFundEvent.Payload payload = Payload.builder()
                 .minipayFundId(minipayFund.getMinipayFundId().value())
                 .bankAccountId(minipayFund.getBankAccountId().value())
+                .moneyHistoryId(moneyHistoryId)
                 .amount(minipayFund.getAmount().value())
                 .fundType(minipayFund.getFundType())
                 .build();
@@ -33,6 +34,7 @@ public class MinipayFundEvent extends DomainEvent {
     public record Payload(
             UUID minipayFundId,
             UUID bankAccountId,
+            UUID moneyHistoryId,
             BigDecimal amount,
             MinipayFund.FundType fundType
     ) {

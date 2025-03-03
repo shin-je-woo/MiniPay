@@ -73,8 +73,7 @@ public class MemberMoney {
         MoneyHistory moneyHistory = MoneyHistory.newInstance(
                 this.memberMoneyId,
                 MoneyHistory.ChangeType.INCREASE,
-                money,
-                this.balance
+                money
         );
 
         Events.raise(MemberMoneyEvent.of(EventType.MEMBER_MONEY_INCREASE_REQUESTED, this, moneyHistory));
