@@ -49,7 +49,10 @@ public class RequestTransferMoneyService implements RequestTransferMoneyUseCase 
         FirmBankingResult firmBankingResult = requestFirmBankingPort.requestFirmBanking(firmBankingRequest);
 
         // 3. 결과에 따라 1번에 저장한 송금 요청 update
-        TransferMoney modifedTransferMoney = savedTransferMoney.changeStatus(firmBankingResult.transferMoneyStatus());
-        return modifyTransferMoneyPort.modifyTransferMoney(modifedTransferMoney);
+        TransferMoney modifiedTransferMoney = savedTransferMoney.changeStatus(
+                firmBankingResult.isSucceeded() ? TransferMoney.TransferMoneyStatus.SUCCEEDED : TransferMoney.TransferMoneyStatus.FAILED
+        );
+
+        return modifyTransferMoneyPort.modifyTransferMoney(modifiedTransferMoney);
     }
 }

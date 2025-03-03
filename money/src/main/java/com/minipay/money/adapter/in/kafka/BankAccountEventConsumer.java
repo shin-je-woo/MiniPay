@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minipay.common.constants.Topic;
 import com.minipay.common.event.DomainEvent;
+import com.minipay.common.event.EventType;
 import com.minipay.money.application.port.in.RegisterMemberMoneyCommand;
 import com.minipay.money.application.port.in.RegisterMemberMoneyUseCase;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,8 @@ public class BankAccountEventConsumer {
         DomainEvent domainEvent = objectMapper.readValue(message, DomainEvent.class);
         BankAccountEventPayload payload = objectMapper.convertValue(domainEvent.getPayload(), BankAccountEventPayload.class);
 
-        switch (domainEvent.getEventType()) {
-            case BANK_ACCOUNT_CREATED -> handleCreateEvent(payload);
+        if (domainEvent.getEventType() == EventType.BANK_ACCOUNT_CREATED) {
+            handleCreateEvent(payload);
         }
 
         acknowledgment.acknowledge();

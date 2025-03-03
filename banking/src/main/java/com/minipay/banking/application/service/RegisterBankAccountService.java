@@ -2,9 +2,9 @@ package com.minipay.banking.application.service;
 
 import com.minipay.banking.application.port.in.RegisterBankAccountCommand;
 import com.minipay.banking.application.port.in.RegisterBankAccountUseCase;
-import com.minipay.banking.application.port.out.CreateBankAccountPort;
+import com.minipay.banking.application.port.out.BankAccountPersistencePort;
 import com.minipay.banking.application.port.out.ExternalBankAccountInfo;
-import com.minipay.banking.application.port.out.GetBankAccountInfoPort;
+import com.minipay.banking.application.port.out.GetExternalBankAccountInfoPort;
 import com.minipay.banking.application.port.out.GetMembershipPort;
 import com.minipay.banking.domain.BankAccount;
 import com.minipay.banking.domain.ExternalBankAccount;
@@ -18,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegisterBankAccountService implements RegisterBankAccountUseCase {
 
-    private final CreateBankAccountPort createBankAccountPort;
-    private final GetBankAccountInfoPort getBankAccountInfoPort;
+    private final BankAccountPersistencePort bankAccountPersistencePort;
+    private final GetExternalBankAccountInfoPort getExternalBankAccountInfoPort;
     private final GetMembershipPort getMembershipPort;
 
     @Override
@@ -30,7 +30,7 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
         }
 
         // 2. 외부 은행에서 계좌 정보 가져오기
-        ExternalBankAccountInfo externalBankAccountInfo = getBankAccountInfoPort.getBankAccountInfo(
+        ExternalBankAccountInfo externalBankAccountInfo = getExternalBankAccountInfoPort.getBankAccountInfo(
                 command.getBankName(),
                 command.getBankAccountNumber()
         );
@@ -48,6 +48,6 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
                 )
         );
 
-        return createBankAccountPort.createBankAccount(bankAccount);
+        return bankAccountPersistencePort.createBankAccount(bankAccount);
     }
 }

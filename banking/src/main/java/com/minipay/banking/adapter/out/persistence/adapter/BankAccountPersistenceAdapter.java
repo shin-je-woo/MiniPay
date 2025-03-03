@@ -3,14 +3,14 @@ package com.minipay.banking.adapter.out.persistence.adapter;
 import com.minipay.banking.adapter.out.persistence.entity.BankAccountJpaEntity;
 import com.minipay.banking.adapter.out.persistence.mapper.BankAccountMapper;
 import com.minipay.banking.adapter.out.persistence.repository.SpringDataBankAccountRepository;
-import com.minipay.banking.application.port.out.CreateBankAccountPort;
+import com.minipay.banking.application.port.out.BankAccountPersistencePort;
 import com.minipay.banking.domain.BankAccount;
 import com.minipay.common.annotation.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class BankAccountPersistenceAdapter implements CreateBankAccountPort {
+public class BankAccountPersistenceAdapter implements BankAccountPersistencePort {
 
     private final SpringDataBankAccountRepository bankAccountRepository;
     private final BankAccountMapper bankAccountMapper;
@@ -21,5 +21,12 @@ public class BankAccountPersistenceAdapter implements CreateBankAccountPort {
         bankAccountRepository.save(bankAccountJpaEntity);
 
         return bankAccountMapper.mapToDomain(bankAccountJpaEntity);
+    }
+
+    @Override
+    public BankAccount getBankAccount(BankAccount.BankAccountId bankAccountId) {
+        return bankAccountRepository.findByBankAccountId(bankAccountId.value())
+                .map(bankAccountMapper::mapToDomain)
+                .orElseThrow(() -> new IllegalArgumentException("BankAccount not found"));
     }
 }

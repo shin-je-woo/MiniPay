@@ -17,6 +17,7 @@ public class MemberMoneyEvent extends DomainEvent {
     public static MemberMoneyEvent of(EventType eventType, MemberMoney memberMoney, MoneyHistory moneyHistory) {
         Payload payload = Payload.builder()
                 .memberMoneyId(memberMoney.getMemberMoneyId().value())
+                .bankAccountId(memberMoney.getBankAccountId().value())
                 .moneyHistoryId(moneyHistory.getMoneyHistoryId().value())
                 .amount(moneyHistory.getAmount().value())
                 .build();
@@ -31,6 +32,7 @@ public class MemberMoneyEvent extends DomainEvent {
     @Builder
     public record Payload(
             UUID memberMoneyId,
+            UUID bankAccountId,
             UUID moneyHistoryId,
             BigDecimal amount
     ) {

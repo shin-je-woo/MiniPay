@@ -34,6 +34,7 @@ public class DomainEventPublishAdapter implements DomainEventPublishPort {
     private String generateTopic(AggregateType aggregateType) {
         return switch (aggregateType) {
             case BANK_ACCOUNT -> Topic.BANK_ACCOUNT_EVENTS;
+            case MINIPAY_FUND -> Topic.MINIPAY_FUND_EVENTS;
             default -> Topic.UNKNOWN;
         };
     }

@@ -40,7 +40,7 @@ public class TransferMoney {
     public record TransferMoneyId(UUID value) {
         public TransferMoneyId {
             if (value == null) {
-                throw new DomainRuleException("transfer money id is null");
+                throw new IllegalArgumentException("Transfer money id is null");
             }
         }
 
@@ -51,7 +51,7 @@ public class TransferMoney {
 
     public enum TransferMoneyStatus {
         REQUESTED,
-        SUCCESS,
+        SUCCEEDED,
         FAILED
     }
 

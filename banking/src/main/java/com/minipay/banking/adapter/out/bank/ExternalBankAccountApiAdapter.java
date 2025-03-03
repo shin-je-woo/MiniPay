@@ -1,13 +1,12 @@
 package com.minipay.banking.adapter.out.bank;
 
 import com.minipay.banking.application.port.out.*;
-import com.minipay.banking.domain.TransferMoney;
 import com.minipay.common.annotation.ExternalSystemAdapter;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 @ExternalSystemAdapter
-public class BankAccountApiAdapter implements GetBankAccountInfoPort, RequestFirmBankingPort {
+public class ExternalBankAccountApiAdapter implements GetExternalBankAccountInfoPort, RequestFirmBankingPort {
 
     @Override
     public ExternalBankAccountInfo getBankAccountInfo(String bankName, String accountNumber) {
@@ -21,13 +20,12 @@ public class BankAccountApiAdapter implements GetBankAccountInfoPort, RequestFir
         // 은행 HTTP 요청 결과에 따라 도메인 영역 코드로 맵핑해서 반환
         int randomResponseStatus = ThreadLocalRandom.current().nextInt(3);
 
-        TransferMoney.TransferMoneyStatus transferMoneyStatus =
-                switch (randomResponseStatus) {
-                    case 1 -> TransferMoney.TransferMoneyStatus.SUCCESS;
-                    case 2 -> TransferMoney.TransferMoneyStatus.FAILED;
-                    default -> throw new IllegalStateException("펌뱅킹 요청 결과값이 올바르지 않습니다.");
-                };
+        boolean isSucceeded = switch (randomResponseStatus) {
+            case 1 -> true;
+            case 2 -> false;
+            default -> throw new IllegalStateException("펌뱅킹 요청 결과값이 올바르지 않습니다.");
+        };
 
-        return new FirmBankingResult(transferMoneyStatus);
+        return new FirmBankingResult(isSucceeded);
     }
 }
