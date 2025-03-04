@@ -3,5 +3,5 @@ package com.minipay.banking.application.port.out;
 import com.minipay.banking.domain.MinipayFund;
 
 public interface MinipayFundPersistencePort {
-    MinipayFund createMinipayFund(MinipayFund minipayFund);
+    void createMinipayFund(MinipayFund minipayFund);
 }

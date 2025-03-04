@@ -3,7 +3,7 @@ package com.minipay.membership.application.service;
 import com.minipay.common.annotation.UseCase;
 import com.minipay.membership.application.port.in.RegisterMembershipCommand;
 import com.minipay.membership.application.port.in.RegisterMembershipUseCase;
-import com.minipay.membership.application.port.out.CreateMembershipPort;
+import com.minipay.membership.application.port.out.MembershipPersistencePort;
 import com.minipay.membership.domain.Membership;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegisterMembershipService implements RegisterMembershipUseCase {
 
-    private final CreateMembershipPort createMembershipPort;
+    private final MembershipPersistencePort membershipPersistencePort;
 
     @Override
     public Membership registerMembership(RegisterMembershipCommand command) {
@@ -24,6 +24,6 @@ public class RegisterMembershipService implements RegisterMembershipUseCase {
                 command.isValid(),
                 command.isCorp()
         );
-        return createMembershipPort.createMembership(membership);
+        return membershipPersistencePort.createMembership(membership);
     }
 }

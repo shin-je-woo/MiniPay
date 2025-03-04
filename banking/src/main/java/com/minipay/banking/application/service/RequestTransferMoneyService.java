@@ -15,9 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RequestTransferMoneyService implements RequestTransferMoneyUseCase {
 
-    private final CreateTransferMoneyPort createTransferMoneyPort;
-    private final RequestFirmBankingPort requestFirmBankingPort;
-    private final ModifyTransferMoneyPort modifyTransferMoneyPort;
+    private final TransferMoneyPersistencePort transferMoneyPersistencePort;
+    private final ExternalBankingPort externalBankingPort;
 
     @Override
     public TransferMoney requestTransferMoney(TransferMoneyCommand command) {
@@ -36,7 +35,7 @@ public class RequestTransferMoneyService implements RequestTransferMoneyUseCase 
                 ),
                 new Money(command.getAmount())
         );
-        TransferMoney savedTransferMoney = createTransferMoneyPort.createTransferMoney(transferMoney);
+        TransferMoney savedTransferMoney = transferMoneyPersistencePort.createTransferMoney(transferMoney);
 
         // 2. 외부 은행에 펌뱅킹 요청
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
@@ -46,13 +45,13 @@ public class RequestTransferMoneyService implements RequestTransferMoneyUseCase 
                 .destAccountNumber(command.getDestAccountNumber())
                 .amount(command.getAmount())
                 .build();
-        FirmBankingResult firmBankingResult = requestFirmBankingPort.requestFirmBanking(firmBankingRequest);
+        FirmBankingResult firmBankingResult = externalBankingPort.requestFirmBanking(firmBankingRequest);
 
         // 3. 결과에 따라 1번에 저장한 송금 요청 update
         TransferMoney modifiedTransferMoney = savedTransferMoney.changeStatus(
                 firmBankingResult.isSucceeded() ? TransferMoney.TransferMoneyStatus.SUCCEEDED : TransferMoney.TransferMoneyStatus.FAILED
         );
 
-        return modifyTransferMoneyPort.modifyTransferMoney(modifiedTransferMoney);
+        return transferMoneyPersistencePort.updateTransferMoney(modifiedTransferMoney);
     }
 }

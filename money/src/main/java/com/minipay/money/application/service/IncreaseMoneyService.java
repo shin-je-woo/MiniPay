@@ -17,37 +17,35 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IncreaseMoneyService implements IncreaseMoneyUseCase {
 
-    private final LoadMemberMoneyPort loadMemberMoneyPort;
+    private final MemberMoneyPersistencePort memberMoneyPersistencePort;
     private final MoneyHistoryPersistencePort moneyHistoryPersistencePort;
-    private final UpdateMemberMoneyPort updateMemberMoneyPort;
-    private final CreateMoneyHistoryPort createMoneyHistoryPort;
-    private final GetMembershipPort getMembershipPort;
+    private final MembershipServicePort membershipServicePort;
 
     @Override
     public MemberMoney requestMoneyIncrease(requestMoneyIncreaseCommand command) {
-        MemberMoney memberMoney = loadMemberMoneyPort.loadMemberMoney(new MemberMoney.MemberMoneyId(command.getMemberMoneyId()));
+        MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(new MemberMoney.MemberMoneyId(command.getMemberMoneyId()));
 
         // 1. 고객 정보가 정상인지 확인 [멤버 서비스]
-        if (!getMembershipPort.isValidMembership(memberMoney.getMembershipId().value())) {
+        if (!membershipServicePort.isValidMembership(memberMoney.getMembershipId().value())) {
             throw new BusinessException("멤버쉽이 유효하지 않습니다.");
         }
 
         // 2. 요청 이력 저장 및 증액 요청 이벤트 발행
         MoneyHistory moneyHistory = memberMoney.requestIncreaseMoney(new Money(command.getAmount()));
-        createMoneyHistoryPort.createMoneyHistory(moneyHistory);
+        moneyHistoryPersistencePort.createMoneyHistory(moneyHistory);
 
         return memberMoney;
     }
 
     @Override
     public void increaseMoney(IncreaseMoneyCommand command) {
-        MoneyHistory moneyHistory = moneyHistoryPersistencePort.loadMoneyHistory(new MoneyHistory.MoneyHistoryId(command.getMoneyHistoryId()));
+        MoneyHistory moneyHistory = moneyHistoryPersistencePort.readMoneyHistory(new MoneyHistory.MoneyHistoryId(command.getMoneyHistoryId()));
         Money increaseMoneyAmount = moneyHistory.getAmount();
 
-        MemberMoney memberMoney = loadMemberMoneyPort.loadMemberMoney(moneyHistory.getMemberMoneyId());
+        MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(moneyHistory.getMemberMoneyId());
         MemberMoney increasedMemberMoney = memberMoney.increaseBalance(increaseMoneyAmount);
 
-        updateMemberMoneyPort.updateMemberMoney(increasedMemberMoney);
+        memberMoneyPersistencePort.updateMemberMoney(increasedMemberMoney);
         MoneyHistory changedMoneyHistory = moneyHistory.succeed(increasedMemberMoney);
         moneyHistoryPersistencePort.updateMoneyHistory(changedMoneyHistory);
     }

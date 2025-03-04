@@ -2,6 +2,7 @@ package com.minipay.banking.application.port.out;
 
 import com.minipay.banking.domain.TransferMoney;
 
-public interface CreateTransferMoneyPort {
+public interface TransferMoneyPersistencePort {
     TransferMoney createTransferMoney(TransferMoney transferMoney);
+    TransferMoney updateTransferMoney(TransferMoney transferMoney);
 }

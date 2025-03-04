@@ -4,8 +4,8 @@ import com.minipay.banking.application.port.in.RegisterBankAccountCommand;
 import com.minipay.banking.application.port.in.RegisterBankAccountUseCase;
 import com.minipay.banking.application.port.out.BankAccountPersistencePort;
 import com.minipay.banking.application.port.out.ExternalBankAccountInfo;
-import com.minipay.banking.application.port.out.GetExternalBankAccountInfoPort;
-import com.minipay.banking.application.port.out.GetMembershipPort;
+import com.minipay.banking.application.port.out.ExternalBankingPort;
+import com.minipay.banking.application.port.out.MembershipServicePort;
 import com.minipay.banking.domain.BankAccount;
 import com.minipay.banking.domain.ExternalBankAccount;
 import com.minipay.common.annotation.UseCase;
@@ -19,18 +19,18 @@ import lombok.RequiredArgsConstructor;
 public class RegisterBankAccountService implements RegisterBankAccountUseCase {
 
     private final BankAccountPersistencePort bankAccountPersistencePort;
-    private final GetExternalBankAccountInfoPort getExternalBankAccountInfoPort;
-    private final GetMembershipPort getMembershipPort;
+    private final ExternalBankingPort externalBankingPort;
+    private final MembershipServicePort membershipServicePort;
 
     @Override
     public BankAccount registerBankAccount(RegisterBankAccountCommand command) {
         // 1. 요청한 멤버쉽이 정상인지 확인
-        if (!getMembershipPort.isValidMembership(command.getMembershipId())) {
+        if (!membershipServicePort.isValidMembership(command.getMembershipId())) {
             throw new BusinessException("멤버쉽이 유효하지 않습니다.");
         }
 
         // 2. 외부 은행에서 계좌 정보 가져오기
-        ExternalBankAccountInfo externalBankAccountInfo = getExternalBankAccountInfoPort.getBankAccountInfo(
+        ExternalBankAccountInfo externalBankAccountInfo = externalBankingPort.getBankAccountInfo(
                 command.getBankName(),
                 command.getBankAccountNumber()
         );

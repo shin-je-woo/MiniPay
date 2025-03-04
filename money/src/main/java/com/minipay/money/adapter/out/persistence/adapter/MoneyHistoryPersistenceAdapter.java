@@ -5,14 +5,13 @@ import com.minipay.common.exception.DataNotFoundException;
 import com.minipay.money.adapter.out.persistence.entity.MoneyHistoryJpaEntity;
 import com.minipay.money.adapter.out.persistence.mapper.MoneyHistoryMapper;
 import com.minipay.money.adapter.out.persistence.repository.SpringDataMoneyHistoryRepository;
-import com.minipay.money.application.port.out.CreateMoneyHistoryPort;
 import com.minipay.money.application.port.out.MoneyHistoryPersistencePort;
 import com.minipay.money.domain.MoneyHistory;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class MoneyHistoryPersistenceAdapter implements CreateMoneyHistoryPort, MoneyHistoryPersistencePort {
+public class MoneyHistoryPersistenceAdapter implements MoneyHistoryPersistencePort {
 
     private final SpringDataMoneyHistoryRepository moneyHistoryRepository;
     private final MoneyHistoryMapper moneyHistoryMapper;
@@ -24,7 +23,7 @@ public class MoneyHistoryPersistenceAdapter implements CreateMoneyHistoryPort, M
     }
 
     @Override
-    public MoneyHistory loadMoneyHistory(MoneyHistory.MoneyHistoryId moneyHistoryId) {
+    public MoneyHistory readMoneyHistory(MoneyHistory.MoneyHistoryId moneyHistoryId) {
         return moneyHistoryRepository.findByMoneyHistoryId(moneyHistoryId.value())
                 .map(moneyHistoryMapper::mapToDomain)
                 .orElseThrow(() -> new DataNotFoundException("MoneyHistory not found"));

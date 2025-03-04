@@ -24,7 +24,7 @@ public class BankAccountPersistenceAdapter implements BankAccountPersistencePort
     }
 
     @Override
-    public BankAccount getBankAccount(BankAccount.BankAccountId bankAccountId) {
+    public BankAccount readBankAccount(BankAccount.BankAccountId bankAccountId) {
         return bankAccountRepository.findByBankAccountId(bankAccountId.value())
                 .map(bankAccountMapper::mapToDomain)
                 .orElseThrow(() -> new IllegalArgumentException("BankAccount not found"));

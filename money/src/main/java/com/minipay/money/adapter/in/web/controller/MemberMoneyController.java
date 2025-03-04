@@ -17,7 +17,7 @@ import java.util.UUID;
 @WebAdapter
 @RestController
 @RequiredArgsConstructor
-public class IncreaseMoneyController {
+public class MemberMoneyController {
 
     private final IncreaseMoneyUseCase increaseMoneyUseCase;
 

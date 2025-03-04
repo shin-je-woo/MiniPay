@@ -6,7 +6,7 @@ import com.minipay.common.annotation.ExternalSystemAdapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 @ExternalSystemAdapter
-public class ExternalBankAccountApiAdapter implements GetExternalBankAccountInfoPort, RequestFirmBankingPort {
+public class ExternalBankAccountApiAdapter implements ExternalBankingPort {
 
     @Override
     public ExternalBankAccountInfo getBankAccountInfo(String bankName, String accountNumber) {

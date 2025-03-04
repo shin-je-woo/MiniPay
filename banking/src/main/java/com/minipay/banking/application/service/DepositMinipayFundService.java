@@ -17,17 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class DepositMinipayFundService implements DepositMinipayFundUseCase {
 
     private final BankAccountPersistencePort bankAccountPersistencePort;
-    private final GetExternalBankAccountInfoPort getExternalBankAccountInfoPort;
-    private final RequestFirmBankingPort requestFirmBankingPort;
+    private final ExternalBankingPort externalBankingPort;
     private final MinipayFundPersistencePort minipayFundPersistencePort;
 
     @Override
     public void deposit(DepositMinipayMoneyCommand command) {
         // 1. 요청받은 계좌 확인
-        BankAccount bankAccount = bankAccountPersistencePort.getBankAccount(new BankAccount.BankAccountId(command.getBankAccountId()));
+        BankAccount bankAccount = bankAccountPersistencePort.readBankAccount(new BankAccount.BankAccountId(command.getBankAccountId()));
 
         // 2. 외부 은행에서 계좌 정보 가져오기
-        ExternalBankAccountInfo externalBankAccountInfo = getExternalBankAccountInfoPort.getBankAccountInfo(
+        ExternalBankAccountInfo externalBankAccountInfo = externalBankingPort.getBankAccountInfo(
                 bankAccount.getLinkedBankAccount().bankName().value(),
                 bankAccount.getLinkedBankAccount().accountNumber().value()
         );
@@ -43,7 +42,7 @@ public class DepositMinipayFundService implements DepositMinipayFundUseCase {
                 .destAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
                 .amount(command.getAmount())
                 .build();
-        FirmBankingResult firmBankingResult = requestFirmBankingPort.requestFirmBanking(firmBankingRequest);
+        FirmBankingResult firmBankingResult = externalBankingPort.requestFirmBanking(firmBankingRequest);
         if (!firmBankingResult.isSucceeded()) {
             throw new BusinessException("펌뱅킹 요청이 실패했습니다.");
         }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @WebAdapter
 @RestController
 @RequiredArgsConstructor
-public class RegisterBankAccountController {
+public class BankAccountController {
 
     private final RegisterBankAccountUseCase registerBankAccountUseCase;
 

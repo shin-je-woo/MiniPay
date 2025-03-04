@@ -13,3 +13,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+minipay:
+  membership:
+    url: http://localhost:8081/membership
