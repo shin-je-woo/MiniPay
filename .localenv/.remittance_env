@@ -1,0 +1,4 @@
+SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/remittance?useSSL=false&allowPublicKeyRetrieval=true
+SPRING_DATASOURCE_USERNAME=minipay_user
+SPRING_DATASOURCE_PASSWORD=minipay_password
+KAFKA_CLUSTER_BOOTSTRAP_SERVERS=localhost:9092, localhost:9093, localhost:9094
