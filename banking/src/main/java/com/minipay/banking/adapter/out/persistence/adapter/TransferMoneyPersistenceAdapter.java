@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class TransferMoneyPersistenceAdapterPersistence implements TransferMoneyPersistencePort {
+public class TransferMoneyPersistenceAdapter implements TransferMoneyPersistencePort {
 
     private final SpringDataTransferMoneyRepository transferMoneyRepository;
     private final TransferMoneyMapper transferMoneyMapper;
