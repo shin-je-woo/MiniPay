@@ -1,5 +1,6 @@
 package com.minipay.remittance.domain;
 
+import com.minipay.common.exception.DomainRuleException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,16 +15,16 @@ public class Remittance {
     private final Sender sender;
     private final Recipient recipient;
     private final RemittanceType remittanceType;
-    private final RemittanceStatus remittanceStatus;
+    private RemittanceStatus remittanceStatus;
     private final Money amount;
 
     // Factory
     public static Remittance newInstance(
             Sender sender,
             Recipient recipient,
-            Money money
+            Money amount
     ) {
-        return new Remittance(RemittanceId.generate(), sender, recipient, recipient.getRemittanceType(), RemittanceStatus.REQUESTED, money);
+        return new Remittance(RemittanceId.generate(), sender, recipient, recipient.getRemittanceType(), RemittanceStatus.REQUESTED, amount);
     }
 
     // VO
@@ -61,7 +62,7 @@ public class Remittance {
             }
         }
 
-        public RemittanceType getRemittanceType() {
+        private RemittanceType getRemittanceType() {
             return membershipId == null ? RemittanceType.EXTERNAL : RemittanceType.INTERNAL;
         }
     }
@@ -75,5 +76,20 @@ public class Remittance {
         REQUESTED,
         SUCCEEDED,
         FAILED
+    }
+
+    // Logic
+    public void success() {
+        if (this.getRemittanceStatus() != RemittanceStatus.REQUESTED) {
+            throw new DomainRuleException("Remittance status is not REQUESTED");
+        }
+        this.remittanceStatus = RemittanceStatus.SUCCEEDED;
+    }
+
+    public void fail() {
+        if (this.getRemittanceStatus() != RemittanceStatus.REQUESTED) {
+            throw new DomainRuleException("Remittance status is not REQUESTED");
+        }
+        this.remittanceStatus = RemittanceStatus.FAILED;
     }
 }
