@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class OpenFeignConfig {
 
     private static final int CONNECT_TIMEOUT = 5000;
-    private static final int READ_TIMEOUT = 20000;
+    private static final int READ_TIMEOUT = 600000;
 
     @Bean
     public Request.Options requestOptions() {

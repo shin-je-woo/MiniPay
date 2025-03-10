@@ -3,6 +3,7 @@ package com.minipay.money.domain;
 import com.minipay.common.exception.DomainRuleException;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public record Money(BigDecimal value) {
 
@@ -20,6 +21,14 @@ public record Money(BigDecimal value) {
 
     public Money subtract(Money money) {
         return new Money(this.value.subtract(money.value));
+    }
+
+    public Money divideAndCeiling(Money money) {
+        return new Money(this.value.divide(money.value, 0, RoundingMode.CEILING));
+    }
+
+    public Money multiply(Money money) {
+        return new Money(this.value.multiply(money.value));
     }
 
     public boolean isNegative() {

@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -70,10 +71,11 @@ public class MemberMoney {
             throw new DomainRuleException("증액하려는 금액은 음수일 수 없습니다.");
         }
 
+        Money increaseMoney = computeIncreaseMoney(money);
         MoneyHistory moneyHistory = MoneyHistory.newInstance(
                 this.memberMoneyId,
                 MoneyHistory.ChangeType.INCREASE,
-                money
+                increaseMoney
         );
 
         Events.raise(MemberMoneyEvent.of(EventType.MEMBER_MONEY_INCREASE_REQUESTED, this, moneyHistory));
@@ -88,5 +90,14 @@ public class MemberMoney {
         Money newMoney = this.balance.add(money);
 
         return new MemberMoney(this.memberMoneyId, this.membershipId, this.bankAccountId, newMoney);
+    }
+
+    /**
+     * 머니 충전은 만원 단위로 이루어져야 한다.
+     */
+    private Money computeIncreaseMoney(Money requested) {
+        return requested.divideAndCeiling(new Money(BigDecimal.valueOf(10_000)))
+                .multiply(new Money(BigDecimal.valueOf(10_000)));
+
     }
 }

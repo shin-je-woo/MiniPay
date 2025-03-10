@@ -4,6 +4,7 @@ import com.minipay.common.annotation.MiniPayServiceAdapter;
 import com.minipay.remittance.application.port.out.MoneyInfo;
 import com.minipay.remittance.application.port.out.MoneyServicePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -12,12 +13,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MoneyServiceApiAdapter implements MoneyServicePort {
 
-    // TODO IPC 구현
+    private final MoneyFeignClient moneyFeignClient;
+
     @Override
     public MoneyInfo getMoneyInfo(UUID membershipId) {
+        MemberMoneyResponse memberMoneyResponse = moneyFeignClient.getMemberMoney(membershipId).getBody();
         return MoneyInfo.builder()
-                .memberMoneyId(UUID.randomUUID())
-                .balance(BigDecimal.valueOf(100_000_000))
+                .memberMoneyId(memberMoneyResponse.memberMoneyId())
+                .balance(memberMoneyResponse.balance())
                 .build();
     }
 
@@ -28,6 +31,9 @@ public class MoneyServiceApiAdapter implements MoneyServicePort {
 
     @Override
     public boolean increaseMoney(UUID memberMoneyId, BigDecimal amount) {
-        return true;
+        ResponseEntity<MemberMoneyResponse> response = moneyFeignClient.increaseMemberMoneyRequest(
+                memberMoneyId, IncreaseMoneyRequest.from(amount)
+        );
+        return response.getStatusCode().is2xxSuccessful();
     }
 }

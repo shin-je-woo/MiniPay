@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @UseCase
 @Transactional
@@ -39,8 +38,8 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
         // 3. 잔액 확인 및 부족 시 충전 요청
         MoneyInfo moneyInfo = moneyServicePort.getMoneyInfo(command.getSenderId());
         if (moneyInfo.balance().compareTo(command.getAmount()) < 0) {
-            BigDecimal increaseAmount = computeIncreaseAmount(command.getAmount(), moneyInfo.balance());
-            if (!moneyServicePort.increaseMoney(command.getSenderId(), increaseAmount)) {
+            BigDecimal increaseAmount = command.getAmount().subtract(moneyInfo.balance());
+            if (!moneyServicePort.increaseMoney(moneyInfo.memberMoneyId(), increaseAmount)) {
                 handleFailure(remittance, "머니 충전에 실패했습니다.");
             }
         }
@@ -75,20 +74,15 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
     }
 
     private void processExternalRemittance(RequestRemittanceCommand command, Remittance remittance) {
+        boolean isSuccessDecrease = moneyServicePort.decreaseMoney(command.getSenderId(), command.getAmount());
         boolean isSuccessWithdrawal = bankingServicePort.withdrawalMinipayFund(
                 command.getDestBankName(),
                 command.getDestBankAccountNumber(),
                 command.getAmount()
         );
-        if (!isSuccessWithdrawal) {
+        if (!isSuccessDecrease || !isSuccessWithdrawal) {
             handleFailure(remittance, "외부 은행 머니 송금에 실패했습니다.");
         }
-    }
-
-    private BigDecimal computeIncreaseAmount(BigDecimal requested, BigDecimal current) {
-        return requested.subtract(current)
-                .divide(BigDecimal.valueOf(10000), RoundingMode.CEILING)
-                .multiply(BigDecimal.valueOf(10000));
     }
 
     private void handleFailure(Remittance remittance, String errorMessage) {
