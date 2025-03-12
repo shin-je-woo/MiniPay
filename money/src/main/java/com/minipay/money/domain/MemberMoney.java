@@ -92,6 +92,16 @@ public class MemberMoney {
         return new MemberMoney(this.memberMoneyId, this.membershipId, this.bankAccountId, newMoney);
     }
 
+    public MemberMoney decreaseBalance(Money money) {
+        if (money == null || money.isNegative()) {
+            throw new DomainRuleException("money is null or negative");
+        }
+
+        Money newMoney = this.balance.subtract(money);
+
+        return new MemberMoney(this.memberMoneyId, this.membershipId, this.bankAccountId, newMoney);
+    }
+
     /**
      * 머니 충전은 만원 단위로 이루어져야 한다.
      */

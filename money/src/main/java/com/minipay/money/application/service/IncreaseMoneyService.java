@@ -4,7 +4,7 @@ import com.minipay.common.annotation.UseCase;
 import com.minipay.common.exception.BusinessException;
 import com.minipay.money.application.port.in.IncreaseMoneyCommand;
 import com.minipay.money.application.port.in.IncreaseMoneyUseCase;
-import com.minipay.money.application.port.in.requestMoneyIncreaseCommand;
+import com.minipay.money.application.port.in.RequestMoneyIncreaseCommand;
 import com.minipay.money.application.port.out.*;
 import com.minipay.money.domain.MemberMoney;
 import com.minipay.money.domain.Money;
@@ -22,7 +22,7 @@ public class IncreaseMoneyService implements IncreaseMoneyUseCase {
     private final MembershipServicePort membershipServicePort;
 
     @Override
-    public MemberMoney requestMoneyIncrease(requestMoneyIncreaseCommand command) {
+    public MemberMoney requestMoneyIncrease(RequestMoneyIncreaseCommand command) {
         MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(new MemberMoney.MemberMoneyId(command.getMemberMoneyId()));
 
         // 1. 고객 정보가 정상인지 확인 [멤버 서비스]
@@ -46,7 +46,8 @@ public class IncreaseMoneyService implements IncreaseMoneyUseCase {
         MemberMoney increasedMemberMoney = memberMoney.increaseBalance(increaseMoneyAmount);
 
         memberMoneyPersistencePort.updateMemberMoney(increasedMemberMoney);
-        MoneyHistory changedMoneyHistory = moneyHistory.succeed(increasedMemberMoney);
-        moneyHistoryPersistencePort.updateMoneyHistory(changedMoneyHistory);
+
+        moneyHistory.succeed(increasedMemberMoney);
+        moneyHistoryPersistencePort.updateMoneyHistory(moneyHistory);
     }
 }

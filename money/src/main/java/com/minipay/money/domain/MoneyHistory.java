@@ -1,50 +1,63 @@
 package com.minipay.money.domain;
 
 import com.minipay.common.exception.DomainRuleException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class MoneyHistory {
 
     private final MoneyHistoryId moneyHistoryId;
     private final MemberMoney.MemberMoneyId memberMoneyId;
     private final ChangeType changeType;
-    private final ChangeStatus changeStatus;
     private final Money amount;
-    private final Money afterBalance;
     private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private ChangeStatus changeStatus;
+    private Money afterBalance;
+    private LocalDateTime updatedAt;
 
     // Factory
     public static MoneyHistory newInstance(
-            MemberMoney.MemberMoneyId memberMoneyId,
-            ChangeType changeType,
-            Money amount
+            @NonNull MemberMoney.MemberMoneyId memberMoneyId,
+            @NonNull ChangeType changeType,
+            @NonNull Money amount
     ) {
-        if (changeType == null) {
-            throw new DomainRuleException("changeType can't be null");
-        }
-
-        return new MoneyHistory(MoneyHistoryId.generate(), memberMoneyId, changeType, ChangeStatus.REQUESTED, amount, null, LocalDateTime.now(), LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        return MoneyHistory.builder()
+                .moneyHistoryId(MoneyHistoryId.generate())
+                .memberMoneyId(memberMoneyId)
+                .changeType(changeType)
+                .amount(amount)
+                .createdAt(now)
+                .changeStatus(ChangeStatus.REQUESTED)
+                .afterBalance(null)
+                .updatedAt(now)
+                .build();
     }
 
     public static MoneyHistory withId(
             MoneyHistoryId moneyHistoryId,
             MemberMoney.MemberMoneyId memberMoneyId,
             ChangeType changeType,
-            ChangeStatus changeStatus,
             Money amount,
-            Money afterBalance,
             LocalDateTime createdAt,
+            ChangeStatus changeStatus,
+            Money afterBalance,
             LocalDateTime updatedAt
     ) {
-        return new MoneyHistory(moneyHistoryId, memberMoneyId, changeType, changeStatus, amount, afterBalance, createdAt, updatedAt);
+        return MoneyHistory.builder()
+                .moneyHistoryId(moneyHistoryId)
+                .memberMoneyId(memberMoneyId)
+                .changeType(changeType)
+                .amount(amount)
+                .createdAt(createdAt)
+                .changeStatus(changeStatus)
+                .afterBalance(afterBalance)
+                .updatedAt(updatedAt)
+                .build();
     }
 
     // VO
@@ -72,7 +85,9 @@ public class MoneyHistory {
     }
 
     // Logic
-    public MoneyHistory succeed(MemberMoney memberMoney) {
-        return new MoneyHistory(moneyHistoryId, memberMoneyId, changeType, ChangeStatus.SUCCEED, amount, memberMoney.getBalance(), createdAt, LocalDateTime.now());
+    public void succeed(MemberMoney memberMoney) {
+        this.changeStatus = ChangeStatus.SUCCEED;
+        this.afterBalance = memberMoney.getBalance();
+        this.updatedAt = LocalDateTime.now();
     }
 }

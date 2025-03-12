@@ -16,10 +16,10 @@ public class MoneyHistoryMapper {
                 new MoneyHistory.MoneyHistoryId(moneyHistory.getMoneyHistoryId()),
                 new MemberMoney.MemberMoneyId(moneyHistory.getMemberMoneyId()),
                 moneyHistory.getChangeType(),
-                moneyHistory.getChangeStatus(),
                 new Money(moneyHistory.getAmount()),
-                Optional.ofNullable(moneyHistory.getAfterBalance()).map(Money::new).orElse(null),
                 moneyHistory.getCreatedAt(),
+                moneyHistory.getChangeStatus(),
+                Optional.ofNullable(moneyHistory.getAfterBalance()).map(Money::new).orElse(null),
                 moneyHistory.getUpdatedAt()
         );
     }
