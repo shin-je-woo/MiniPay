@@ -1,21 +1,20 @@
 package com.minipay.banking.domain;
 
-import com.minipay.common.exception.DomainRuleException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransferMoney {
 
+    @EqualsAndHashCode.Include
     private final TransferMoneyId transferMoneyId;
     private final ExternalBankAccount sourceAccount;
     private final ExternalBankAccount destinationAccount;
     private final Money amount;
-    private final TransferMoneyStatus status;
+    private TransferMoneyStatus status;
 
     // Factory
     public static TransferMoney newInstance(
@@ -56,10 +55,7 @@ public class TransferMoney {
     }
 
     // Logic
-    public TransferMoney changeStatus(TransferMoneyStatus status) {
-        if (status == null) {
-            throw new DomainRuleException("status can't be null");
-        }
-        return new TransferMoney(this.transferMoneyId, this.sourceAccount, this.destinationAccount, this.amount, status);
+    public void changeStatus(TransferMoneyStatus status) {
+        this.status = status;
     }
 }

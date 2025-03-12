@@ -3,21 +3,21 @@ package com.minipay.money.domain;
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
 import com.minipay.common.exception.DomainRuleException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberMoney {
 
+    @EqualsAndHashCode.Include
     private final MemberMoneyId memberMoneyId;
     private final MembershipId membershipId;
     private final BankAccountId bankAccountId;
-    private final Money balance;
+    private Money balance;
 
     // Factory
     public static MemberMoney newInstance(
@@ -82,24 +82,20 @@ public class MemberMoney {
         return moneyHistory;
     }
 
-    public MemberMoney increaseBalance(Money money) {
-        if (money == null || money.isNegative()) {
-            throw new DomainRuleException("money is null or negative");
+    public void increaseBalance(Money money) {
+        if (money.isNegative()) {
+            throw new DomainRuleException("증액하는 금액은 음수일 수 없습니다.");
         }
 
-        Money newMoney = this.balance.add(money);
-
-        return new MemberMoney(this.memberMoneyId, this.membershipId, this.bankAccountId, newMoney);
+        this.balance = this.balance.add(money);
     }
 
-    public MemberMoney decreaseBalance(Money money) {
-        if (money == null || money.isNegative()) {
-            throw new DomainRuleException("money is null or negative");
+    public void decreaseBalance(Money money) {
+        if (money.isNegative()) {
+            throw new DomainRuleException("감액하는 금액은 음수일 수 없습니다.");
         }
 
-        Money newMoney = this.balance.subtract(money);
-
-        return new MemberMoney(this.memberMoneyId, this.membershipId, this.bankAccountId, newMoney);
+        this.balance = this.balance.subtract(money);
     }
 
     /**

@@ -3,20 +3,23 @@ package com.minipay.remittance.domain;
 import com.minipay.common.exception.DomainRuleException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Remittance {
 
+    @EqualsAndHashCode.Include
     private final RemittanceId remittanceId;
     private final Sender sender;
     private final Recipient recipient;
     private final RemittanceType remittanceType;
-    private RemittanceStatus remittanceStatus;
     private final Money amount;
+    private RemittanceStatus remittanceStatus;
 
     // Factory
     public static Remittance newInstance(
@@ -24,7 +27,7 @@ public class Remittance {
             Recipient recipient,
             Money amount
     ) {
-        return new Remittance(RemittanceId.generate(), sender, recipient, recipient.getRemittanceType(), RemittanceStatus.REQUESTED, amount);
+        return new Remittance(RemittanceId.generate(), sender, recipient, recipient.getRemittanceType(), amount, RemittanceStatus.REQUESTED);
     }
 
     // VO

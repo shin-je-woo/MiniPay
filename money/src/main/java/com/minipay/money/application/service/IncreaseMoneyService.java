@@ -43,11 +43,11 @@ public class IncreaseMoneyService implements IncreaseMoneyUseCase {
         Money increaseMoneyAmount = moneyHistory.getAmount();
 
         MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(moneyHistory.getMemberMoneyId());
-        MemberMoney increasedMemberMoney = memberMoney.increaseBalance(increaseMoneyAmount);
+        memberMoney.increaseBalance(increaseMoneyAmount);
 
-        memberMoneyPersistencePort.updateMemberMoney(increasedMemberMoney);
+        memberMoneyPersistencePort.updateMemberMoney(memberMoney);
 
-        moneyHistory.succeed(increasedMemberMoney);
+        moneyHistory.succeed(memberMoney);
         moneyHistoryPersistencePort.updateMoneyHistory(moneyHistory);
     }
 }

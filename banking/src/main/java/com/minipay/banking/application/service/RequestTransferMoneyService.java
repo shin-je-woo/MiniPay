@@ -35,7 +35,7 @@ public class RequestTransferMoneyService implements RequestTransferMoneyUseCase 
                 ),
                 new Money(command.getAmount())
         );
-        TransferMoney savedTransferMoney = transferMoneyPersistencePort.createTransferMoney(transferMoney);
+        transferMoneyPersistencePort.createTransferMoney(transferMoney);
 
         // 2. 외부 은행에 펌뱅킹 요청
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
@@ -48,10 +48,11 @@ public class RequestTransferMoneyService implements RequestTransferMoneyUseCase 
         FirmBankingResult firmBankingResult = externalBankingPort.requestFirmBanking(firmBankingRequest);
 
         // 3. 결과에 따라 1번에 저장한 송금 요청 update
-        TransferMoney modifiedTransferMoney = savedTransferMoney.changeStatus(
-                firmBankingResult.isSucceeded() ? TransferMoney.TransferMoneyStatus.SUCCEEDED : TransferMoney.TransferMoneyStatus.FAILED
-        );
+        transferMoney.changeStatus(mapFirmBankingResultToStatus(firmBankingResult));
+        return transferMoneyPersistencePort.updateTransferMoney(transferMoney);
+    }
 
-        return transferMoneyPersistencePort.updateTransferMoney(modifiedTransferMoney);
+    private TransferMoney.TransferMoneyStatus mapFirmBankingResultToStatus(FirmBankingResult firmBankingResult) {
+        return firmBankingResult.isSucceeded() ? TransferMoney.TransferMoneyStatus.SUCCEEDED : TransferMoney.TransferMoneyStatus.FAILED;
     }
 }

@@ -18,12 +18,13 @@ public class RegisterMembershipService implements RegisterMembershipUseCase {
     @Override
     public Membership registerMembership(RegisterMembershipCommand command) {
         Membership membership = Membership.newInstance(
+                command.isValid(),
+                command.isCorp(),
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),
-                new Membership.MembershipAddress(command.getAddress()),
-                command.isValid(),
-                command.isCorp()
+                new Membership.MembershipAddress(command.getAddress())
         );
+
         return membershipPersistencePort.createMembership(membership);
     }
 }

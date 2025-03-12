@@ -7,9 +7,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder(access = AccessLevel.PRIVATE)
 public class MoneyHistory {
 
+    @EqualsAndHashCode.Include
     private final MoneyHistoryId moneyHistoryId;
     private final MemberMoney.MemberMoneyId memberMoneyId;
     private final ChangeType changeType;
@@ -21,9 +23,9 @@ public class MoneyHistory {
 
     // Factory
     public static MoneyHistory newInstance(
-            @NonNull MemberMoney.MemberMoneyId memberMoneyId,
-            @NonNull ChangeType changeType,
-            @NonNull Money amount
+            MemberMoney.MemberMoneyId memberMoneyId,
+            ChangeType changeType,
+            Money amount
     ) {
         LocalDateTime now = LocalDateTime.now();
         return MoneyHistory.builder()

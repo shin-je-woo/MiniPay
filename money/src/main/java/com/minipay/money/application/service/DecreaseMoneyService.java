@@ -36,12 +36,12 @@ public class DecreaseMoneyService implements DecreaseMoneyUseCase {
                 new Money(command.getAmount())
         );
 
-        MemberMoney decreasedMemberMoney = memberMoney.decreaseBalance(new Money(command.getAmount()));
-        memberMoneyPersistencePort.updateMemberMoney(decreasedMemberMoney);
+        memberMoney.decreaseBalance(new Money(command.getAmount()));
+        memberMoneyPersistencePort.updateMemberMoney(memberMoney);
 
-        moneyHistory.succeed(decreasedMemberMoney);
+        moneyHistory.succeed(memberMoney);
         moneyHistoryPersistencePort.createMoneyHistory(moneyHistory);
 
-        return decreasedMemberMoney;
+        return memberMoney;
     }
 }

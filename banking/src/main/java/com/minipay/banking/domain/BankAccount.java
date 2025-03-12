@@ -2,16 +2,16 @@ package com.minipay.banking.domain;
 
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BankAccount {
 
+    @EqualsAndHashCode.Include
     private final BankAccountId bankAccountId;
     private final MembershipId membershipId;
     private final ExternalBankAccount linkedBankAccount;
@@ -22,7 +22,7 @@ public class BankAccount {
             MembershipId membershipId,
             ExternalBankAccount externalBankAccount
     ) {
-        BankAccount bankAccount = new BankAccount(BankAccountId.generate(), membershipId, externalBankAccount,LinkedStatus.VALID);
+        BankAccount bankAccount = new BankAccount(BankAccountId.generate(), membershipId, externalBankAccount, LinkedStatus.VALID);
         Events.raise(BankAccountEvent.of(EventType.BANK_ACCOUNT_CREATED, bankAccount));
 
         return bankAccount;

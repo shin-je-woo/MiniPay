@@ -1,16 +1,15 @@
 package com.minipay.banking.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MinipayFund {
 
+    @EqualsAndHashCode.Include
     private final MinipayFundId minipayFundId;
     private final BankAccount.BankAccountId bankAccountId;
     private final MinipayBankAccount minipayBankAccount;
@@ -19,8 +18,8 @@ public class MinipayFund {
 
     // Factory
     public static MinipayFund depositInstance(
-            @NonNull BankAccount.BankAccountId bankAccountId,
-            @NonNull Money money
+            BankAccount.BankAccountId bankAccountId,
+            Money money
     ) {
         return new MinipayFund(MinipayFundId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.DEPOSIT, money);
     }

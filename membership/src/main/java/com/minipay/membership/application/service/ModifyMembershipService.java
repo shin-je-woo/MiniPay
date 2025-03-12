@@ -18,12 +18,12 @@ public class ModifyMembershipService implements ModifyMembershipUseCase {
     @Override
     public Membership modifyMembership(ModifyMembershipCommand command) {
         Membership membership = membershipPersistencePort.readMembership(new Membership.MembershipId(command.getMembershipId()));
-        Membership modifiedMembership = membership.changeInfo(
+        membership.changeInfo(
                 new Membership.MembershipName(command.getName()),
                 new Membership.MembershipEmail(command.getEmail()),
                 new Membership.MembershipAddress(command.getAddress())
         );
 
-        return membershipPersistencePort.updateMembership(modifiedMembership);
+        return membershipPersistencePort.updateMembership(membership);
     }
 }

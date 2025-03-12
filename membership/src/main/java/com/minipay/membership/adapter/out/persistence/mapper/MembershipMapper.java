@@ -10,11 +10,11 @@ public class MembershipMapper {
     public Membership mapToDomain(MembershipJpaEntity membershipJpaEntity) {
         return Membership.withId(
                 new Membership.MembershipId(membershipJpaEntity.getMembershipId()),
+                membershipJpaEntity.isValid(),
+                membershipJpaEntity.isCorp(),
                 new Membership.MembershipName(membershipJpaEntity.getName()),
                 new Membership.MembershipEmail(membershipJpaEntity.getEmail()),
-                new Membership.MembershipAddress(membershipJpaEntity.getAddress()),
-                membershipJpaEntity.isValid(),
-                membershipJpaEntity.isCorp()
+                new Membership.MembershipAddress(membershipJpaEntity.getAddress())
         );
     }
 

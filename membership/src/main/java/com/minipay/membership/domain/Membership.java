@@ -1,53 +1,47 @@
 package com.minipay.membership.domain;
 
 import com.minipay.common.exception.DomainRuleException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Membership {
 
+    @EqualsAndHashCode.Include
     private final MembershipId membershipId;
-    private final MembershipName name;
-    private final MembershipEmail email;
-    private final MembershipAddress address;
     private final boolean isValid;
     private final boolean isCorp;
+    private MembershipName name;
+    private MembershipEmail email;
+    private MembershipAddress address;
 
+    // Factory
     public static Membership newInstance(
-            MembershipName name,
-            MembershipEmail email,
-            MembershipAddress address,
-            boolean isValid,
-            boolean isCorp
-    ) {
-        return new Membership(MembershipId.generate(), name, email, address, isValid, isCorp);
-    }
-
-    public static Membership withId(
-            MembershipId membershipId,
-            MembershipName name,
-            MembershipEmail email,
-            MembershipAddress address,
-            boolean isValid,
-            boolean isCorp
-    ) {
-        return new Membership(membershipId, name, email, address, isValid, isCorp);
-    }
-
-    public Membership changeInfo(
+            Boolean isValid,
+            Boolean isCorp,
             MembershipName name,
             MembershipEmail email,
             MembershipAddress address
     ) {
-        return new Membership(this.membershipId, name, email, address, this.isValid, this.isCorp);
+        return new Membership(MembershipId.generate(), isValid, isCorp, name, email, address);
     }
 
+    public static Membership withId(
+            MembershipId membershipId,
+            boolean isValid,
+            boolean isCorp,
+            MembershipName name,
+            MembershipEmail email,
+            MembershipAddress address
+    ) {
+        return new Membership(membershipId, isValid, isCorp, name, email, address);
+    }
+
+    //VO
     public record MembershipId(UUID value) {
         public MembershipId {
             if (value == null) {
@@ -82,5 +76,11 @@ public class Membership {
                 throw new DomainRuleException("membershipAddress value is empty or too long");
             }
         }
+    }
+
+    public void changeInfo(MembershipName name, MembershipEmail email, MembershipAddress address) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
     }
 }
