@@ -32,22 +32,22 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
 
         // 2. 멤버십 상태 확인
         if (!membershipServicePort.isValidMembership(command.getSenderId())) {
-            handleFailure(remittance, "멤버쉽이 유효하지 않습니다.");
+            handleFailure(remittance, "송신자의 멤버쉽이 유효하지 않습니다.");
         }
 
         // 3. 잔액 확인 및 부족 시 충전 요청
-        MoneyInfo moneyInfo = moneyServicePort.getMoneyInfo(command.getSenderId());
-        if (moneyInfo.balance().compareTo(command.getAmount()) < 0) {
-            BigDecimal increaseAmount = command.getAmount().subtract(moneyInfo.balance());
-            if (!moneyServicePort.increaseMoney(moneyInfo.memberMoneyId(), increaseAmount)) {
+        MoneyInfo senderMoneyInfo = moneyServicePort.getMoneyInfo(command.getSenderId());
+        if (senderMoneyInfo.balance().compareTo(command.getAmount()) < 0) {
+            BigDecimal increaseAmount = command.getAmount().subtract(senderMoneyInfo.balance());
+            if (!moneyServicePort.increaseMoney(senderMoneyInfo.memberMoneyId(), increaseAmount)) {
                 handleFailure(remittance, "머니 충전에 실패했습니다.");
             }
         }
 
         // 4. 송금 처리 (내부 / 외부 송금)
         switch (remittance.getRemittanceType()) {
-            case INTERNAL -> processInternalRemittance(command, remittance);
-            case EXTERNAL -> processExternalRemittance(command, remittance);
+            case INTERNAL -> processInternalRemittance(senderMoneyInfo, remittance, command);
+            case EXTERNAL -> processExternalRemittance(senderMoneyInfo, remittance, command);
         }
 
         // 5. 성공 처리 및 상태 업데이트
@@ -65,16 +65,21 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
         return remittance;
     }
 
-    private void processInternalRemittance(RequestRemittanceCommand command, Remittance remittance) {
-        boolean isSuccessDecrease = moneyServicePort.decreaseMoney(command.getSenderId(), command.getAmount());
-        boolean isSuccessIncrease = moneyServicePort.increaseMoney(command.getRecipientId(), command.getAmount());
+    private void processInternalRemittance(MoneyInfo senderMoneyInfo, Remittance remittance, RequestRemittanceCommand command) {
+        if (!membershipServicePort.isValidMembership(remittance.getRecipient().membershipId())) {
+            handleFailure(remittance, "수신자의 멤버쉽이 유효하지 않습니다.");
+        }
+        MoneyInfo recipientMoneyInfo = moneyServicePort.getMoneyInfo(command.getRecipientId());
+
+        boolean isSuccessDecrease = moneyServicePort.decreaseMoney(senderMoneyInfo.memberMoneyId(), command.getAmount());
+        boolean isSuccessIncrease = moneyServicePort.increaseMoney(recipientMoneyInfo.memberMoneyId(), command.getAmount());
         if (!isSuccessDecrease || !isSuccessIncrease) {
             handleFailure(remittance, "내부 고객 머니 송금에 실패했습니다.");
         }
     }
 
-    private void processExternalRemittance(RequestRemittanceCommand command, Remittance remittance) {
-        boolean isSuccessDecrease = moneyServicePort.decreaseMoney(command.getSenderId(), command.getAmount());
+    private void processExternalRemittance(MoneyInfo senderMoneyInfo, Remittance remittance, RequestRemittanceCommand command) {
+        boolean isSuccessDecrease = moneyServicePort.decreaseMoney(senderMoneyInfo.memberMoneyId(), command.getAmount());
         boolean isSuccessWithdrawal = bankingServicePort.withdrawalMinipayFund(
                 command.getDestBankName(),
                 command.getDestBankAccountNumber(),

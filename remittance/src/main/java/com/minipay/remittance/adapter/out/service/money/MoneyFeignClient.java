@@ -16,4 +16,9 @@ public interface MoneyFeignClient {
     ResponseEntity<MemberMoneyResponse> increaseMemberMoneyRequest(
             @PathVariable UUID memberMoneyId, @RequestBody IncreaseMoneyRequest request
     );
+
+    @PostMapping("/member-money/{memberMoneyId}/decrease")
+    ResponseEntity<MemberMoneyResponse> decreaseMemberMoneyRequest(
+            @PathVariable UUID memberMoneyId, @RequestBody DecreaseMoneyRequest request
+    );
 }

@@ -26,7 +26,10 @@ public class MoneyServiceApiAdapter implements MoneyServicePort {
 
     @Override
     public boolean decreaseMoney(UUID memberMoneyId, BigDecimal amount) {
-        return true;
+        ResponseEntity<MemberMoneyResponse> response = moneyFeignClient.decreaseMemberMoneyRequest(
+                memberMoneyId, DecreaseMoneyRequest.from(amount)
+        );
+        return response.getStatusCode().is2xxSuccessful();
     }
 
     @Override
