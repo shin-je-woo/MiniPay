@@ -38,8 +38,8 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
         // 3. 잔액 확인 및 부족 시 충전 요청
         MoneyInfo senderMoneyInfo = moneyServicePort.getMoneyInfo(command.getSenderId());
         if (senderMoneyInfo.balance().compareTo(command.getAmount()) < 0) {
-            BigDecimal increaseAmount = command.getAmount().subtract(senderMoneyInfo.balance());
-            if (!moneyServicePort.increaseMoney(senderMoneyInfo.memberMoneyId(), increaseAmount)) {
+            BigDecimal rechargeAmount = command.getAmount().subtract(senderMoneyInfo.balance());
+            if (!moneyServicePort.rechargeMoney(senderMoneyInfo.memberMoneyId(), rechargeAmount)) {
                 handleFailure(remittance, "머니 충전에 실패했습니다.");
             }
         }

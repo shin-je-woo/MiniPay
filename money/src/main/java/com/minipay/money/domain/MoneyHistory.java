@@ -76,6 +76,7 @@ public class MoneyHistory {
     }
 
     public enum ChangeType {
+        RECHARGE,
         INCREASE,
         DECREASE
     }

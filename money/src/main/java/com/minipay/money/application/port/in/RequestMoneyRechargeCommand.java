@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class RequestMoneyIncreaseCommand extends SelfValidating<RequestMoneyIncreaseCommand> {
+public class RequestMoneyRechargeCommand extends SelfValidating<RequestMoneyRechargeCommand> {
 
     @NotNull
     private final UUID memberMoneyId;
@@ -22,7 +22,7 @@ public class RequestMoneyIncreaseCommand extends SelfValidating<RequestMoneyIncr
     private final BigDecimal amount;
 
     @Builder
-    public RequestMoneyIncreaseCommand(UUID memberMoneyId, BigDecimal amount) {
+    public RequestMoneyRechargeCommand(UUID memberMoneyId, BigDecimal amount) {
         this.memberMoneyId = memberMoneyId;
         this.amount = amount;
 

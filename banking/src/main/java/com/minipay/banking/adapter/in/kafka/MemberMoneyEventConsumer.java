@@ -21,7 +21,7 @@ public class MemberMoneyEventConsumer {
     private final DepositMinipayFundUseCase depositMinipayFundUseCase;
 
     /**
-     * 고객의 증액 요청이 발생하면 고객의 연동계좌에서 미니페이 법인계좌로 입금한다.
+     * 고객의 머니 충전 요청이 발생하면 고객의 연동계좌에서 미니페이 법인계좌로 입금한다.
      */
     @KafkaListener(
             topics = {Topic.MEMBER_MONEY_EVENTS},
@@ -33,14 +33,14 @@ public class MemberMoneyEventConsumer {
         DomainEvent domainEvent = objectMapper.readValue(message, DomainEvent.class);
         MemberMoneyEventPayload payload = objectMapper.convertValue(domainEvent.getPayload(), MemberMoneyEventPayload.class);
 
-        if (domainEvent.getEventType() == EventType.MEMBER_MONEY_INCREASE_REQUESTED) {
-            handleIncreaseMoneyRequestedEvent(payload);
+        if (domainEvent.getEventType() == EventType.MEMBER_MONEY_RECHARGE_REQUESTED) {
+            handleRechargeMoneyRequestedEvent(payload);
         }
 
         acknowledgment.acknowledge();
     }
 
-    private void handleIncreaseMoneyRequestedEvent(MemberMoneyEventPayload payload) {
+    private void handleRechargeMoneyRequestedEvent(MemberMoneyEventPayload payload) {
         DepositMinipayMoneyCommand command = DepositMinipayMoneyCommand.builder()
                 .bankAccountId(payload.bankAccountId())
                 .moneyHistoryId(payload.moneyHistoryId())

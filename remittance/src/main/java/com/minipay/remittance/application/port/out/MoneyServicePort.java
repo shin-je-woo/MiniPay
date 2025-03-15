@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public interface MoneyServicePort {
     MoneyInfo getMoneyInfo(UUID membershipId);
+    boolean rechargeMoney(UUID memberMoneyId, BigDecimal amount);
     boolean decreaseMoney(UUID memberMoneyId, BigDecimal amount);
     boolean increaseMoney(UUID memberMoneyId, BigDecimal amount);
 }

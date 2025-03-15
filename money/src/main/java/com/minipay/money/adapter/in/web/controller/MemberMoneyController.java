@@ -3,6 +3,7 @@ package com.minipay.money.adapter.in.web.controller;
 import com.minipay.common.annotation.WebAdapter;
 import com.minipay.money.adapter.in.web.request.DecreaseMoneyRequest;
 import com.minipay.money.adapter.in.web.request.IncreaseMoneyRequest;
+import com.minipay.money.adapter.in.web.request.RechargeMoneyRequest;
 import com.minipay.money.adapter.in.web.response.MemberMoneyResponse;
 import com.minipay.money.application.port.in.*;
 import com.minipay.money.domain.MemberMoney;
@@ -13,26 +14,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @WebAdapter
-@RestController
+@RestController("/internal")
 @RequiredArgsConstructor
 public class MemberMoneyController {
 
+    private final RechargeMoneyUseCase rechargeMoneyUseCase;
     private final IncreaseMoneyUseCase increaseMoneyUseCase;
     private final DecreaseMoneyUseCase decreaseMoneyUseCase;
     private final MemberMoneyQuery memberMoneyQuery;
 
-    /**
-     * TODO 권한 검사 필요할 듯
-     */
-    @PostMapping("/member-money/{memberMoneyId}/increase")
-    ResponseEntity<MemberMoneyResponse> increaseMemberMoneyRequest(
-            @PathVariable UUID memberMoneyId, @RequestBody IncreaseMoneyRequest request
+    @PostMapping("/member-money/{memberMoneyId}/recharge")
+    ResponseEntity<MemberMoneyResponse> requestMemberMoneyRecharge(
+            @PathVariable UUID memberMoneyId, @RequestBody RechargeMoneyRequest request
     ) {
-        RequestMoneyIncreaseCommand command = RequestMoneyIncreaseCommand.builder()
+        RequestMoneyRechargeCommand command = RequestMoneyRechargeCommand.builder()
                 .memberMoneyId(memberMoneyId)
                 .amount(request.amount())
                 .build();
-        MemberMoney memberMoney = increaseMoneyUseCase.requestMoneyIncrease(command);
+        MemberMoney memberMoney = rechargeMoneyUseCase.requestMoneyRecharge(command);
+        return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
+    }
+
+    @PostMapping("/member-money/{memberMoneyId}/increase")
+    ResponseEntity<MemberMoneyResponse> increaseMemberMoney(
+            @PathVariable UUID memberMoneyId, @RequestBody IncreaseMoneyRequest request
+    ) {
+        IncreaseMoneyCommand command = IncreaseMoneyCommand.builder()
+                .memberMoneyId(memberMoneyId)
+                .amount(request.amount())
+                .build();
+        MemberMoney memberMoney = increaseMoneyUseCase.increaseMoney(command);
         return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
     }
 

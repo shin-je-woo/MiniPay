@@ -66,19 +66,19 @@ public class MemberMoney {
     }
 
     // Logic
-    public MoneyHistory requestIncreaseMoney(Money money) {
+    public MoneyHistory requestRechargeMoney(Money money) {
         if (money.isNegative()) {
-            throw new DomainRuleException("증액하려는 금액은 음수일 수 없습니다.");
+            throw new DomainRuleException("충전하려는 금액은 음수일 수 없습니다.");
         }
 
-        Money increaseMoney = computeIncreaseMoney(money);
+        Money rechargeMoney = computeRechargeMoney(money);
         MoneyHistory moneyHistory = MoneyHistory.newInstance(
                 this.memberMoneyId,
-                MoneyHistory.ChangeType.INCREASE,
-                increaseMoney
+                MoneyHistory.ChangeType.RECHARGE,
+                rechargeMoney
         );
 
-        Events.raise(MemberMoneyEvent.of(EventType.MEMBER_MONEY_INCREASE_REQUESTED, this, moneyHistory));
+        Events.raise(MemberMoneyEvent.of(EventType.MEMBER_MONEY_RECHARGE_REQUESTED, this, moneyHistory));
         return moneyHistory;
     }
 
@@ -101,7 +101,7 @@ public class MemberMoney {
     /**
      * 머니 충전은 만원 단위로 이루어져야 한다.
      */
-    private Money computeIncreaseMoney(Money requested) {
+    private Money computeRechargeMoney(Money requested) {
         return requested.divideAndCeiling(new Money(BigDecimal.valueOf(10_000)))
                 .multiply(new Money(BigDecimal.valueOf(10_000)));
 

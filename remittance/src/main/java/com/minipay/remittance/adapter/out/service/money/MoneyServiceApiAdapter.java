@@ -25,8 +25,16 @@ public class MoneyServiceApiAdapter implements MoneyServicePort {
     }
 
     @Override
+    public boolean rechargeMoney(UUID memberMoneyId, BigDecimal amount) {
+        ResponseEntity<MemberMoneyResponse> response = moneyFeignClient.requestMemberMoneyRecharge(
+                memberMoneyId, RechargeMoneyRequest.from(amount)
+        );
+        return response.getStatusCode().is2xxSuccessful();
+    }
+
+    @Override
     public boolean decreaseMoney(UUID memberMoneyId, BigDecimal amount) {
-        ResponseEntity<MemberMoneyResponse> response = moneyFeignClient.decreaseMemberMoneyRequest(
+        ResponseEntity<MemberMoneyResponse> response = moneyFeignClient.decreaseMemberMoney(
                 memberMoneyId, DecreaseMoneyRequest.from(amount)
         );
         return response.getStatusCode().is2xxSuccessful();
@@ -34,7 +42,7 @@ public class MoneyServiceApiAdapter implements MoneyServicePort {
 
     @Override
     public boolean increaseMoney(UUID memberMoneyId, BigDecimal amount) {
-        ResponseEntity<MemberMoneyResponse> response = moneyFeignClient.increaseMemberMoneyRequest(
+        ResponseEntity<MemberMoneyResponse> response = moneyFeignClient.increaseMemberMoney(
                 memberMoneyId, IncreaseMoneyRequest.from(amount)
         );
         return response.getStatusCode().is2xxSuccessful();

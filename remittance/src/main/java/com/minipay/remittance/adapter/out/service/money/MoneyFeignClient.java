@@ -12,13 +12,18 @@ public interface MoneyFeignClient {
     @GetMapping("/member-money")
     ResponseEntity<MemberMoneyResponse> getMemberMoney(@RequestParam UUID membershipId);
 
+    @PostMapping("/member-money/{memberMoneyId}/recharge")
+    ResponseEntity<MemberMoneyResponse> requestMemberMoneyRecharge(
+            @PathVariable UUID memberMoneyId, @RequestBody RechargeMoneyRequest request
+    );
+
     @PostMapping("/member-money/{memberMoneyId}/increase")
-    ResponseEntity<MemberMoneyResponse> increaseMemberMoneyRequest(
+    ResponseEntity<MemberMoneyResponse> increaseMemberMoney(
             @PathVariable UUID memberMoneyId, @RequestBody IncreaseMoneyRequest request
     );
 
     @PostMapping("/member-money/{memberMoneyId}/decrease")
-    ResponseEntity<MemberMoneyResponse> decreaseMemberMoneyRequest(
+    ResponseEntity<MemberMoneyResponse> decreaseMemberMoney(
             @PathVariable UUID memberMoneyId, @RequestBody DecreaseMoneyRequest request
     );
 }

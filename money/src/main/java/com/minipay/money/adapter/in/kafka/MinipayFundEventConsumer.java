@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minipay.common.constants.Topic;
 import com.minipay.common.event.DomainEvent;
 import com.minipay.common.event.EventType;
-import com.minipay.money.application.port.in.IncreaseMoneyCommand;
-import com.minipay.money.application.port.in.IncreaseMoneyUseCase;
+import com.minipay.money.application.port.in.RechargeMoneyCommand;
+import com.minipay.money.application.port.in.RechargeMoneyUseCase;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,14 +18,14 @@ import org.springframework.stereotype.Component;
 public class MinipayFundEventConsumer {
 
     private final ObjectMapper objectMapper;
-    private final IncreaseMoneyUseCase increaseMoneyUseCase;
+    private final RechargeMoneyUseCase rechargeMoneyUseCase;
 
     @KafkaListener(
             topics = {Topic.MINIPAY_FUND_EVENTS},
-            groupId = "money.member-money.increase",
+            groupId = "money.member-money.recharge",
             concurrency = "3"
     )
-    public void increaseMemberMoney(ConsumerRecord<String, String> record, Acknowledgment acknowledgment) throws JsonProcessingException {
+    public void rechargeMemberMoney(ConsumerRecord<String, String> record, Acknowledgment acknowledgment) throws JsonProcessingException {
         String message = record.value();
         DomainEvent domainEvent = objectMapper.readValue(message, DomainEvent.class);
         MinipayFundEventPayload payload = objectMapper.convertValue(domainEvent.getPayload(), MinipayFundEventPayload.class);
@@ -38,9 +38,9 @@ public class MinipayFundEventConsumer {
     }
 
     private void handleDepositEvent(MinipayFundEventPayload payload) {
-        IncreaseMoneyCommand command = IncreaseMoneyCommand.builder()
+        RechargeMoneyCommand command = RechargeMoneyCommand.builder()
                 .moneyHistoryId(payload.moneyHistoryId())
                 .build();
-        increaseMoneyUseCase.increaseMoney(command);
+        rechargeMoneyUseCase.rechargeMoney(command);
     }
 }
