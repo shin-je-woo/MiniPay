@@ -79,13 +79,13 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
     }
 
     private void processExternalRemittance(MoneyInfo senderMoneyInfo, Remittance remittance, RequestRemittanceCommand command) {
-        boolean isSuccessDecrease = moneyServicePort.decreaseMoney(senderMoneyInfo.memberMoneyId(), command.getAmount());
         boolean isSuccessWithdrawal = bankingServicePort.withdrawalMinipayFund(
+                senderMoneyInfo.bankAccountId(),
                 command.getDestBankName(),
                 command.getDestBankAccountNumber(),
                 command.getAmount()
         );
-        if (!isSuccessDecrease || !isSuccessWithdrawal) {
+        if (!isSuccessWithdrawal) {
             handleFailure(remittance, "외부 은행 머니 송금에 실패했습니다.");
         }
     }

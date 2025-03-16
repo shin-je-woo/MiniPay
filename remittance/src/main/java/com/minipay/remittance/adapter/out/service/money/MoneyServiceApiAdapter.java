@@ -21,6 +21,7 @@ public class MoneyServiceApiAdapter implements MoneyServicePort {
         return MoneyInfo.builder()
                 .memberMoneyId(memberMoneyResponse.memberMoneyId())
                 .balance(memberMoneyResponse.balance())
+                .bankAccountId(memberMoneyResponse.bankAccountId())
                 .build();
     }
 

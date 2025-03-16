@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface SpringDataMemberMoneyRepository extends JpaRepository<MemberMoneyJpaEntity, Long> {
     Optional<MemberMoneyJpaEntity> findByMemberMoneyId(UUID memberMoneyId);
     Optional<MemberMoneyJpaEntity> findByMembershipId(UUID membershipId);
+    Optional<MemberMoneyJpaEntity> findByBankAccountId(UUID bankAccountId);
 }

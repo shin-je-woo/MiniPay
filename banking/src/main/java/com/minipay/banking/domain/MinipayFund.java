@@ -24,6 +24,13 @@ public class MinipayFund {
         return new MinipayFund(MinipayFundId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.DEPOSIT, money);
     }
 
+    public static MinipayFund withdrawalInstance(
+            BankAccount.BankAccountId bankAccountId,
+            Money money
+    ) {
+        return new MinipayFund(MinipayFundId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.WITHDRAWAL, money);
+    }
+
     public static MinipayFund withId(
             MinipayFundId minipayFundId,
             BankAccount.BankAccountId bankAccountId,

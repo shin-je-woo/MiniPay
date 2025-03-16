@@ -9,4 +9,5 @@ public interface MemberMoneyPersistencePort {
     void updateMemberMoney(MemberMoney memberMoney);
     MemberMoney readMemberMoney(MemberMoney.MemberMoneyId memberMoneyId);
     MemberMoney readMemberMoneyByMembershipId(UUID membershipId);
+    MemberMoney readMemberMoneyByBankAccountId(UUID bankAccountId);
 }

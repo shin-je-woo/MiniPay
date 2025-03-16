@@ -72,6 +72,7 @@ services:
       - KAFKA_CLUSTER_BOOTSTRAP_SERVERS=kafka1:19092,kafka2:19092,kafka3:19092
       - MINIPAY_MEMBERSHIP_URL=http://membership-service:8081
       - MINIPAY_MONEY_URL=http://money-service:8083
+      - MINIPAY_BANKING_URL=http://banking-service:8082
 
   global-consumer:
     image: mini-pay-global-consumer:1.0.0

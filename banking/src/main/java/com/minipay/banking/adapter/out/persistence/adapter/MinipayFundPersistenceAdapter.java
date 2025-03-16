@@ -16,7 +16,7 @@ public class MinipayFundPersistenceAdapter implements MinipayFundPersistencePort
     private final SpringDataMinipayFundRepository minipayFundRepository;
 
     @Override
-    public void createMinipayFund(MinipayFund minipayFund) {
+    public void storeMinipayFund(MinipayFund minipayFund) {
         MinipayFundJpaEntity minipayFundJpaEntity = minipayFundMapper.mapToJpaEntity(minipayFund);
         minipayFundRepository.save(minipayFundJpaEntity);
     }

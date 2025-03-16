@@ -27,3 +27,11 @@ spring:
     bootstrap-servers: ${KAFKA_CLUSTER_BOOTSTRAP_SERVERS}
     producer:
       acks: all
+
+minipay:
+  membership:
+    url: ${MINIPAY_MEMBERSHIP_URL}
+  money:
+    url: ${MINIPAY_MONEY_URL}
+  banking:
+    url: ${MINIPAY_BANKING_URL}

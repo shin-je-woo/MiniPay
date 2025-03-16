@@ -30,6 +30,21 @@ public class MinipayFundEvent extends DomainEvent {
         );
     }
 
+    public static MinipayFundEvent of(EventType eventType, MinipayFund minipayFund) {
+        MinipayFundEvent.Payload payload = Payload.builder()
+                .minipayFundId(minipayFund.getMinipayFundId().value())
+                .bankAccountId(minipayFund.getBankAccountId().value())
+                .amount(minipayFund.getAmount().value())
+                .fundType(minipayFund.getFundType())
+                .build();
+
+        return new MinipayFundEvent(
+                eventType,
+                minipayFund.getMinipayFundId().value(),
+                payload
+        );
+    }
+
     @Builder
     public record Payload(
             UUID minipayFundId,

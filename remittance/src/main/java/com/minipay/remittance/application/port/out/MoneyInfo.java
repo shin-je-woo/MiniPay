@@ -8,6 +8,7 @@ import java.util.UUID;
 @Builder
 public record MoneyInfo(
         UUID memberMoneyId,
+        UUID bankAccountId,
         BigDecimal balance
 ) {
 }

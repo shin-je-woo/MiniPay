@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minipay.common.constants.Topic;
 import com.minipay.common.event.DomainEvent;
 import com.minipay.common.event.EventType;
+import com.minipay.money.application.port.in.DecreaseMoneyAfterBankingCommand;
+import com.minipay.money.application.port.in.DecreaseMoneyUseCase;
 import com.minipay.money.application.port.in.RechargeMoneyCommand;
 import com.minipay.money.application.port.in.RechargeMoneyUseCase;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class MinipayFundEventConsumer {
 
     private final ObjectMapper objectMapper;
     private final RechargeMoneyUseCase rechargeMoneyUseCase;
+    private final DecreaseMoneyUseCase decreaseMoneyUseCase;
 
     @KafkaListener(
             topics = {Topic.MINIPAY_FUND_EVENTS},
@@ -37,10 +40,35 @@ public class MinipayFundEventConsumer {
         acknowledgment.acknowledge();
     }
 
+    @KafkaListener(
+            topics = {Topic.MINIPAY_FUND_EVENTS},
+            groupId = "money.member-money.decrease",
+            concurrency = "3"
+    )
+    public void decreaseMemberMoney(ConsumerRecord<String, String> record, Acknowledgment acknowledgment) throws JsonProcessingException {
+        String message = record.value();
+        DomainEvent domainEvent = objectMapper.readValue(message, DomainEvent.class);
+        MinipayFundEventPayload payload = objectMapper.convertValue(domainEvent.getPayload(), MinipayFundEventPayload.class);
+
+        if (domainEvent.getEventType() == EventType.MINIPAY_FUND_WITHDRAWN) {
+            handleWithdrawalEvent(payload);
+        }
+
+        acknowledgment.acknowledge();
+    }
+
     private void handleDepositEvent(MinipayFundEventPayload payload) {
         RechargeMoneyCommand command = RechargeMoneyCommand.builder()
                 .moneyHistoryId(payload.moneyHistoryId())
                 .build();
         rechargeMoneyUseCase.rechargeMoney(command);
+    }
+
+    private void handleWithdrawalEvent(MinipayFundEventPayload payload) {
+        DecreaseMoneyAfterBankingCommand command = DecreaseMoneyAfterBankingCommand.builder()
+                .bankAccountId(payload.bankAccountId())
+                .amount(payload.amount())
+                .build();
+        decreaseMoneyUseCase.decreaseMoneyAfterBanking(command);
     }
 }

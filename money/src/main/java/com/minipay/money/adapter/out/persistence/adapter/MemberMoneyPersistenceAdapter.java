@@ -50,4 +50,12 @@ public class MemberMoneyPersistenceAdapter implements MemberMoneyPersistencePort
 
         return memberMoneyMapper.mapToDomain(memberMoneyJpaEntity);
     }
+
+    @Override
+    public MemberMoney readMemberMoneyByBankAccountId(UUID bankAccountId) {
+        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyRepository.findByBankAccountId(bankAccountId)
+                .orElseThrow(() -> new DataNotFoundException("Member money not found"));
+
+        return memberMoneyMapper.mapToDomain(memberMoneyJpaEntity);
+    }
 }

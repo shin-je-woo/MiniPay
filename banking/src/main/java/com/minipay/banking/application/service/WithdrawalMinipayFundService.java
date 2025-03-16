@@ -1,7 +1,7 @@
 package com.minipay.banking.application.service;
 
-import com.minipay.banking.application.port.in.DepositMinipayMoneyCommand;
-import com.minipay.banking.application.port.in.DepositMinipayFundUseCase;
+import com.minipay.banking.application.port.in.WithdrawalMinipayFundUseCase;
+import com.minipay.banking.application.port.in.WithdrawalMinipayMoneyCommand;
 import com.minipay.banking.application.port.out.*;
 import com.minipay.banking.domain.*;
 import com.minipay.common.annotation.UseCase;
@@ -14,14 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 @UseCase
 @Transactional
 @RequiredArgsConstructor
-public class DepositMinipayFundService implements DepositMinipayFundUseCase {
+public class WithdrawalMinipayFundService implements WithdrawalMinipayFundUseCase {
 
     private final BankAccountPersistencePort bankAccountPersistencePort;
-    private final ExternalBankingPort externalBankingPort;
     private final MinipayFundPersistencePort minipayFundPersistencePort;
+    private final ExternalBankingPort externalBankingPort;
 
     @Override
-    public void deposit(DepositMinipayMoneyCommand command) {
+    public void withdrawal(WithdrawalMinipayMoneyCommand command) {
         // 1. 요청받은 계좌 확인
         BankAccount bankAccount = bankAccountPersistencePort.readBankAccount(new BankAccount.BankAccountId(command.getBankAccountId()));
 
@@ -36,10 +36,10 @@ public class DepositMinipayFundService implements DepositMinipayFundUseCase {
 
         // 3. 외부 은행에 펌뱅킹 요청
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
-                .srcBankName(externalBankAccountInfo.bankName())
-                .srcAccountNumber(externalBankAccountInfo.accountNumber())
-                .destBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
-                .destAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .srcBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
+                .srcAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .destBankName(externalBankAccountInfo.bankName())
+                .destAccountNumber(externalBankAccountInfo.accountNumber())
                 .amount(command.getAmount())
                 .build();
         FirmBankingResult firmBankingResult = externalBankingPort.requestFirmBanking(firmBankingRequest);
@@ -47,11 +47,11 @@ public class DepositMinipayFundService implements DepositMinipayFundUseCase {
             throw new BusinessException("펌뱅킹 요청이 실패했습니다.");
         }
 
-        MinipayFund minipayFund = MinipayFund.depositInstance(
+        MinipayFund minipayFund = MinipayFund.withdrawalInstance(
                 new BankAccount.BankAccountId(command.getBankAccountId()),
                 new Money(command.getAmount())
         );
         minipayFundPersistencePort.storeMinipayFund(minipayFund);
-        Events.raise(MinipayFundEvent.of(EventType.MINIPAY_FUND_DEPOSITED, minipayFund, command.getMoneyHistoryId()));
+        Events.raise(MinipayFundEvent.of(EventType.MINIPAY_FUND_WITHDRAWN, minipayFund));
     }
 }
