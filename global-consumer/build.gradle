@@ -1,5 +1,5 @@
 plugins {
-    id 'com.palantir.docker' version '0.36.0'
+    id 'com.palantir.docker' version "${palantirDockerVersion}"
 }
 
 group = 'com.minipay.global-consumer'
