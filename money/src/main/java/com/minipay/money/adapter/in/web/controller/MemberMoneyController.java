@@ -1,6 +1,7 @@
 package com.minipay.money.adapter.in.web.controller;
 
 import com.minipay.common.annotation.WebAdapter;
+import com.minipay.money.adapter.in.web.request.CreateMoneyRequest;
 import com.minipay.money.adapter.in.web.request.DecreaseMoneyRequest;
 import com.minipay.money.adapter.in.web.request.IncreaseMoneyRequest;
 import com.minipay.money.adapter.in.web.request.RechargeMoneyRequest;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberMoneyController {
 
+    private final RegisterMemberMoneyUseCase registerMemberMoneyUseCase;
     private final RechargeMoneyUseCase rechargeMoneyUseCase;
     private final IncreaseMoneyUseCase increaseMoneyUseCase;
     private final DecreaseMoneyUseCase decreaseMoneyUseCase;
@@ -57,6 +59,16 @@ public class MemberMoneyController {
                 .build();
         MemberMoney memberMoney = decreaseMoneyUseCase.decreaseMoney(command);
         return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
+    }
+
+    @PostMapping("/member-money")
+    ResponseEntity<Void> createMemberMoney(@RequestBody CreateMoneyRequest request) {
+        RegisterMemberMoneyCommand command = RegisterMemberMoneyCommand.builder()
+                .membershipId(request.membershipId())
+                .bankAccountId(request.bankAccountId())
+                .build();
+        registerMemberMoneyUseCase.registerMemberMoneyAxon(command);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/member-money")
