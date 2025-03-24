@@ -1,4 +1,4 @@
-package com.minipay.money.adapter.axon.event;
+package com.minipay.money.domain.event;
 
 import java.math.BigDecimal;
 import java.util.UUID;

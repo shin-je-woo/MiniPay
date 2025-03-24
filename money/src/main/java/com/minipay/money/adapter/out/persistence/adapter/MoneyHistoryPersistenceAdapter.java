@@ -6,7 +6,7 @@ import com.minipay.money.adapter.out.persistence.entity.MoneyHistoryJpaEntity;
 import com.minipay.money.adapter.out.persistence.mapper.MoneyHistoryMapper;
 import com.minipay.money.adapter.out.persistence.repository.SpringDataMoneyHistoryRepository;
 import com.minipay.money.application.port.out.MoneyHistoryPersistencePort;
-import com.minipay.money.domain.MoneyHistory;
+import com.minipay.money.domain.model.MoneyHistory;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter

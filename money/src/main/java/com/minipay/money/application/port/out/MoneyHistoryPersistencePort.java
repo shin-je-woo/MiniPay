@@ -1,6 +1,6 @@
 package com.minipay.money.application.port.out;
 
-import com.minipay.money.domain.MoneyHistory;
+import com.minipay.money.domain.model.MoneyHistory;
 
 public interface MoneyHistoryPersistencePort {
     void createMoneyHistory(MoneyHistory moneyHistory);

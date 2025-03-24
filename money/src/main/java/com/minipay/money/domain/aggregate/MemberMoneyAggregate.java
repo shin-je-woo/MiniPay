@@ -1,9 +1,9 @@
-package com.minipay.money.adapter.axon.aggregate;
+package com.minipay.money.domain.aggregate;
 
-import com.minipay.money.adapter.axon.command.CreateMemberMoneyCommand;
-import com.minipay.money.adapter.axon.event.MemberMoneyCreatedEvent;
-import com.minipay.money.domain.MemberMoney;
-import com.minipay.money.domain.Money;
+import com.minipay.money.application.port.in.RegisterMemberMoneyCommand;
+import com.minipay.money.domain.event.MemberMoneyCreatedEvent;
+import com.minipay.money.domain.model.MemberMoney;
+import com.minipay.money.domain.model.Money;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +28,11 @@ public class MemberMoneyAggregate {
 
     // Command Handlers
     @CommandHandler
-    public MemberMoneyAggregate(CreateMemberMoneyCommand command) {
+    public MemberMoneyAggregate(RegisterMemberMoneyCommand command) {
         log.info("CreateMemberMoneyCommand Handler");
         this.memberMoney = MemberMoney.newInstance(
-                new MemberMoney.MembershipId(command.membershipId()),
-                new MemberMoney.BankAccountId(command.bankAccountId())
+                new MemberMoney.MembershipId(command.getMembershipId()),
+                new MemberMoney.BankAccountId(command.getBankAccountId())
         );
 
         AggregateLifecycle.apply(new MemberMoneyCreatedEvent(

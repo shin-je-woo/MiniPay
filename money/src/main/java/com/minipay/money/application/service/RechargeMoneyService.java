@@ -6,9 +6,9 @@ import com.minipay.money.application.port.in.RechargeMoneyCommand;
 import com.minipay.money.application.port.in.RechargeMoneyUseCase;
 import com.minipay.money.application.port.in.RequestMoneyRechargeCommand;
 import com.minipay.money.application.port.out.*;
-import com.minipay.money.domain.MemberMoney;
-import com.minipay.money.domain.Money;
-import com.minipay.money.domain.MoneyHistory;
+import com.minipay.money.domain.model.MemberMoney;
+import com.minipay.money.domain.model.Money;
+import com.minipay.money.domain.model.MoneyHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

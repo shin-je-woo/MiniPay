@@ -1,4 +1,4 @@
-package com.minipay.money.domain;
+package com.minipay.money.domain.model;
 
 import com.minipay.common.exception.DomainRuleException;
 import lombok.*;

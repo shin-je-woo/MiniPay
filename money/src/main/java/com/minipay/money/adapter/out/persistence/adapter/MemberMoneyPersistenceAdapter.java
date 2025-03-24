@@ -6,7 +6,7 @@ import com.minipay.money.adapter.out.persistence.entity.MemberMoneyJpaEntity;
 import com.minipay.money.adapter.out.persistence.mapper.MemberMoneyMapper;
 import com.minipay.money.adapter.out.persistence.repository.SpringDataMemberMoneyRepository;
 import com.minipay.money.application.port.out.MemberMoneyPersistencePort;
-import com.minipay.money.domain.MemberMoney;
+import com.minipay.money.domain.model.MemberMoney;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;

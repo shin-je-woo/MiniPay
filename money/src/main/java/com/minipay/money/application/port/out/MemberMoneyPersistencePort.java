@@ -1,6 +1,6 @@
 package com.minipay.money.application.port.out;
 
-import com.minipay.money.domain.MemberMoney;
+import com.minipay.money.domain.model.MemberMoney;
 
 import java.util.UUID;
 

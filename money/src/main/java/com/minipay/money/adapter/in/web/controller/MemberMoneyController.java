@@ -7,7 +7,7 @@ import com.minipay.money.adapter.in.web.request.IncreaseMoneyRequest;
 import com.minipay.money.adapter.in.web.request.RechargeMoneyRequest;
 import com.minipay.money.adapter.in.web.response.MemberMoneyResponse;
 import com.minipay.money.application.port.in.*;
-import com.minipay.money.domain.MemberMoney;
+import com.minipay.money.domain.model.MemberMoney;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

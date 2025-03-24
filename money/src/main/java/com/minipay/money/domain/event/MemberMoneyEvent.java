@@ -1,8 +1,10 @@
-package com.minipay.money.domain;
+package com.minipay.money.domain.event;
 
 import com.minipay.common.event.AggregateType;
 import com.minipay.common.event.DomainEvent;
 import com.minipay.common.event.EventType;
+import com.minipay.money.domain.model.MoneyHistory;
+import com.minipay.money.domain.model.MemberMoney;
 import lombok.Builder;
 
 import java.math.BigDecimal;

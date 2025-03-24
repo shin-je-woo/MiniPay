@@ -2,8 +2,8 @@ package com.minipay.money.adapter.out.persistence.mapper;
 
 import com.minipay.common.annotation.DomainMapper;
 import com.minipay.money.adapter.out.persistence.entity.MemberMoneyJpaEntity;
-import com.minipay.money.domain.MemberMoney;
-import com.minipay.money.domain.Money;
+import com.minipay.money.domain.model.MemberMoney;
+import com.minipay.money.domain.model.Money;
 
 @DomainMapper
 public class MemberMoneyMapper {

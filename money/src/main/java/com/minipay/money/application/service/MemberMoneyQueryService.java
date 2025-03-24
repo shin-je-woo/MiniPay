@@ -3,7 +3,7 @@ package com.minipay.money.application.service;
 import com.minipay.common.annotation.UseCase;
 import com.minipay.money.application.port.in.MemberMoneyQuery;
 import com.minipay.money.application.port.out.MemberMoneyPersistencePort;
-import com.minipay.money.domain.MemberMoney;
+import com.minipay.money.domain.model.MemberMoney;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

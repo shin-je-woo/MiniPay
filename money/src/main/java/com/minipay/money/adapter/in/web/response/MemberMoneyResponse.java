@@ -1,6 +1,6 @@
 package com.minipay.money.adapter.in.web.response;
 
-import com.minipay.money.domain.MemberMoney;
+import com.minipay.money.domain.model.MemberMoney;
 
 import java.math.BigDecimal;
 import java.util.UUID;

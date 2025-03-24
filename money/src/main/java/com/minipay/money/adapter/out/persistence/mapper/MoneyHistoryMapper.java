@@ -2,9 +2,9 @@ package com.minipay.money.adapter.out.persistence.mapper;
 
 import com.minipay.common.annotation.DomainMapper;
 import com.minipay.money.adapter.out.persistence.entity.MoneyHistoryJpaEntity;
-import com.minipay.money.domain.MemberMoney;
-import com.minipay.money.domain.Money;
-import com.minipay.money.domain.MoneyHistory;
+import com.minipay.money.domain.model.MemberMoney;
+import com.minipay.money.domain.model.Money;
+import com.minipay.money.domain.model.MoneyHistory;
 
 import java.util.Optional;
 

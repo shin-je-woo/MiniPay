@@ -1,8 +1,9 @@
-package com.minipay.money.domain;
+package com.minipay.money.domain.model;
 
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
 import com.minipay.common.exception.DomainRuleException;
+import com.minipay.money.domain.event.MemberMoneyEvent;
 import lombok.*;
 
 import java.math.BigDecimal;
