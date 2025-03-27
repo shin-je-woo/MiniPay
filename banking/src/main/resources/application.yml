@@ -1,6 +1,12 @@
 server:
   port: 8082
 
+axon:
+  serializer:
+    events: jackson
+    messages: jackson
+    general: xstream
+
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}

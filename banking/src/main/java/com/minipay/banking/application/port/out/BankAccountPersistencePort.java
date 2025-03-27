@@ -1,6 +1,6 @@
 package com.minipay.banking.application.port.out;
 
-import com.minipay.banking.domain.BankAccount;
+import com.minipay.banking.domain.model.BankAccount;
 
 public interface BankAccountPersistencePort {
     BankAccount createBankAccount(BankAccount bankAccount);

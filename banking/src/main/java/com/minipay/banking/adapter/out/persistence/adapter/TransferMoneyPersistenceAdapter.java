@@ -4,7 +4,7 @@ import com.minipay.banking.adapter.out.persistence.entity.TransferMoneyJpaEntity
 import com.minipay.banking.adapter.out.persistence.mapper.TransferMoneyMapper;
 import com.minipay.banking.adapter.out.persistence.repository.SpringDataTransferMoneyRepository;
 import com.minipay.banking.application.port.out.TransferMoneyPersistencePort;
-import com.minipay.banking.domain.TransferMoney;
+import com.minipay.banking.domain.model.TransferMoney;
 import com.minipay.common.annotation.PersistenceAdapter;
 import com.minipay.common.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;

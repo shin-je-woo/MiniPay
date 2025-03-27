@@ -1,5 +1,6 @@
-package com.minipay.banking.domain;
+package com.minipay.banking.domain.event;
 
+import com.minipay.banking.domain.model.BankAccount;
 import com.minipay.common.event.AggregateType;
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.DomainEvent;

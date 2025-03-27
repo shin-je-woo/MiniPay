@@ -1,4 +1,4 @@
-package com.minipay.banking.domain;
+package com.minipay.banking.domain.model;
 
 import com.minipay.common.exception.DomainRuleException;
 import org.springframework.util.StringUtils;

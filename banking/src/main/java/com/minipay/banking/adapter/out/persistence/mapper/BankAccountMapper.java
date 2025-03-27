@@ -1,8 +1,8 @@
 package com.minipay.banking.adapter.out.persistence.mapper;
 
 import com.minipay.banking.adapter.out.persistence.entity.BankAccountJpaEntity;
-import com.minipay.banking.domain.BankAccount;
-import com.minipay.banking.domain.ExternalBankAccount;
+import com.minipay.banking.domain.model.BankAccount;
+import com.minipay.banking.domain.model.ExternalBankAccount;
 import com.minipay.common.annotation.DomainMapper;
 
 @DomainMapper

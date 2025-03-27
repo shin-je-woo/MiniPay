@@ -1,6 +1,6 @@
 package com.minipay.banking.adapter.out.persistence.entity;
 
-import com.minipay.banking.domain.BankAccount;
+import com.minipay.banking.domain.model.BankAccount;
 import jakarta.persistence.*;
 import lombok.*;
 

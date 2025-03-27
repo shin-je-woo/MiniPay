@@ -3,7 +3,7 @@ package com.minipay.banking.adapter.in.web.controller;
 import com.minipay.banking.adapter.in.web.request.RegisterBankAccountRequest;
 import com.minipay.banking.application.port.in.RegisterBankAccountCommand;
 import com.minipay.banking.application.port.in.RegisterBankAccountUseCase;
-import com.minipay.banking.domain.BankAccount;
+import com.minipay.banking.domain.model.BankAccount;
 import com.minipay.common.annotation.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

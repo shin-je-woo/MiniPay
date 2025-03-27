@@ -1,4 +1,4 @@
-package com.minipay.banking.domain;
+package com.minipay.banking.domain.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
-package com.minipay.banking.domain;
+package com.minipay.banking.domain.model;
 
+import com.minipay.banking.domain.event.BankAccountEvent;
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
 import lombok.*;

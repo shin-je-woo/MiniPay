@@ -1,6 +1,6 @@
 package com.minipay.banking.adapter.out.persistence.entity;
 
-import com.minipay.banking.domain.TransferMoney;
+import com.minipay.banking.domain.model.TransferMoney;
 import jakarta.persistence.*;
 import lombok.*;
 
