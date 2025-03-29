@@ -1,12 +1,12 @@
 package com.minipay.banking.application.service;
 
-import com.minipay.banking.application.port.in.DepositMinipayMoneyCommand;
-import com.minipay.banking.application.port.in.DepositMinipayFundUseCase;
+import com.minipay.banking.application.port.in.DepositFundCommand;
+import com.minipay.banking.application.port.in.DepositFundUseCase;
 import com.minipay.banking.application.port.out.*;
-import com.minipay.banking.domain.event.MinipayFundEvent;
+import com.minipay.banking.domain.event.FundTransactionEvent;
 import com.minipay.banking.domain.model.BankAccount;
 import com.minipay.banking.domain.model.MinipayBankAccount;
-import com.minipay.banking.domain.model.MinipayFund;
+import com.minipay.banking.domain.model.FundTransaction;
 import com.minipay.banking.domain.model.Money;
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.event.EventType;
@@ -18,14 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 @UseCase
 @Transactional
 @RequiredArgsConstructor
-public class DepositMinipayFundService implements DepositMinipayFundUseCase {
+public class DepositFundService implements DepositFundUseCase {
 
     private final BankAccountPersistencePort bankAccountPersistencePort;
     private final ExternalBankingPort externalBankingPort;
-    private final MinipayFundPersistencePort minipayFundPersistencePort;
+    private final FundTransactionPersistencePort fundTransactionPersistencePort;
 
     @Override
-    public void deposit(DepositMinipayMoneyCommand command) {
+    public void deposit(DepositFundCommand command) {
         // 1. 요청받은 계좌 확인
         BankAccount bankAccount = bankAccountPersistencePort.readBankAccount(new BankAccount.BankAccountId(command.getBankAccountId()));
 
@@ -51,11 +51,11 @@ public class DepositMinipayFundService implements DepositMinipayFundUseCase {
             throw new BusinessException("펌뱅킹 요청이 실패했습니다.");
         }
 
-        MinipayFund minipayFund = MinipayFund.depositInstance(
+        FundTransaction fundTransaction = FundTransaction.depositInstance(
                 new BankAccount.BankAccountId(command.getBankAccountId()),
                 new Money(command.getAmount())
         );
-        minipayFundPersistencePort.storeMinipayFund(minipayFund);
-        Events.raise(MinipayFundEvent.of(EventType.MINIPAY_FUND_DEPOSITED, minipayFund, command.getMoneyHistoryId()));
+        fundTransactionPersistencePort.createFundTransaction(fundTransaction);
+        Events.raise(FundTransactionEvent.of(EventType.MINIPAY_FUND_DEPOSITED, fundTransaction, command.getMoneyHistoryId()));
     }
 }

@@ -1,7 +1,7 @@
 package com.minipay.banking.adapter.out.persistence.entity;
 
 import com.minipay.banking.domain.model.MinipayBankAccount;
-import com.minipay.banking.domain.model.MinipayFund;
+import com.minipay.banking.domain.model.FundTransaction;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,17 +11,17 @@ import java.util.UUID;
 @Getter
 @Entity
 @Builder
-@Table(name = "minipay_fund")
+@Table(name = "fund_transaction")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MinipayFundJpaEntity {
+public class FundTransactionJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private UUID minipayFundId;
+    private UUID fundTransactionId;
 
     private UUID bankAccountId;
 
@@ -29,7 +29,7 @@ public class MinipayFundJpaEntity {
     private MinipayBankAccount minipayBankAccount;
 
     @Enumerated(EnumType.STRING)
-    private MinipayFund.FundType fundType;
+    private FundTransaction.FundType fundType;
 
     private BigDecimal amount;
 }

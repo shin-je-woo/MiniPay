@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "banking-service", url = "${minipay.banking.url}")
 public interface BankingFeignClient {
 
-    @GetMapping("/minipay-funds/withdrawal")
-    ResponseEntity<Void> withdrawalMinipayFund(@RequestBody WithdrawalMinipayFundRequest request);
+    @GetMapping("/fund-transactions/withdrawal")
+    ResponseEntity<Void> withdrawalFund(@RequestBody WithdrawalFundRequest request);
 }

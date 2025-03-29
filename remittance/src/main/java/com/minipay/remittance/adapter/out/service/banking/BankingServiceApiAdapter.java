@@ -15,14 +15,14 @@ public class BankingServiceApiAdapter implements BankingServicePort {
     private final BankingFeignClient bankingFeignClient;
 
     @Override
-    public boolean withdrawalMinipayFund(UUID senderBankAccountId, String bankName, String bankAccountNumber, BigDecimal amount) {
-        WithdrawalMinipayFundRequest request = WithdrawalMinipayFundRequest.builder()
+    public boolean withdrawalFund(UUID senderBankAccountId, String bankName, String bankAccountNumber, BigDecimal amount) {
+        WithdrawalFundRequest request = WithdrawalFundRequest.builder()
                 .bankAccountId(senderBankAccountId)
                 .bankName(bankName)
                 .bankAccountNumber(bankAccountNumber)
                 .amount(amount)
                 .build();
-        ResponseEntity<Void> response = bankingFeignClient.withdrawalMinipayFund(request);
+        ResponseEntity<Void> response = bankingFeignClient.withdrawalFund(request);
         return response.getStatusCode().is2xxSuccessful();
     }
 }

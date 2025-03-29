@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class WithdrawalMinipayMoneyCommand extends SelfValidating<WithdrawalMinipayMoneyCommand> {
+public class WithdrawalFundCommand extends SelfValidating<WithdrawalFundCommand> {
 
     @NotNull
     private final UUID bankAccountId;
@@ -31,7 +31,7 @@ public class WithdrawalMinipayMoneyCommand extends SelfValidating<WithdrawalMini
     private final BigDecimal amount;
 
     @Builder
-    public WithdrawalMinipayMoneyCommand(UUID bankAccountId, String bankName, String bankAccountNumber, BigDecimal amount) {
+    public WithdrawalFundCommand(UUID bankAccountId, String bankName, String bankAccountNumber, BigDecimal amount) {
         this.bankAccountId = bankAccountId;
         this.bankName = bankName;
         this.bankAccountNumber = bankAccountNumber;

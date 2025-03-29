@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class DepositMinipayMoneyCommand extends SelfValidating<DepositMinipayMoneyCommand> {
+public class DepositFundCommand extends SelfValidating<DepositFundCommand> {
 
     @NotNull
     private final UUID bankAccountId;
@@ -25,7 +25,7 @@ public class DepositMinipayMoneyCommand extends SelfValidating<DepositMinipayMon
     private final BigDecimal amount;
 
     @Builder
-    public DepositMinipayMoneyCommand(UUID bankAccountId, UUID moneyHistoryId, BigDecimal amount) {
+    public DepositFundCommand(UUID bankAccountId, UUID moneyHistoryId, BigDecimal amount) {
         this.bankAccountId = bankAccountId;
         this.moneyHistoryId = moneyHistoryId;
         this.amount = amount;

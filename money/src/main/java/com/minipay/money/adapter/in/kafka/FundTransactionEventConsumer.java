@@ -17,21 +17,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MinipayFundEventConsumer {
+public class FundTransactionEventConsumer {
 
     private final ObjectMapper objectMapper;
     private final RechargeMoneyUseCase rechargeMoneyUseCase;
     private final DecreaseMoneyUseCase decreaseMoneyUseCase;
 
     @KafkaListener(
-            topics = {Topic.MINIPAY_FUND_EVENTS},
+            topics = {Topic.FUND_TRANSACTION_EVENTS},
             groupId = "money.member-money.recharge",
             concurrency = "3"
     )
     public void rechargeMemberMoney(ConsumerRecord<String, String> record, Acknowledgment acknowledgment) throws JsonProcessingException {
         String message = record.value();
         DomainEvent domainEvent = objectMapper.readValue(message, DomainEvent.class);
-        MinipayFundEventPayload payload = objectMapper.convertValue(domainEvent.getPayload(), MinipayFundEventPayload.class);
+        FundTransactionEventPayload payload = objectMapper.convertValue(domainEvent.getPayload(), FundTransactionEventPayload.class);
 
         if (domainEvent.getEventType() == EventType.MINIPAY_FUND_DEPOSITED) {
             handleDepositEvent(payload);
@@ -41,14 +41,14 @@ public class MinipayFundEventConsumer {
     }
 
     @KafkaListener(
-            topics = {Topic.MINIPAY_FUND_EVENTS},
+            topics = {Topic.FUND_TRANSACTION_EVENTS},
             groupId = "money.member-money.decrease",
             concurrency = "3"
     )
     public void decreaseMemberMoney(ConsumerRecord<String, String> record, Acknowledgment acknowledgment) throws JsonProcessingException {
         String message = record.value();
         DomainEvent domainEvent = objectMapper.readValue(message, DomainEvent.class);
-        MinipayFundEventPayload payload = objectMapper.convertValue(domainEvent.getPayload(), MinipayFundEventPayload.class);
+        FundTransactionEventPayload payload = objectMapper.convertValue(domainEvent.getPayload(), FundTransactionEventPayload.class);
 
         if (domainEvent.getEventType() == EventType.MINIPAY_FUND_WITHDRAWN) {
             handleWithdrawalEvent(payload);
@@ -57,14 +57,14 @@ public class MinipayFundEventConsumer {
         acknowledgment.acknowledge();
     }
 
-    private void handleDepositEvent(MinipayFundEventPayload payload) {
+    private void handleDepositEvent(FundTransactionEventPayload payload) {
         RechargeMoneyCommand command = RechargeMoneyCommand.builder()
                 .moneyHistoryId(payload.moneyHistoryId())
                 .build();
         rechargeMoneyUseCase.rechargeMoney(command);
     }
 
-    private void handleWithdrawalEvent(MinipayFundEventPayload payload) {
+    private void handleWithdrawalEvent(FundTransactionEventPayload payload) {
         DecreaseMoneyAfterBankingCommand command = DecreaseMoneyAfterBankingCommand.builder()
                 .bankAccountId(payload.bankAccountId())
                 .amount(payload.amount())

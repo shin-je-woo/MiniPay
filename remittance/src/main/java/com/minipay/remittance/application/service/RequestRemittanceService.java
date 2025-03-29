@@ -79,7 +79,7 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
     }
 
     private void processExternalRemittance(MoneyInfo senderMoneyInfo, Remittance remittance, RequestRemittanceCommand command) {
-        boolean isSuccessWithdrawal = bankingServicePort.withdrawalMinipayFund(
+        boolean isSuccessWithdrawal = bankingServicePort.withdrawalFund(
                 senderMoneyInfo.bankAccountId(),
                 command.getDestBankName(),
                 command.getDestBankAccountNumber(),

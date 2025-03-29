@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Builder
-public record WithdrawalMinipayFundRequest(
+public record WithdrawalFundRequest(
         UUID bankAccountId,
         String bankName,
         String bankAccountNumber,
