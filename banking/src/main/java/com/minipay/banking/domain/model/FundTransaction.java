@@ -14,6 +14,7 @@ public class FundTransaction {
     private final BankAccount.BankAccountId bankAccountId;
     private final MinipayBankAccount minipayBankAccount;
     private final FundType fundType;
+    private FundTransactionStatus status;
     private final Money amount;
 
     // Factory
@@ -21,14 +22,14 @@ public class FundTransaction {
             BankAccount.BankAccountId bankAccountId,
             Money money
     ) {
-        return new FundTransaction(FundTransactionId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.DEPOSIT, money);
+        return new FundTransaction(FundTransactionId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.DEPOSIT, FundTransactionStatus.REQUESTED, money);
     }
 
     public static FundTransaction withdrawalInstance(
             BankAccount.BankAccountId bankAccountId,
             Money money
     ) {
-        return new FundTransaction(FundTransactionId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.WITHDRAWAL, money);
+        return new FundTransaction(FundTransactionId.generate(), bankAccountId, MinipayBankAccount.NORMAL_ACCOUNT, FundType.WITHDRAWAL, FundTransactionStatus.REQUESTED, money);
     }
 
     public static FundTransaction withId(
@@ -36,9 +37,10 @@ public class FundTransaction {
             BankAccount.BankAccountId bankAccountId,
             MinipayBankAccount minipayBankAccount,
             FundType fundType,
+            FundTransactionStatus status,
             Money money
     ) {
-        return new FundTransaction(fundTransactionId, bankAccountId, minipayBankAccount, fundType, money);
+        return new FundTransaction(fundTransactionId, bankAccountId, minipayBankAccount, fundType, status, money);
     }
 
     // VO
@@ -57,5 +59,26 @@ public class FundTransaction {
     public enum FundType {
         DEPOSIT,
         WITHDRAWAL
+    }
+
+    public enum FundTransactionStatus {
+        REQUESTED,
+        SUCCEEDED,
+        FAILED
+    }
+
+    // Logic
+    public void success() {
+        if (this.status != FundTransactionStatus.REQUESTED) {
+            throw new IllegalStateException("FundTransaction status is not REQUESTED");
+        }
+        this.status = FundTransactionStatus.SUCCEEDED;
+    }
+
+    public void fail() {
+        if (this.status != FundTransactionStatus.REQUESTED) {
+            throw new IllegalStateException("FundTransaction status is not REQUESTED");
+        }
+        this.status = FundTransactionStatus.FAILED;
     }
 }

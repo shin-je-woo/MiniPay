@@ -31,5 +31,8 @@ public class FundTransactionJpaEntity {
     @Enumerated(EnumType.STRING)
     private FundTransaction.FundType fundType;
 
+    @Enumerated(EnumType.STRING)
+    private FundTransaction.FundTransactionStatus status;
+
     private BigDecimal amount;
 }

@@ -15,6 +15,7 @@ public class FundTransactionMapper {
                 new BankAccount.BankAccountId(fundTransaction.getBankAccountId()),
                 fundTransaction.getMinipayBankAccount(),
                 fundTransaction.getFundType(),
+                fundTransaction.getStatus(),
                 new Money(fundTransaction.getAmount())
         );
     }
@@ -25,6 +26,7 @@ public class FundTransactionMapper {
                 .bankAccountId(fundTransaction.getBankAccountId().value())
                 .minipayBankAccount(fundTransaction.getMinipayBankAccount())
                 .fundType(fundTransaction.getFundType())
+                .status(fundTransaction.getStatus())
                 .amount(fundTransaction.getAmount().value())
                 .build();
     }

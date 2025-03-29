@@ -1,18 +1,21 @@
 package com.minipay.banking.application.service;
 
+import com.minipay.banking.adapter.in.axon.commnad.CreateDepositFundCommand;
+import com.minipay.banking.application.port.in.DepositFundByAxonCommand;
 import com.minipay.banking.application.port.in.DepositFundCommand;
 import com.minipay.banking.application.port.in.DepositFundUseCase;
 import com.minipay.banking.application.port.out.*;
 import com.minipay.banking.domain.event.FundTransactionEvent;
 import com.minipay.banking.domain.model.BankAccount;
-import com.minipay.banking.domain.model.MinipayBankAccount;
 import com.minipay.banking.domain.model.FundTransaction;
+import com.minipay.banking.domain.model.MinipayBankAccount;
 import com.minipay.banking.domain.model.Money;
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
 import com.minipay.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.transaction.annotation.Transactional;
 
 @UseCase
@@ -23,6 +26,7 @@ public class DepositFundService implements DepositFundUseCase {
     private final BankAccountPersistencePort bankAccountPersistencePort;
     private final ExternalBankingPort externalBankingPort;
     private final FundTransactionPersistencePort fundTransactionPersistencePort;
+    private final CommandGateway commandGateway;
 
     @Override
     public void deposit(DepositFundCommand command) {
@@ -57,5 +61,11 @@ public class DepositFundService implements DepositFundUseCase {
         );
         fundTransactionPersistencePort.createFundTransaction(fundTransaction);
         Events.raise(FundTransactionEvent.of(EventType.MINIPAY_FUND_DEPOSITED, fundTransaction, command.getMoneyHistoryId()));
+    }
+
+    @Override
+    public void depositByAxon(DepositFundByAxonCommand command) {
+        CreateDepositFundCommand createDepositFundCommand = new CreateDepositFundCommand(command.getBankAccountId(), command.getAmount());
+        commandGateway.send(createDepositFundCommand);
     }
 }
