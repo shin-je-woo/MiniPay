@@ -5,6 +5,8 @@ import java.util.UUID;
 
 public record CreateWithdrawalFundCommand(
         UUID bankAccountId,
+        String bankName,
+        String bankAccountNumber,
         BigDecimal amount
 ) {
 }

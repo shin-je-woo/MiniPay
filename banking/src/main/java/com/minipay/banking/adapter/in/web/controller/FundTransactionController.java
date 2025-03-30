@@ -1,5 +1,6 @@
 package com.minipay.banking.adapter.in.web.controller;
 
+import com.minipay.banking.adapter.in.web.request.DepositFundRequest;
 import com.minipay.banking.adapter.in.web.request.WithdrawalFundRequest;
 import com.minipay.banking.application.port.in.*;
 import com.minipay.common.annotation.WebAdapter;
@@ -26,18 +27,28 @@ public class FundTransactionController {
                 .amount(request.amount())
                 .build();
         withdrawalFundUseCase.withdrawal(command);
-
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/fund-transactions/deposit-axon")
-    ResponseEntity<Void> depositFundByAxon(@RequestBody WithdrawalFundRequest request) {
+    ResponseEntity<Void> depositFundByAxon(@RequestBody DepositFundRequest request) {
         DepositFundByAxonCommand command = DepositFundByAxonCommand.builder()
                 .bankAccountId(request.bankAccountId())
                 .amount(request.amount())
                 .build();
         depositFundUseCase.depositByAxon(command);
+        return ResponseEntity.ok().build();
+    }
 
+    @PostMapping("/fund-transactions/withdrawal-axon")
+    ResponseEntity<Void> withdrawalFundByAxon(@RequestBody WithdrawalFundRequest request) {
+        WithdrawalFundByAxonCommand command = WithdrawalFundByAxonCommand.builder()
+                .bankAccountId(request.bankAccountId())
+                .bankName(request.bankName())
+                .bankAccountNumber(request.bankAccountNumber())
+                .amount(request.amount())
+                .build();
+        withdrawalFundUseCase.withdrawalByAxon(command);
         return ResponseEntity.ok().build();
     }
 }

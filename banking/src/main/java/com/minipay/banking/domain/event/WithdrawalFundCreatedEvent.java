@@ -6,11 +6,13 @@ import java.util.UUID;
 public record WithdrawalFundCreatedEvent(
         UUID fundTransactionId,
         UUID bankAccountId,
-        String fundType,
-        String status,
-        BigDecimal amount,
+        String withdrawalBankName,
+        String withdrawalAccountNumber,
         String minipayBankAccount,
         String minipayBankAccountName,
-        String minipayBankAccountNumber
+        String minipayBankAccountNumber,
+        String fundType,
+        BigDecimal amount,
+        String status
 ) {
 }

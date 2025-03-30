@@ -1,18 +1,18 @@
 package com.minipay.banking.application.service;
 
-import com.minipay.banking.application.port.in.WithdrawalFundUseCase;
+import com.minipay.banking.adapter.in.axon.commnad.CreateWithdrawalFundCommand;
+import com.minipay.banking.application.port.in.WithdrawalFundByAxonCommand;
 import com.minipay.banking.application.port.in.WithdrawalFundCommand;
+import com.minipay.banking.application.port.in.WithdrawalFundUseCase;
 import com.minipay.banking.application.port.out.*;
 import com.minipay.banking.domain.event.FundTransactionEvent;
-import com.minipay.banking.domain.model.BankAccount;
-import com.minipay.banking.domain.model.MinipayBankAccount;
-import com.minipay.banking.domain.model.FundTransaction;
-import com.minipay.banking.domain.model.Money;
+import com.minipay.banking.domain.model.*;
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
 import com.minipay.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.transaction.annotation.Transactional;
 
 @UseCase
@@ -23,6 +23,7 @@ public class WithdrawalFundService implements WithdrawalFundUseCase {
     private final BankAccountPersistencePort bankAccountPersistencePort;
     private final FundTransactionPersistencePort fundTransactionPersistencePort;
     private final ExternalBankingPort externalBankingPort;
+    private final CommandGateway commandGateway;
 
     @Override
     public void withdrawal(WithdrawalFundCommand command) {
@@ -42,8 +43,8 @@ public class WithdrawalFundService implements WithdrawalFundUseCase {
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
                 .srcBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
                 .srcAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
-                .destBankName(externalBankAccountInfo.bankName())
-                .destAccountNumber(externalBankAccountInfo.accountNumber())
+                .destBankName(command.getBankName())
+                .destAccountNumber(command.getBankAccountNumber())
                 .amount(command.getAmount())
                 .build();
         FirmBankingResult firmBankingResult = externalBankingPort.requestFirmBanking(firmBankingRequest);
@@ -53,9 +54,24 @@ public class WithdrawalFundService implements WithdrawalFundUseCase {
 
         FundTransaction fundTransaction = FundTransaction.withdrawalInstance(
                 new BankAccount.BankAccountId(command.getBankAccountId()),
+                new ExternalBankAccount(
+                        new ExternalBankAccount.BankName(command.getBankName()),
+                        new ExternalBankAccount.AccountNumber(command.getBankAccountNumber())
+                ),
                 new Money(command.getAmount())
         );
         fundTransactionPersistencePort.createFundTransaction(fundTransaction);
         Events.raise(FundTransactionEvent.of(EventType.MINIPAY_FUND_WITHDRAWN, fundTransaction));
+    }
+
+    @Override
+    public void withdrawalByAxon(WithdrawalFundByAxonCommand command) {
+        CreateWithdrawalFundCommand createWithdrawalFundCommand = new CreateWithdrawalFundCommand(
+                command.getBankAccountId(),
+                command.getBankName(),
+                command.getBankAccountNumber(),
+                command.getAmount()
+        );
+        commandGateway.send(createWithdrawalFundCommand);
     }
 }

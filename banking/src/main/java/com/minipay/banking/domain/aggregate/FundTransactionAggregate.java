@@ -4,10 +4,7 @@ import com.minipay.banking.adapter.in.axon.commnad.CreateDepositFundCommand;
 import com.minipay.banking.adapter.in.axon.commnad.CreateWithdrawalFundCommand;
 import com.minipay.banking.domain.event.DepositFundCreatedEvent;
 import com.minipay.banking.domain.event.WithdrawalFundCreatedEvent;
-import com.minipay.banking.domain.model.BankAccount;
-import com.minipay.banking.domain.model.FundTransaction;
-import com.minipay.banking.domain.model.MinipayBankAccount;
-import com.minipay.banking.domain.model.Money;
+import com.minipay.banking.domain.model.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +14,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -60,9 +58,10 @@ public class FundTransactionAggregate {
                 new FundTransaction.FundTransactionId(event.fundTransactionId()),
                 new BankAccount.BankAccountId(event.bankAccountId()),
                 MinipayBankAccount.valueOf(event.minipayBankAccount()),
+                null,
                 FundTransaction.FundType.valueOf(event.fundType()),
-                FundTransaction.FundTransactionStatus.valueOf(event.status()),
-                new Money(event.amount())
+                new Money(event.amount()),
+                FundTransaction.FundTransactionStatus.valueOf(event.status())
         );
     }
 
@@ -71,20 +70,27 @@ public class FundTransactionAggregate {
     public FundTransactionAggregate(CreateWithdrawalFundCommand command) {
         log.info("CreateWithdrawalFundCommand Handler");
 
-        FundTransaction createdFund = FundTransaction.withdrawalInstance(
+        FundTransaction withdrawalTransaction = FundTransaction.withdrawalInstance(
                 new BankAccount.BankAccountId(command.bankAccountId()),
+                new ExternalBankAccount(
+                        new ExternalBankAccount.BankName(command.bankName()),
+                        new ExternalBankAccount.AccountNumber(command.bankAccountNumber())
+                ),
                 new Money(command.amount())
         );
+        Objects.requireNonNull(withdrawalTransaction.getWithdrawalBankAccount());
 
-        AggregateLifecycle.apply(new DepositFundCreatedEvent(
-                createdFund.getFundTransactionId().value(),
-                createdFund.getBankAccountId().value(),
-                createdFund.getFundType().name(),
-                createdFund.getStatus().name(),
-                createdFund.getAmount().value(),
-                createdFund.getMinipayBankAccount().name(),
-                createdFund.getMinipayBankAccount().getBankName(),
-                createdFund.getMinipayBankAccount().getAccountNumber()
+        AggregateLifecycle.apply(new WithdrawalFundCreatedEvent(
+                withdrawalTransaction.getFundTransactionId().value(),
+                withdrawalTransaction.getBankAccountId().value(),
+                withdrawalTransaction.getWithdrawalBankAccount().bankName().value(),
+                withdrawalTransaction.getWithdrawalBankAccount().accountNumber().value(),
+                withdrawalTransaction.getMinipayBankAccount().name(),
+                withdrawalTransaction.getMinipayBankAccount().getBankName(),
+                withdrawalTransaction.getMinipayBankAccount().getAccountNumber(),
+                withdrawalTransaction.getFundType().name(),
+                withdrawalTransaction.getAmount().value(),
+                withdrawalTransaction.getStatus().name()
         ));
     }
 
@@ -97,9 +103,13 @@ public class FundTransactionAggregate {
                 new FundTransaction.FundTransactionId(event.fundTransactionId()),
                 new BankAccount.BankAccountId(event.bankAccountId()),
                 MinipayBankAccount.valueOf(event.minipayBankAccount()),
+                new ExternalBankAccount(
+                        new ExternalBankAccount.BankName(event.withdrawalBankName()),
+                        new ExternalBankAccount.AccountNumber(event.withdrawalAccountNumber())
+                ),
                 FundTransaction.FundType.valueOf(event.fundType()),
-                FundTransaction.FundTransactionStatus.valueOf(event.status()),
-                new Money(event.amount())
+                new Money(event.amount()),
+                FundTransaction.FundTransactionStatus.valueOf(event.status())
         );
     }
 }

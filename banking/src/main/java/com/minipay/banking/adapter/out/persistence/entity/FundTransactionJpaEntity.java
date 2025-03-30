@@ -1,7 +1,7 @@
 package com.minipay.banking.adapter.out.persistence.entity;
 
-import com.minipay.banking.domain.model.MinipayBankAccount;
 import com.minipay.banking.domain.model.FundTransaction;
+import com.minipay.banking.domain.model.MinipayBankAccount;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,11 +28,15 @@ public class FundTransactionJpaEntity {
     @Enumerated(EnumType.STRING)
     private MinipayBankAccount minipayBankAccount;
 
+    private String withdrawalBankName;
+
+    private String withdrawalAccountNumber;
+
     @Enumerated(EnumType.STRING)
     private FundTransaction.FundType fundType;
 
+    private BigDecimal amount;
+
     @Enumerated(EnumType.STRING)
     private FundTransaction.FundTransactionStatus status;
-
-    private BigDecimal amount;
 }
