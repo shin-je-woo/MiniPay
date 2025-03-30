@@ -68,7 +68,7 @@ public class FundTransaction {
     public record FundTransactionId(UUID value) {
         public FundTransactionId {
             if (value == null) {
-                throw new IllegalArgumentException("FundTransactionId is null");
+                throw new IllegalArgumentException("fundTransactionId is null");
             }
         }
 

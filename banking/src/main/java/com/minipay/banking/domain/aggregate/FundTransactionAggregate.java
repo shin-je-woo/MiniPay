@@ -2,7 +2,11 @@ package com.minipay.banking.domain.aggregate;
 
 import com.minipay.banking.adapter.in.axon.commnad.CreateDepositFundCommand;
 import com.minipay.banking.adapter.in.axon.commnad.CreateWithdrawalFundCommand;
+import com.minipay.banking.adapter.in.axon.commnad.FailDepositFundCommand;
+import com.minipay.banking.adapter.in.axon.commnad.SucceedDepositFundCommand;
 import com.minipay.banking.domain.event.DepositFundCreatedEvent;
+import com.minipay.banking.domain.event.DepositFundFailedEvent;
+import com.minipay.banking.domain.event.DepositFundSucceededEvent;
 import com.minipay.banking.domain.event.WithdrawalFundCreatedEvent;
 import com.minipay.banking.domain.model.*;
 import lombok.AccessLevel;
@@ -27,7 +31,6 @@ public class FundTransactionAggregate {
 
     private FundTransaction fundTransaction;
 
-    // 입금 커맨드 핸들러
     @CommandHandler
     public FundTransactionAggregate(CreateDepositFundCommand command) {
         log.info("CreateDepositFundCommand Handler");
@@ -49,7 +52,6 @@ public class FundTransactionAggregate {
         ));
     }
 
-    // 입금 이벤트 핸들러
     @EventSourcingHandler
     public void on(DepositFundCreatedEvent event) {
         log.info("DepositFundCreatedEvent Sourcing Handler");
@@ -65,7 +67,6 @@ public class FundTransactionAggregate {
         );
     }
 
-    // 출금 커맨드 핸들러
     @CommandHandler
     public FundTransactionAggregate(CreateWithdrawalFundCommand command) {
         log.info("CreateWithdrawalFundCommand Handler");
@@ -94,7 +95,6 @@ public class FundTransactionAggregate {
         ));
     }
 
-    // 출금 이벤트 핸들러
     @EventSourcingHandler
     public void on(WithdrawalFundCreatedEvent event) {
         log.info("WithdrawalFundCreatedEvent Sourcing Handler");
@@ -111,5 +111,29 @@ public class FundTransactionAggregate {
                 new Money(event.amount()),
                 FundTransaction.FundTransactionStatus.valueOf(event.status())
         );
+    }
+
+    @CommandHandler
+    public void handle(SucceedDepositFundCommand command) {
+        log.info("SucceedDepositFundCommand Handler");
+        AggregateLifecycle.apply(new DepositFundSucceededEvent(command.fundTransactionId()));
+    }
+
+    @EventSourcingHandler
+    public void on(DepositFundSucceededEvent event) {
+        log.info("DepositFundSucceededEvent Sourcing Handler");
+        this.fundTransaction.success();
+    }
+
+    @CommandHandler
+    public void handle(FailDepositFundCommand command) {
+        log.info("FailDepositFundCommand Handler");
+        AggregateLifecycle.apply(new DepositFundFailedEvent(command.fundTransactionId()));
+    }
+
+    @EventSourcingHandler
+    public void on(DepositFundFailedEvent event) {
+        log.info("DepositFundFailedEvent Sourcing Handler");
+        this.fundTransaction.fail();
     }
 }

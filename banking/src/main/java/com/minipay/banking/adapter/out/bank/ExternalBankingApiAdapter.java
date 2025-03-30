@@ -2,6 +2,7 @@ package com.minipay.banking.adapter.out.bank;
 
 import com.minipay.banking.application.port.out.*;
 import com.minipay.common.annotation.ExternalSystemAdapter;
+import lombok.SneakyThrows;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,10 +16,12 @@ public class ExternalBankingApiAdapter implements ExternalBankingPort {
     }
 
     @Override
+    @SneakyThrows(InterruptedException.class)
     public FirmBankingResult requestFirmBanking(FirmBankingRequest firmBankingRequest) {
         // TODO 실제 은행에 펌뱅킹 요청. 지금은 성공한 펌뱅킹 결과 리턴하도록 Mocking
         // 은행 HTTP 요청 결과에 따라 도메인 영역 코드로 맵핑해서 반환
         int randomResponseStatus = ThreadLocalRandom.current().nextInt(3);
+        Thread.sleep(3000);
 
         boolean isSucceeded = switch (randomResponseStatus) {
             case 1 -> true;

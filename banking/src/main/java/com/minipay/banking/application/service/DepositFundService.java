@@ -5,6 +5,7 @@ import com.minipay.banking.application.port.in.DepositFundByAxonCommand;
 import com.minipay.banking.application.port.in.DepositFundCommand;
 import com.minipay.banking.application.port.in.DepositFundUseCase;
 import com.minipay.banking.application.port.out.*;
+import com.minipay.banking.domain.event.DepositFundCreatedEvent;
 import com.minipay.banking.domain.event.FundTransactionEvent;
 import com.minipay.banking.domain.model.BankAccount;
 import com.minipay.banking.domain.model.FundTransaction;
@@ -67,5 +68,19 @@ public class DepositFundService implements DepositFundUseCase {
     public void depositByAxon(DepositFundByAxonCommand command) {
         CreateDepositFundCommand createDepositFundCommand = new CreateDepositFundCommand(command.getBankAccountId(), command.getAmount());
         commandGateway.send(createDepositFundCommand);
+    }
+
+    @Override
+    public FirmBankingResult processDepositByAxon(DepositFundCreatedEvent event) {
+        BankAccount bankAccount = bankAccountPersistencePort.readBankAccount(new BankAccount.BankAccountId(event.bankAccountId()));
+        // 외부 은행에 펌뱅킹 요청
+        FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
+                .srcBankName(bankAccount.getLinkedBankAccount().bankName().value())
+                .srcAccountNumber(bankAccount.getLinkedBankAccount().accountNumber().value())
+                .destBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
+                .destAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .amount(event.amount())
+                .build();
+        return externalBankingPort.requestFirmBanking(firmBankingRequest);
     }
 }

@@ -6,6 +6,7 @@ import com.minipay.banking.adapter.out.persistence.repository.SpringDataFundTran
 import com.minipay.banking.application.port.out.FundTransactionPersistencePort;
 import com.minipay.banking.domain.model.FundTransaction;
 import com.minipay.common.annotation.PersistenceAdapter;
+import com.minipay.common.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
@@ -18,6 +19,22 @@ public class FundTransactionPersistenceAdapter implements FundTransactionPersist
     @Override
     public void createFundTransaction(FundTransaction fundTransaction) {
         FundTransactionJpaEntity fundTransactionJpaEntity = fundTransactionMapper.mapToJpaEntity(fundTransaction);
+        fundTransactionRepository.save(fundTransactionJpaEntity);
+    }
+
+    @Override
+    public FundTransaction readFundTransaction(FundTransaction.FundTransactionId fundTransactionId) {
+        return fundTransactionRepository.findByFundTransactionId(fundTransactionId.value())
+                .map(fundTransactionMapper::mapToDomain)
+                .orElseThrow(() -> new DataNotFoundException("FundTransaction not found"));
+    }
+
+    @Override
+    public void updateFundTransaction(FundTransaction fundTransaction) {
+        FundTransactionJpaEntity existingEntity = fundTransactionRepository.findByFundTransactionId(fundTransaction.getFundTransactionId().value())
+                .orElseThrow(() -> new DataNotFoundException("FundTransaction not found"));
+
+        FundTransactionJpaEntity fundTransactionJpaEntity = fundTransactionMapper.mapToExistingJpaEntity(fundTransaction, existingEntity.getId());
         fundTransactionRepository.save(fundTransactionJpaEntity);
     }
 }

@@ -2,6 +2,8 @@ package com.minipay.banking.adapter.in.axon.projection;
 
 import com.minipay.banking.application.port.out.FundTransactionPersistencePort;
 import com.minipay.banking.domain.event.DepositFundCreatedEvent;
+import com.minipay.banking.domain.event.DepositFundFailedEvent;
+import com.minipay.banking.domain.event.DepositFundSucceededEvent;
 import com.minipay.banking.domain.event.WithdrawalFundCreatedEvent;
 import com.minipay.banking.domain.model.*;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,6 @@ public class FundTransactionProjection {
 
     private final FundTransactionPersistencePort fundTransactionPersistencePort;
 
-    // 입금 요청 이벤트 핸들러
     @EventHandler
     public void on(DepositFundCreatedEvent event) {
         log.info("DepositFundCreatedEvent Handler");
@@ -34,7 +35,6 @@ public class FundTransactionProjection {
         fundTransactionPersistencePort.createFundTransaction(fundTransaction);
     }
 
-    // 출금 요청 이벤트 핸들러
     @EventHandler
     public void on(WithdrawalFundCreatedEvent event) {
         log.info("WithdrawalFundCreatedEvent Handler");
@@ -51,5 +51,21 @@ public class FundTransactionProjection {
                 FundTransaction.FundTransactionStatus.valueOf(event.status())
         );
         fundTransactionPersistencePort.createFundTransaction(fundTransaction);
+    }
+
+    @EventHandler
+    public void on(DepositFundSucceededEvent event) {
+        log.info("DepositFundSucceededEvent Handler");
+        FundTransaction fundTransaction = fundTransactionPersistencePort.readFundTransaction(new FundTransaction.FundTransactionId(event.fundTransactionId()));
+        fundTransaction.success();
+        fundTransactionPersistencePort.updateFundTransaction(fundTransaction);
+    }
+
+    @EventHandler
+    public void on(DepositFundFailedEvent event) {
+        log.info("DepositFundFailedEvent Handler");
+        FundTransaction fundTransaction = fundTransactionPersistencePort.readFundTransaction(new FundTransaction.FundTransactionId(event.fundTransactionId()));
+        fundTransaction.fail();
+        fundTransactionPersistencePort.updateFundTransaction(fundTransaction);
     }
 }
