@@ -1,13 +1,7 @@
 package com.minipay.banking.domain.aggregate;
 
-import com.minipay.banking.adapter.in.axon.commnad.CreateDepositFundCommand;
-import com.minipay.banking.adapter.in.axon.commnad.CreateWithdrawalFundCommand;
-import com.minipay.banking.adapter.in.axon.commnad.FailDepositFundCommand;
-import com.minipay.banking.adapter.in.axon.commnad.SucceedDepositFundCommand;
-import com.minipay.banking.domain.event.DepositFundCreatedEvent;
-import com.minipay.banking.domain.event.DepositFundFailedEvent;
-import com.minipay.banking.domain.event.DepositFundSucceededEvent;
-import com.minipay.banking.domain.event.WithdrawalFundCreatedEvent;
+import com.minipay.banking.adapter.in.axon.commnad.*;
+import com.minipay.banking.domain.event.*;
 import com.minipay.banking.domain.model.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -134,6 +128,30 @@ public class FundTransactionAggregate {
     @EventSourcingHandler
     public void on(DepositFundFailedEvent event) {
         log.info("DepositFundFailedEvent Sourcing Handler");
+        this.fundTransaction.fail();
+    }
+
+    @CommandHandler
+    public void handle(SucceedWithdrawalFundCommand command) {
+        log.info("SucceedWithdrawalFundCommand Handler");
+        AggregateLifecycle.apply(new WithdrawalFundSucceededEvent(command.fundTransactionId()));
+    }
+
+    @EventSourcingHandler
+    public void on(WithdrawalFundSucceededEvent event) {
+        log.info("WithdrawalFundSucceededEvent Sourcing Handler");
+        this.fundTransaction.success();
+    }
+
+    @CommandHandler
+    public void handle(FailWithdrawalFundCommand command) {
+        log.info("FailWithdrawalFundCommand Handler");
+        AggregateLifecycle.apply(new WithdrawalFundFailedEvent(command.fundTransactionId()));
+    }
+
+    @EventSourcingHandler
+    public void on(WithdrawalFundFailedEvent event) {
+        log.info("WithdrawalFundFailedEvent Sourcing Handler");
         this.fundTransaction.fail();
     }
 }

@@ -1,10 +1,7 @@
 package com.minipay.banking.adapter.in.axon.projection;
 
 import com.minipay.banking.application.port.out.FundTransactionPersistencePort;
-import com.minipay.banking.domain.event.DepositFundCreatedEvent;
-import com.minipay.banking.domain.event.DepositFundFailedEvent;
-import com.minipay.banking.domain.event.DepositFundSucceededEvent;
-import com.minipay.banking.domain.event.WithdrawalFundCreatedEvent;
+import com.minipay.banking.domain.event.*;
 import com.minipay.banking.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +61,22 @@ public class FundTransactionProjection {
     @EventHandler
     public void on(DepositFundFailedEvent event) {
         log.info("DepositFundFailedEvent Handler");
+        FundTransaction fundTransaction = fundTransactionPersistencePort.readFundTransaction(new FundTransaction.FundTransactionId(event.fundTransactionId()));
+        fundTransaction.fail();
+        fundTransactionPersistencePort.updateFundTransaction(fundTransaction);
+    }
+
+    @EventHandler
+    public void on(WithdrawalFundSucceededEvent event) {
+        log.info("WithdrawalFundSucceededEvent Handler");
+        FundTransaction fundTransaction = fundTransactionPersistencePort.readFundTransaction(new FundTransaction.FundTransactionId(event.fundTransactionId()));
+        fundTransaction.success();
+        fundTransactionPersistencePort.updateFundTransaction(fundTransaction);
+    }
+
+    @EventHandler
+    public void on(WithdrawalFundFailedEvent event) {
+        log.info("WithdrawalFundFailedEvent Handler");
         FundTransaction fundTransaction = fundTransactionPersistencePort.readFundTransaction(new FundTransaction.FundTransactionId(event.fundTransactionId()));
         fundTransaction.fail();
         fundTransactionPersistencePort.updateFundTransaction(fundTransaction);

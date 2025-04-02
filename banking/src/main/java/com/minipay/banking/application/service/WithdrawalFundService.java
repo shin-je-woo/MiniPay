@@ -6,6 +6,7 @@ import com.minipay.banking.application.port.in.WithdrawalFundCommand;
 import com.minipay.banking.application.port.in.WithdrawalFundUseCase;
 import com.minipay.banking.application.port.out.*;
 import com.minipay.banking.domain.event.FundTransactionEvent;
+import com.minipay.banking.domain.event.WithdrawalFundCreatedEvent;
 import com.minipay.banking.domain.model.*;
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.event.EventType;
@@ -73,5 +74,18 @@ public class WithdrawalFundService implements WithdrawalFundUseCase {
                 command.getAmount()
         );
         commandGateway.send(createWithdrawalFundCommand);
+    }
+
+    @Override
+    public FirmBankingResult processWithdrawalByAxon(WithdrawalFundCreatedEvent event) {
+        // 외부 은행에 펌뱅킹 요청
+        FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
+                .srcBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
+                .srcAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .destBankName(event.withdrawalBankName())
+                .destAccountNumber(event.withdrawalAccountNumber())
+                .amount(event.amount())
+                .build();
+        return externalBankingPort.requestFirmBanking(firmBankingRequest);
     }
 }
