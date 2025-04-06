@@ -28,4 +28,16 @@ public class BankAccountController {
 
         return ResponseEntity.ok(registerBankAccountUseCase.registerBankAccount(command));
     }
+
+    @PostMapping("/bank-accounts/axon")
+    ResponseEntity<Void> registerBankAccountByAxon(@RequestBody RegisterBankAccountRequest request) {
+        RegisterBankAccountCommand command = RegisterBankAccountCommand.builder()
+                .membershipId(request.membershipId())
+                .bankName(request.bankName())
+                .bankAccountNumber(request.bankAccountNumber())
+                .build();
+
+        registerBankAccountUseCase.registerBankAccountByAxon(command);
+        return ResponseEntity.ok().build();
+    }
 }

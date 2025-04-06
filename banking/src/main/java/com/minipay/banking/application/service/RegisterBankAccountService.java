@@ -1,5 +1,6 @@
 package com.minipay.banking.application.service;
 
+import com.minipay.banking.adapter.in.axon.commnad.CreateBankAccountCommand;
 import com.minipay.banking.application.port.in.RegisterBankAccountCommand;
 import com.minipay.banking.application.port.in.RegisterBankAccountUseCase;
 import com.minipay.banking.application.port.out.BankAccountPersistencePort;
@@ -12,6 +13,7 @@ import com.minipay.common.annotation.UseCase;
 import com.minipay.common.exception.BusinessException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 
 @UseCase
 @Transactional
@@ -21,6 +23,7 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
     private final BankAccountPersistencePort bankAccountPersistencePort;
     private final ExternalBankingPort externalBankingPort;
     private final MembershipServicePort membershipServicePort;
+    private final CommandGateway commandGateway;
 
     @Override
     public BankAccount registerBankAccount(RegisterBankAccountCommand command) {
@@ -49,5 +52,24 @@ public class RegisterBankAccountService implements RegisterBankAccountUseCase {
         );
 
         return bankAccountPersistencePort.createBankAccount(bankAccount);
+    }
+
+    @Override
+    public void registerBankAccountByAxon(RegisterBankAccountCommand command) {
+        if (!membershipServicePort.isValidMembership(command.getMembershipId())) {
+            throw new BusinessException("멤버쉽이 유효하지 않습니다.");
+        }
+        ExternalBankAccountInfo externalBankAccountInfo = externalBankingPort.getBankAccountInfo(
+                command.getBankName(),
+                command.getBankAccountNumber()
+        );
+        if (!externalBankAccountInfo.isValid()) {
+            throw new BusinessException("연결된 계좌의 상태가 유효하지 않습니다");
+        }
+        commandGateway.send(new CreateBankAccountCommand(
+                command.getMembershipId(),
+                command.getBankName(),
+                command.getBankAccountNumber()
+        ));
     }
 }
