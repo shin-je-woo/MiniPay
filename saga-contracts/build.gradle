@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.minipay.saga'
+version = 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.axonframework:axon-spring-boot-starter:${axonVersion}"
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}

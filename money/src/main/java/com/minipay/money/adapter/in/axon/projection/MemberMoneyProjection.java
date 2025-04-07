@@ -7,6 +7,7 @@ import com.minipay.money.domain.event.RechargeMoneyRequestedEvent;
 import com.minipay.money.domain.model.MemberMoney;
 import com.minipay.money.domain.model.Money;
 import com.minipay.money.domain.model.MoneyHistory;
+import com.minipay.saga.event.BankAccountCheckFailedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
@@ -42,6 +43,24 @@ public class MemberMoneyProjection {
                 MoneyHistory.ChangeType.RECHARGE,
                 new Money(event.amount())
         );
-        moneyHistoryPersistencePort.createMoneyHistory(moneyHistory);
+        MoneyHistory withIdHistory = MoneyHistory.withId(
+                new MoneyHistory.MoneyHistoryId(event.moneyHistoryId()),
+                moneyHistory.getMemberMoneyId(),
+                moneyHistory.getChangeType(),
+                moneyHistory.getAmount(),
+                moneyHistory.getCreatedAt(),
+                moneyHistory.getChangeStatus(),
+                moneyHistory.getAfterBalance(),
+                moneyHistory.getUpdatedAt()
+        );
+        moneyHistoryPersistencePort.createMoneyHistory(withIdHistory);
+    }
+
+    @EventHandler
+    public void on(BankAccountCheckFailedEvent event) {
+        log.info("[Projection] 충전 요청 실패 이력 저장, 사유: 유효하지 않은 계좌");
+        MoneyHistory moneyHistory = moneyHistoryPersistencePort.readMoneyHistory(new MoneyHistory.MoneyHistoryId(event.moneyHistoryId()));
+        moneyHistory.failNotValidAccount();
+        moneyHistoryPersistencePort.updateMoneyHistory(moneyHistory);
     }
 }

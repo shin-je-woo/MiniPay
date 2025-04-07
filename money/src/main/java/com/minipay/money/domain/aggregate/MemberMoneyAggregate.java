@@ -59,9 +59,11 @@ public class MemberMoneyAggregate {
     public void on(RequestRechargeMoneyCommand command) {
         log.info("RequestRechargeMoneyCommand Handler");
         // Saga Start
+        UUID moneyHistoryId = UUID.randomUUID();
         AggregateLifecycle.apply(new RechargeMoneyRequestedEvent(
                 command.rechargeRequestId(),
                 command.memberMoneyId(),
+                moneyHistoryId,
                 command.membershipId(),
                 command.bankAccountId(),
                 command.amount()

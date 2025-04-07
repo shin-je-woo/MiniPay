@@ -1,12 +1,17 @@
-package com.minipay.money.adapter.in.axon.command;
+package com.minipay.saga.command;
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public record CheckLinkedBankAccountCommand(
         @TargetAggregateIdentifier UUID bankAccountId,
+        UUID checkLinkedBankAccountId,
         UUID rechargeRequestId,
-        UUID membershipId
+        UUID memberMoneyId,
+        UUID moneyHistoryId,
+        UUID membershipId,
+        BigDecimal amount
 ) {
 }

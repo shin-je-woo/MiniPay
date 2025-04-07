@@ -84,13 +84,23 @@ public class MoneyHistory {
     public enum ChangeStatus {
         REQUESTED,
         SUCCEED,
-        FAILED
+        FAILED,
+        FAILED_NOT_VALID_ACCOUNT
     }
 
     // Logic
     public void succeed(MemberMoney memberMoney) {
         this.changeStatus = ChangeStatus.SUCCEED;
         this.afterBalance = memberMoney.getBalance();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Logic
+    public void failNotValidAccount() {
+        if (this.changeStatus != ChangeStatus.REQUESTED) {
+            throw new DomainRuleException("MoneyHistory is not in REQUESTED status");
+        }
+        this.changeStatus = ChangeStatus.FAILED_NOT_VALID_ACCOUNT;
         this.updatedAt = LocalDateTime.now();
     }
 }

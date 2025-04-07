@@ -6,6 +6,7 @@ import java.util.UUID;
 public record RechargeMoneyRequestedEvent(
         UUID rechargeRequestId,
         UUID memberMoneyId,
+        UUID moneyHistoryId,
         UUID membershipId,
         UUID bankAccountId,
         BigDecimal amount

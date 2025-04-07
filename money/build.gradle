@@ -12,6 +12,7 @@ dependencies {
     implementation "org.axonframework:axon-spring-boot-starter:${axonVersion}"
 
     implementation project(':common')
+    implementation project(':saga-contracts')
 
     runtimeOnly 'com.mysql:mysql-connector-j'
     testRuntimeOnly 'com.h2database:h2'
