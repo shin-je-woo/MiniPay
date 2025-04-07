@@ -37,6 +37,18 @@ public class MemberMoneyController {
         return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
     }
 
+    @PostMapping("/member-money/{memberMoneyId}/recharge-axon")
+    ResponseEntity<Void> requestMemberMoneyRechargeByAxon(
+            @PathVariable UUID memberMoneyId, @RequestBody RechargeMoneyRequest request
+    ) {
+        RequestMoneyRechargeCommand command = RequestMoneyRechargeCommand.builder()
+                .memberMoneyId(memberMoneyId)
+                .amount(request.amount())
+                .build();
+        rechargeMoneyUseCase.requestMoneyRechargeByAxon(command);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/member-money/{memberMoneyId}/increase")
     ResponseEntity<MemberMoneyResponse> increaseMemberMoney(
             @PathVariable UUID memberMoneyId, @RequestBody IncreaseMoneyRequest request
@@ -61,13 +73,13 @@ public class MemberMoneyController {
         return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
     }
 
-    @PostMapping("/member-money")
+    @PostMapping("/member-money/axon")
     ResponseEntity<Void> createMemberMoney(@RequestBody CreateMoneyRequest request) {
         RegisterMemberMoneyCommand command = RegisterMemberMoneyCommand.builder()
                 .membershipId(request.membershipId())
                 .bankAccountId(request.bankAccountId())
                 .build();
-        registerMemberMoneyUseCase.registerMemberMoneyAxon(command);
+        registerMemberMoneyUseCase.registerMemberMoneyByAxon(command);
         return ResponseEntity.ok().build();
     }
 

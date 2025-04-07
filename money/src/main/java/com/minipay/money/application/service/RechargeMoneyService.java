@@ -2,6 +2,7 @@ package com.minipay.money.application.service;
 
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.exception.BusinessException;
+import com.minipay.money.adapter.in.axon.command.RequestRechargeMoneyCommand;
 import com.minipay.money.application.port.in.RechargeMoneyCommand;
 import com.minipay.money.application.port.in.RechargeMoneyUseCase;
 import com.minipay.money.application.port.in.RequestMoneyRechargeCommand;
@@ -10,7 +11,10 @@ import com.minipay.money.domain.model.MemberMoney;
 import com.minipay.money.domain.model.Money;
 import com.minipay.money.domain.model.MoneyHistory;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @UseCase
 @Transactional
@@ -20,6 +24,7 @@ public class RechargeMoneyService implements RechargeMoneyUseCase {
     private final MemberMoneyPersistencePort memberMoneyPersistencePort;
     private final MoneyHistoryPersistencePort moneyHistoryPersistencePort;
     private final MembershipServicePort membershipServicePort;
+    private final CommandGateway commandGateway;
 
     @Override
     public MemberMoney requestMoneyRecharge(RequestMoneyRechargeCommand command) {
@@ -48,5 +53,17 @@ public class RechargeMoneyService implements RechargeMoneyUseCase {
 
         moneyHistory.succeed(memberMoney);
         moneyHistoryPersistencePort.updateMoneyHistory(moneyHistory);
+    }
+
+    @Override
+    public void requestMoneyRechargeByAxon(RequestMoneyRechargeCommand command) {
+        MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(new MemberMoney.MemberMoneyId(command.getMemberMoneyId()));
+        commandGateway.send(new RequestRechargeMoneyCommand(
+                memberMoney.getMemberMoneyId().value(),
+                UUID.randomUUID(),
+                memberMoney.getBankAccountId().value(),
+                memberMoney.getMembershipId().value(),
+                command.getAmount()
+        ));
     }
 }

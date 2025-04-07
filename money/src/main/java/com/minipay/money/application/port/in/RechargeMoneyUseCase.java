@@ -4,5 +4,6 @@ import com.minipay.money.domain.model.MemberMoney;
 
 public interface RechargeMoneyUseCase {
     MemberMoney requestMoneyRecharge(RequestMoneyRechargeCommand command);
+    void requestMoneyRechargeByAxon(RequestMoneyRechargeCommand command);
     void rechargeMoney(RechargeMoneyCommand command);
 }

@@ -1,7 +1,9 @@
 package com.minipay.money.domain.aggregate;
 
-import com.minipay.money.application.port.in.RegisterMemberMoneyCommand;
+import com.minipay.money.adapter.in.axon.command.CreateMemberMoneyCommand;
+import com.minipay.money.adapter.in.axon.command.RequestRechargeMoneyCommand;
 import com.minipay.money.domain.event.MemberMoneyCreatedEvent;
+import com.minipay.money.domain.event.RechargeMoneyRequestedEvent;
 import com.minipay.money.domain.model.MemberMoney;
 import com.minipay.money.domain.model.Money;
 import lombok.AccessLevel;
@@ -23,16 +25,14 @@ public class MemberMoneyAggregate {
     @AggregateIdentifier
     private UUID memberMoneyId;
 
-    // 도메인 모델
     private MemberMoney memberMoney;
 
-    // Command Handlers
     @CommandHandler
-    public MemberMoneyAggregate(RegisterMemberMoneyCommand command) {
+    public MemberMoneyAggregate(CreateMemberMoneyCommand command) {
         log.info("CreateMemberMoneyCommand Handler");
         this.memberMoney = MemberMoney.newInstance(
-                new MemberMoney.MembershipId(command.getMembershipId()),
-                new MemberMoney.BankAccountId(command.getBankAccountId())
+                new MemberMoney.MembershipId(command.membershipId()),
+                new MemberMoney.BankAccountId(command.bankAccountId())
         );
 
         AggregateLifecycle.apply(new MemberMoneyCreatedEvent(
@@ -43,7 +43,6 @@ public class MemberMoneyAggregate {
         ));
     }
 
-    // Event Sourcing Handlers
     @EventSourcingHandler
     public void on(MemberMoneyCreatedEvent event) {
         log.info("MemberMoneyCreatedEvent Handler");
@@ -54,5 +53,18 @@ public class MemberMoneyAggregate {
                 new MemberMoney.BankAccountId(event.bankAccountId()),
                 new Money(event.balance())
         );
+    }
+
+    @CommandHandler
+    public void on(RequestRechargeMoneyCommand command) {
+        log.info("RequestRechargeMoneyCommand Handler");
+        // Saga Start
+        AggregateLifecycle.apply(new RechargeMoneyRequestedEvent(
+                command.rechargeRequestId(),
+                command.memberMoneyId(),
+                command.membershipId(),
+                command.bankAccountId(),
+                command.amount()
+        ));
     }
 }
