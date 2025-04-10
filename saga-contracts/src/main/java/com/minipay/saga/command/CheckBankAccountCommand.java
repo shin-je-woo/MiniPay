@@ -5,9 +5,9 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record CheckLinkedBankAccountCommand(
+public record CheckBankAccountCommand(
         @TargetAggregateIdentifier UUID bankAccountId,
-        UUID checkLinkedBankAccountId,
+        UUID checkBankAccountId,
         UUID rechargeRequestId,
         UUID memberMoneyId,
         UUID moneyHistoryId,

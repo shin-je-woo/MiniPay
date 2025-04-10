@@ -1,30 +1,37 @@
 package com.minipay.banking.application.event;
 
-import com.minipay.saga.command.CheckLinkedBankAccountCommand;
-import com.minipay.saga.event.BankAccountCheckFailedEvent;
-import com.minipay.saga.event.BankAccountCheckSucceededEvent;
+import com.minipay.banking.application.port.out.ExternalBankAccountInfo;
+import com.minipay.saga.command.CheckBankAccountCommand;
+import com.minipay.saga.event.CheckBankAccountFailedEvent;
+import com.minipay.saga.event.CheckBankAccountSucceededEvent;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BankAccountValidationEventFactory {
 
-    public BankAccountCheckSucceededEvent successEvent(CheckLinkedBankAccountCommand command) {
-        return new BankAccountCheckSucceededEvent(
-                command.checkLinkedBankAccountId(),
+    public CheckBankAccountSucceededEvent successEvent(
+            CheckBankAccountCommand command, ExternalBankAccountInfo externalBankInfo
+    ) {
+        return new CheckBankAccountSucceededEvent(
+                command.checkBankAccountId(),
                 command.rechargeRequestId(),
                 command.bankAccountId(),
                 command.memberMoneyId(),
-                command.moneyHistoryId()
+                command.moneyHistoryId(),
+                command.amount(),
+                externalBankInfo.bankName(),
+                externalBankInfo.accountNumber()
         );
     }
 
-    public BankAccountCheckFailedEvent failureEvent(CheckLinkedBankAccountCommand command) {
-        return new BankAccountCheckFailedEvent(
-                command.checkLinkedBankAccountId(),
+    public CheckBankAccountFailedEvent failureEvent(CheckBankAccountCommand command) {
+        return new CheckBankAccountFailedEvent(
+                command.checkBankAccountId(),
                 command.rechargeRequestId(),
                 command.bankAccountId(),
                 command.memberMoneyId(),
-                command.moneyHistoryId()
+                command.moneyHistoryId(),
+                command.amount()
         );
     }
 }

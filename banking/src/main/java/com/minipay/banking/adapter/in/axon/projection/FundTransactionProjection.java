@@ -3,6 +3,7 @@ package com.minipay.banking.adapter.in.axon.projection;
 import com.minipay.banking.application.port.out.FundTransactionPersistencePort;
 import com.minipay.banking.domain.event.*;
 import com.minipay.banking.domain.model.*;
+import com.minipay.saga.event.OrderDepositFundSucceededEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
@@ -28,6 +29,16 @@ public class FundTransactionProjection {
                 FundTransaction.FundType.valueOf(event.fundType()),
                 new Money(event.amount()),
                 FundTransaction.FundTransactionStatus.valueOf(event.status())
+        );
+        fundTransactionPersistencePort.createFundTransaction(fundTransaction);
+    }
+
+    @EventHandler
+    public void on(OrderDepositFundSucceededEvent event) {
+        log.info("OrderDepositFundSucceededEvent Handler");
+        FundTransaction fundTransaction = FundTransaction.depositInstance(
+                new BankAccount.BankAccountId(event.bankAccountId()),
+                new Money(event.amount())
         );
         fundTransactionPersistencePort.createFundTransaction(fundTransaction);
     }

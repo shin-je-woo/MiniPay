@@ -1,11 +1,13 @@
 package com.minipay.money.adapter.in.axon.saga;
 
 import com.minipay.money.domain.event.RechargeMoneyRequestedEvent;
-import com.minipay.saga.command.CheckLinkedBankAccountCommand;
-import com.minipay.saga.event.BankAccountCheckFailedEvent;
-import com.minipay.saga.event.BankAccountCheckSucceededEvent;
+import com.minipay.saga.command.CheckBankAccountCommand;
+import com.minipay.saga.command.OrderDepositFundCommand;
+import com.minipay.saga.event.CheckBankAccountSucceededEvent;
+import com.minipay.saga.event.OrderDepositFundSucceededEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.SagaLifecycle;
 import org.axonframework.modelling.saga.StartSaga;
@@ -28,12 +30,12 @@ public class MoneyRechargeSaga {
     public void handle(RechargeMoneyRequestedEvent event) {
         log.info("[Saga] 충전 요청 시작 - ID : {}", event.rechargeRequestId());
 
-        UUID checkLinkedBankAccountId = UUID.randomUUID();
-        SagaLifecycle.associateWith("checkLinkedBankAccountId", checkLinkedBankAccountId.toString());
+        UUID checkBankAccountId = UUID.randomUUID();
+        SagaLifecycle.associateWith("checkBankAccountId", checkBankAccountId.toString());
 
-        commandGateway.send(new CheckLinkedBankAccountCommand(
+        commandGateway.send(new CheckBankAccountCommand(
                 event.bankAccountId(),
-                checkLinkedBankAccountId,
+                checkBankAccountId,
                 event.rechargeRequestId(),
                 event.memberMoneyId(),
                 event.moneyHistoryId(),
@@ -42,14 +44,28 @@ public class MoneyRechargeSaga {
         ));
     }
 
-    @SagaEventHandler(associationProperty = "checkLinkedBankAccountId")
-    public void handle(BankAccountCheckSucceededEvent event) {
-        log.info("[Saga] 계좌 확인 성공 - ID : {}", event.checkLinkedBankAccountId());
+    @SagaEventHandler(associationProperty = "checkBankAccountId")
+    public void handle(CheckBankAccountSucceededEvent event) {
+        log.info("[Saga] 계좌 확인 성공 - ID : {}", event.checkBankAccountId());
+
+        UUID orderDepositFundId = UUID.randomUUID();
+        SagaLifecycle.associateWith("orderDepositFundId", orderDepositFundId.toString());
+
+        commandGateway.send(new OrderDepositFundCommand(
+                orderDepositFundId,
+                event.bankAccountId(),
+                event.checkBankAccountId(),
+                event.memberMoneyId(),
+                event.moneyHistoryId(),
+                event.amount(),
+                event.bankName(),
+                event.accountNumber()
+        ));
     }
 
-    @SagaEventHandler(associationProperty = "checkLinkedBankAccountId")
-    public void handle(BankAccountCheckFailedEvent event) {
-        log.info("[Saga] 계좌 확인 실패 - ID : {}", event.checkLinkedBankAccountId());
-        SagaLifecycle.end();
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderDepositFundId")
+    public void handle(OrderDepositFundSucceededEvent event) {
+        log.info("[Saga] 입금 성공 - ID : {}", event.orderDepositFundId());
     }
 }

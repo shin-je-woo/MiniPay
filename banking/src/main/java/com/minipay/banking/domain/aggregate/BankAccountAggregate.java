@@ -5,7 +5,7 @@ import com.minipay.banking.application.port.in.BankAccountValidateUseCase;
 import com.minipay.banking.domain.event.BankAccountCreatedEvent;
 import com.minipay.banking.domain.model.BankAccount;
 import com.minipay.banking.domain.model.ExternalBankAccount;
-import com.minipay.saga.command.CheckLinkedBankAccountCommand;
+import com.minipay.saga.command.CheckBankAccountCommand;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +64,7 @@ public class BankAccountAggregate {
     }
 
     @CommandHandler
-    public void handle(CheckLinkedBankAccountCommand command, BankAccountValidateUseCase bankAccountValidateUseCase) {
+    public void handle(CheckBankAccountCommand command, BankAccountValidateUseCase bankAccountValidateUseCase) {
         log.info("CheckLinkedBankAccountCommand Handler");
 
         // command 를 통해, 이 어그리거트(BankAccount)가 정상인지를 확인

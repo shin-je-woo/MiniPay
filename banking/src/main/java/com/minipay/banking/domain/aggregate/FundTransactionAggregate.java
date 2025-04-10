@@ -1,8 +1,10 @@
 package com.minipay.banking.domain.aggregate;
 
 import com.minipay.banking.adapter.in.axon.commnad.*;
+import com.minipay.banking.application.port.in.DepositFundUseCase;
 import com.minipay.banking.domain.event.*;
 import com.minipay.banking.domain.model.*;
+import com.minipay.saga.command.OrderDepositFundCommand;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,14 @@ public class FundTransactionAggregate {
                 createdFund.getMinipayBankAccount().getBankName(),
                 createdFund.getMinipayBankAccount().getAccountNumber()
         ));
+    }
+
+    @CommandHandler
+    public FundTransactionAggregate(OrderDepositFundCommand command, DepositFundUseCase depositFundUseCase) {
+        log.info("OrderDepositFundCommand Handler");
+
+        // command 를 통해, MinipayFund에 입금 요청
+        depositFundUseCase.depositByAxonSaga(command);
     }
 
     @EventSourcingHandler

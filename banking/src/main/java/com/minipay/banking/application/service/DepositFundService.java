@@ -1,6 +1,7 @@
 package com.minipay.banking.application.service;
 
 import com.minipay.banking.adapter.in.axon.commnad.CreateDepositFundCommand;
+import com.minipay.banking.application.event.DepositFundEventFactory;
 import com.minipay.banking.application.port.in.DepositFundByAxonCommand;
 import com.minipay.banking.application.port.in.DepositFundCommand;
 import com.minipay.banking.application.port.in.DepositFundUseCase;
@@ -15,8 +16,10 @@ import com.minipay.common.annotation.UseCase;
 import com.minipay.common.event.EventType;
 import com.minipay.common.event.Events;
 import com.minipay.common.exception.BusinessException;
+import com.minipay.saga.command.OrderDepositFundCommand;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.transaction.annotation.Transactional;
 
 @UseCase
@@ -28,6 +31,8 @@ public class DepositFundService implements DepositFundUseCase {
     private final ExternalBankingPort externalBankingPort;
     private final FundTransactionPersistencePort fundTransactionPersistencePort;
     private final CommandGateway commandGateway;
+    private final EventGateway eventGateway;
+    private final DepositFundEventFactory eventFactory;
 
     @Override
     public void deposit(DepositFundCommand command) {
@@ -82,5 +87,22 @@ public class DepositFundService implements DepositFundUseCase {
                 .amount(event.amount())
                 .build();
         return externalBankingPort.requestFirmBanking(firmBankingRequest);
+    }
+
+    @Override
+    public void depositByAxonSaga(OrderDepositFundCommand command) {
+        // 외부 은행에 펌뱅킹 요청
+        FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
+                .srcBankName(command.bankName())
+                .srcAccountNumber(command.accountNumber())
+                .destBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
+                .destAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .amount(command.amount())
+                .build();
+        FirmBankingResult firmBankingResult = externalBankingPort.requestFirmBanking(firmBankingRequest);
+
+        eventGateway.publish(firmBankingResult.isSucceeded()
+                ? eventFactory.successEvent(command)
+                : eventFactory.failureEvent(command));
     }
 }

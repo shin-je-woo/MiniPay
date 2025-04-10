@@ -7,7 +7,7 @@ import com.minipay.banking.application.port.out.ExternalBankAccountInfo;
 import com.minipay.banking.application.port.out.ExternalBankingPort;
 import com.minipay.banking.domain.model.BankAccount;
 import com.minipay.common.annotation.UseCase;
-import com.minipay.saga.command.CheckLinkedBankAccountCommand;
+import com.minipay.saga.command.CheckBankAccountCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.eventhandling.gateway.EventGateway;
@@ -25,7 +25,7 @@ public class BankAccountValidateService implements BankAccountValidateUseCase {
     private final EventGateway eventGateway;
 
     @Override
-    public void validateLinkedAccount(CheckLinkedBankAccountCommand command) {
+    public void validateLinkedAccount(CheckBankAccountCommand command) {
         BankAccount bankAccount = bankAccountPersistencePort.readBankAccount(
                 new BankAccount.BankAccountId(command.bankAccountId())
         );
@@ -33,15 +33,14 @@ public class BankAccountValidateService implements BankAccountValidateUseCase {
         String bankName = bankAccount.getLinkedBankAccount().bankName().value();
         String accountNumber = bankAccount.getLinkedBankAccount().accountNumber().value();
 
-        ExternalBankAccountInfo externalInfo = getAccountInfoSafely(command, bankName, accountNumber);
+        ExternalBankAccountInfo externalBankInfo = getAccountInfoSafely(command, bankName, accountNumber);
 
-//        eventGateway.publish(externalInfo.isValid()
-//                ? eventFactory.successEvent(command)
-//                : eventFactory.failureEvent(command));
-        eventGateway.publish(eventFactory.failureEvent(command));
+        eventGateway.publish(externalBankInfo.isValid()
+                ? eventFactory.successEvent(command, externalBankInfo)
+                : eventFactory.failureEvent(command));
     }
 
-    private ExternalBankAccountInfo getAccountInfoSafely(CheckLinkedBankAccountCommand command, String bankName, String accountNumber) {
+    private ExternalBankAccountInfo getAccountInfoSafely(CheckBankAccountCommand command, String bankName, String accountNumber) {
         try {
             return externalBankingPort.getBankAccountInfo(bankName, accountNumber);
         } catch (Exception e) {
