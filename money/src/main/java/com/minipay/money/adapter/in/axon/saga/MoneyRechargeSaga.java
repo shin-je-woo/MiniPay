@@ -3,7 +3,9 @@ package com.minipay.money.adapter.in.axon.saga;
 import com.minipay.money.domain.event.RechargeMoneyRequestedEvent;
 import com.minipay.saga.command.CheckBankAccountCommand;
 import com.minipay.saga.command.OrderDepositFundCommand;
+import com.minipay.saga.event.CheckBankAccountFailedEvent;
 import com.minipay.saga.event.CheckBankAccountSucceededEvent;
+import com.minipay.saga.event.OrderDepositFundFailedEvent;
 import com.minipay.saga.event.OrderDepositFundSucceededEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -64,8 +66,20 @@ public class MoneyRechargeSaga {
     }
 
     @EndSaga
+    @SagaEventHandler(associationProperty = "checkBankAccountId")
+    public void handle(CheckBankAccountFailedEvent event) {
+        log.info("[Saga] 계좌 확인 실패 - ID : {}", event.checkBankAccountId());
+    }
+
+    @EndSaga
     @SagaEventHandler(associationProperty = "orderDepositFundId")
     public void handle(OrderDepositFundSucceededEvent event) {
         log.info("[Saga] 입금 성공 - ID : {}", event.orderDepositFundId());
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderDepositFundId")
+    public void handle(OrderDepositFundFailedEvent event) {
+        log.info("[Saga] 입금 실패 - ID : {}", event.orderDepositFundId());
     }
 }

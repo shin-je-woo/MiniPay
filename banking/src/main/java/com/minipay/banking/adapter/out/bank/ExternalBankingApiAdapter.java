@@ -3,9 +3,11 @@ package com.minipay.banking.adapter.out.bank;
 import com.minipay.banking.application.port.out.*;
 import com.minipay.common.annotation.ExternalSystemAdapter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+@Slf4j
 @ExternalSystemAdapter
 public class ExternalBankingApiAdapter implements ExternalBankingPort {
 
@@ -26,7 +28,10 @@ public class ExternalBankingApiAdapter implements ExternalBankingPort {
         boolean isSucceeded = switch (randomResponseStatus) {
             case 1 -> true;
             case 2 -> false;
-            default -> throw new IllegalStateException("펌뱅킹 요청 결과값이 올바르지 않습니다.");
+            default -> {
+                log.warn("펌뱅킹 요청 결과가 성공하지 않았습니다. 펌뱅킹 요청 결과: {}", randomResponseStatus);
+                yield  false;
+            }
         };
 
         return new FirmBankingResult(isSucceeded);

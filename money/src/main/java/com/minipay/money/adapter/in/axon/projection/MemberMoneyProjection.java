@@ -8,6 +8,7 @@ import com.minipay.money.domain.model.MemberMoney;
 import com.minipay.money.domain.model.Money;
 import com.minipay.money.domain.model.MoneyHistory;
 import com.minipay.saga.event.CheckBankAccountFailedEvent;
+import com.minipay.saga.event.OrderDepositFundFailedEvent;
 import com.minipay.saga.event.OrderDepositFundSucceededEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +60,7 @@ public class MemberMoneyProjection {
 
     @EventHandler
     public void on(CheckBankAccountFailedEvent event) {
-        log.info("[Projection] 충전 요청 실패 이력 저장, 사유: 유효하지 않은 계좌");
+        log.error("[Projection] 충전 요청 실패 이력 저장, 사유: 유효하지 않은 계좌");
         MoneyHistory moneyHistory = moneyHistoryPersistencePort.readMoneyHistory(new MoneyHistory.MoneyHistoryId(event.moneyHistoryId()));
         moneyHistory.failNotValidAccount();
         moneyHistoryPersistencePort.updateMoneyHistory(moneyHistory);
@@ -74,6 +75,14 @@ public class MemberMoneyProjection {
 
         MoneyHistory moneyHistory = moneyHistoryPersistencePort.readMoneyHistory(new MoneyHistory.MoneyHistoryId(event.moneyHistoryId()));
         moneyHistory.succeed(memberMoney);
+        moneyHistoryPersistencePort.updateMoneyHistory(moneyHistory);
+    }
+
+    @EventHandler
+    public void on(OrderDepositFundFailedEvent event) {
+        log.error("[Projection] 충전 요청 실패 이력 저장, 사유: 입금 실패");
+        MoneyHistory moneyHistory = moneyHistoryPersistencePort.readMoneyHistory(new MoneyHistory.MoneyHistoryId(event.moneyHistoryId()));
+        moneyHistory.failDepositFund();
         moneyHistoryPersistencePort.updateMoneyHistory(moneyHistory);
     }
 }

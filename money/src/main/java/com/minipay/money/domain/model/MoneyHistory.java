@@ -85,7 +85,8 @@ public class MoneyHistory {
         REQUESTED,
         SUCCEED,
         FAILED,
-        FAILED_NOT_VALID_ACCOUNT
+        FAILED_NOT_VALID_ACCOUNT,
+        FAILED_DEPOSIT_FUND
     }
 
     // Logic
@@ -101,6 +102,14 @@ public class MoneyHistory {
             throw new DomainRuleException("MoneyHistory is not in REQUESTED status");
         }
         this.changeStatus = ChangeStatus.FAILED_NOT_VALID_ACCOUNT;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void failDepositFund() {
+        if (this.changeStatus != ChangeStatus.REQUESTED) {
+            throw new DomainRuleException("MoneyHistory is not in REQUESTED status");
+        }
+        this.changeStatus = ChangeStatus.FAILED_DEPOSIT_FUND;
         this.updatedAt = LocalDateTime.now();
     }
 }
