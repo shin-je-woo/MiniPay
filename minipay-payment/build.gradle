@@ -1,0 +1,28 @@
+plugins {
+    id 'com.palantir.docker' version "${palantirDockerVersion}"
+}
+
+group = 'com.minipay.minipay-payment'
+version = '1.0.0'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation project(':common')
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testRuntimeOnly 'com.h2database:h2'
+}
+
+docker {
+    println(tasks.bootJar.outputs.files)
+    // 이미지 이름 정의
+    name project.name + ":" + version
+    // 어떤 Dockerfile 을 이용해서
+    dockerfile file('../Dockerfile')
+    // 어떤 파일들을 Dockerfile 에 넣을 것인지
+    files tasks.bootJar.outputs.files
+    // Dockerfile 에 전달할 인자
+    buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name])
+}
