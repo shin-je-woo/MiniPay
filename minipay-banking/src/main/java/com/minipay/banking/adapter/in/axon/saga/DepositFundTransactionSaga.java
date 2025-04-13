@@ -1,12 +1,11 @@
 package com.minipay.banking.adapter.in.axon.saga;
 
-import com.minipay.banking.adapter.in.axon.commnad.FailDepositFundCommand;
-import com.minipay.banking.adapter.in.axon.commnad.SucceedDepositFundCommand;
 import com.minipay.banking.application.port.in.DepositFundUseCase;
 import com.minipay.banking.application.port.out.FirmBankingResult;
-import com.minipay.banking.domain.event.DepositFundCreatedEvent;
-import com.minipay.banking.domain.event.DepositFundFailedEvent;
-import com.minipay.banking.domain.event.DepositFundSucceededEvent;
+import com.minipay.saga.event.DepositFundFailedEvent;
+import com.minipay.saga.event.DepositFundSucceededEvent;
+import com.minipay.saga.command.DepositFundCommandFactory;
+import com.minipay.saga.event.DepositFundCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.modelling.saga.EndSaga;
@@ -33,18 +32,15 @@ public class DepositFundTransactionSaga {
     @SagaEventHandler(associationProperty = "fundTransactionId")
     public void handle(DepositFundCreatedEvent event) {
         log.info("[Saga] 입금 트랜잭션 시작 - ID : {}", event.fundTransactionId());
-        CompletableFuture.supplyAsync(() -> depositFundUseCase.processDepositByAxon(event))
+        CompletableFuture.supplyAsync(() -> depositFundUseCase.depositBySaga(event))
                 .exceptionally(ex -> {
                     log.error("[Saga] 입금 트랜잭션 처리중 예외 발생", ex);
                     return new FirmBankingResult(false);
                 })
-                .thenAccept(firmBankingResult -> {
-                    if (firmBankingResult.isSucceeded()) {
-                        commandGateway.send(new SucceedDepositFundCommand(event.fundTransactionId()));
-                    } else {
-                        commandGateway.send(new FailDepositFundCommand(event.fundTransactionId()));
-                    }
-                });
+                .thenApply(firmBankingResult -> firmBankingResult.isSucceeded() ?
+                        commandGateway.send(DepositFundCommandFactory.successCommand(event)) :
+                        commandGateway.send(DepositFundCommandFactory.failureCommand(event))
+                );
     }
 
     @EndSaga

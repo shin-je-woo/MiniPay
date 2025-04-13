@@ -30,16 +30,6 @@ public class FundTransactionController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/fund-transactions/deposit-axon")
-    ResponseEntity<Void> depositFundByAxon(@RequestBody DepositFundRequest request) {
-        DepositFundByAxonCommand command = DepositFundByAxonCommand.builder()
-                .bankAccountId(request.bankAccountId())
-                .amount(request.amount())
-                .build();
-        depositFundUseCase.depositByAxon(command);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/fund-transactions/withdrawal-axon")
     ResponseEntity<Void> withdrawalFundByAxon(@RequestBody WithdrawalFundRequest request) {
         WithdrawalFundByAxonCommand command = WithdrawalFundByAxonCommand.builder()

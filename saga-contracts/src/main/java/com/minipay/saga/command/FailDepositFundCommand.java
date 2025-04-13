@@ -1,9 +1,12 @@
-package com.minipay.saga.event;
+package com.minipay.saga.command;
+
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record OrderDepositFundSucceededEvent(
+public record FailDepositFundCommand(
+        @TargetAggregateIdentifier UUID fundTransactionId,
         UUID orderDepositFundId,
         UUID bankAccountId,
         UUID checkBankAccountId,

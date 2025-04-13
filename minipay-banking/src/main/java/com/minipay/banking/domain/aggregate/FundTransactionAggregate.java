@@ -1,10 +1,18 @@
 package com.minipay.banking.domain.aggregate;
 
-import com.minipay.banking.adapter.in.axon.commnad.*;
-import com.minipay.banking.application.port.in.DepositFundUseCase;
-import com.minipay.banking.domain.event.*;
+import com.minipay.banking.adapter.in.axon.commnad.CreateWithdrawalFundCommand;
+import com.minipay.banking.adapter.in.axon.commnad.FailWithdrawalFundCommand;
+import com.minipay.banking.adapter.in.axon.commnad.SucceedWithdrawalFundCommand;
+import com.minipay.banking.domain.event.WithdrawalFundCreatedEvent;
+import com.minipay.banking.domain.event.WithdrawalFundFailedEvent;
+import com.minipay.banking.domain.event.WithdrawalFundSucceededEvent;
 import com.minipay.banking.domain.model.*;
+import com.minipay.saga.command.FailDepositFundCommand;
 import com.minipay.saga.command.OrderDepositFundCommand;
+import com.minipay.saga.command.SucceedDepositFundCommand;
+import com.minipay.saga.event.DepositFundCreatedEvent;
+import com.minipay.saga.event.DepositFundFailedEvent;
+import com.minipay.saga.event.DepositFundSucceededEvent;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +36,8 @@ public class FundTransactionAggregate {
     private FundTransaction fundTransaction;
 
     @CommandHandler
-    public FundTransactionAggregate(CreateDepositFundCommand command) {
-        log.info("CreateDepositFundCommand Handler");
+    public FundTransactionAggregate(OrderDepositFundCommand command) {
+        log.info("OrderDepositFundCommand Handler");
 
         FundTransaction createdFund = FundTransaction.depositInstance(
                 new BankAccount.BankAccountId(command.bankAccountId()),
@@ -37,23 +45,19 @@ public class FundTransactionAggregate {
         );
 
         AggregateLifecycle.apply(new DepositFundCreatedEvent(
+                command.orderDepositFundId(),
                 createdFund.getFundTransactionId().value(),
-                createdFund.getBankAccountId().value(),
+                command.bankAccountId(),
+                command.checkBankAccountId(),
+                command.memberMoneyId(),
+                command.moneyHistoryId(),
+                command.amount(),
+                command.bankName(),
+                command.accountNumber(),
                 createdFund.getFundType().name(),
                 createdFund.getStatus().name(),
-                createdFund.getAmount().value(),
-                createdFund.getMinipayBankAccount().name(),
-                createdFund.getMinipayBankAccount().getBankName(),
-                createdFund.getMinipayBankAccount().getAccountNumber()
+                createdFund.getMinipayBankAccount().name()
         ));
-    }
-
-    @CommandHandler
-    public FundTransactionAggregate(OrderDepositFundCommand command, DepositFundUseCase depositFundUseCase) {
-        log.info("OrderDepositFundCommand Handler");
-
-        // command 를 통해, MinipayFund에 입금 요청
-        depositFundUseCase.depositByAxonSaga(command);
     }
 
     @EventSourcingHandler
@@ -67,8 +71,52 @@ public class FundTransactionAggregate {
                 null,
                 FundTransaction.FundType.valueOf(event.fundType()),
                 new Money(event.amount()),
-                FundTransaction.FundTransactionStatus.valueOf(event.status())
+                FundTransaction.FundTransactionStatus.valueOf(event.fundTransactionStatus())
         );
+    }
+
+    @CommandHandler
+    public void handle(SucceedDepositFundCommand command) {
+        log.info("SucceedDepositFundCommand Handler");
+        AggregateLifecycle.apply(new DepositFundSucceededEvent(
+                command.fundTransactionId(),
+                command.orderDepositFundId(),
+                command.bankAccountId(),
+                command.checkBankAccountId(),
+                command.memberMoneyId(),
+                command.moneyHistoryId(),
+                command.amount(),
+                command.bankName(),
+                command.accountNumber()
+        ));
+    }
+
+    @EventSourcingHandler
+    public void on(DepositFundSucceededEvent event) {
+        log.info("DepositFundSucceededEvent Sourcing Handler");
+        this.fundTransaction.success();
+    }
+
+    @CommandHandler
+    public void handle(FailDepositFundCommand command) {
+        log.info("FailDepositFundCommand Handler");
+        AggregateLifecycle.apply(new DepositFundFailedEvent(
+                command.fundTransactionId(),
+                command.orderDepositFundId(),
+                command.bankAccountId(),
+                command.checkBankAccountId(),
+                command.memberMoneyId(),
+                command.moneyHistoryId(),
+                command.amount(),
+                command.bankName(),
+                command.accountNumber()
+        ));
+    }
+
+    @EventSourcingHandler
+    public void on(DepositFundFailedEvent event) {
+        log.info("DepositFundFailedEvent Sourcing Handler");
+        this.fundTransaction.fail();
     }
 
     @CommandHandler
@@ -115,30 +163,6 @@ public class FundTransactionAggregate {
                 new Money(event.amount()),
                 FundTransaction.FundTransactionStatus.valueOf(event.status())
         );
-    }
-
-    @CommandHandler
-    public void handle(SucceedDepositFundCommand command) {
-        log.info("SucceedDepositFundCommand Handler");
-        AggregateLifecycle.apply(new DepositFundSucceededEvent(command.fundTransactionId()));
-    }
-
-    @EventSourcingHandler
-    public void on(DepositFundSucceededEvent event) {
-        log.info("DepositFundSucceededEvent Sourcing Handler");
-        this.fundTransaction.success();
-    }
-
-    @CommandHandler
-    public void handle(FailDepositFundCommand command) {
-        log.info("FailDepositFundCommand Handler");
-        AggregateLifecycle.apply(new DepositFundFailedEvent(command.fundTransactionId()));
-    }
-
-    @EventSourcingHandler
-    public void on(DepositFundFailedEvent event) {
-        log.info("DepositFundFailedEvent Sourcing Handler");
-        this.fundTransaction.fail();
     }
 
     @CommandHandler

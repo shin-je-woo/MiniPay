@@ -4,8 +4,8 @@ import com.minipay.banking.adapter.in.axon.commnad.FailWithdrawalFundCommand;
 import com.minipay.banking.adapter.in.axon.commnad.SucceedWithdrawalFundCommand;
 import com.minipay.banking.application.port.in.WithdrawalFundUseCase;
 import com.minipay.banking.application.port.out.FirmBankingResult;
-import com.minipay.banking.domain.event.DepositFundFailedEvent;
-import com.minipay.banking.domain.event.DepositFundSucceededEvent;
+import com.minipay.saga.event.DepositFundFailedEvent;
+import com.minipay.saga.event.DepositFundSucceededEvent;
 import com.minipay.banking.domain.event.WithdrawalFundCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -38,13 +38,10 @@ public class WithdrawalFundTransactionSaga {
                     log.error("[Saga] 출금 트랜잭션 처리중 예외 발생", ex);
                     return new FirmBankingResult(false);
                 })
-                .thenAccept(firmBankingResult -> {
-                    if (firmBankingResult.isSucceeded()) {
-                        commandGateway.send(new SucceedWithdrawalFundCommand(event.fundTransactionId()));
-                    } else {
-                        commandGateway.send(new FailWithdrawalFundCommand(event.fundTransactionId()));
-                    }
-                });
+                .thenApply(firmBankingResult -> firmBankingResult.isSucceeded() ?
+                        commandGateway.send(new SucceedWithdrawalFundCommand(event.fundTransactionId())) :
+                        commandGateway.send(new FailWithdrawalFundCommand(event.fundTransactionId()))
+                );
     }
 
     @EndSaga

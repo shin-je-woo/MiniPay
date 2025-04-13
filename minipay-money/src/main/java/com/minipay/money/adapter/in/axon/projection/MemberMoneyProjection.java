@@ -8,8 +8,8 @@ import com.minipay.money.domain.model.MemberMoney;
 import com.minipay.money.domain.model.Money;
 import com.minipay.money.domain.model.MoneyHistory;
 import com.minipay.saga.event.CheckBankAccountFailedEvent;
-import com.minipay.saga.event.OrderDepositFundFailedEvent;
-import com.minipay.saga.event.OrderDepositFundSucceededEvent;
+import com.minipay.saga.event.DepositFundFailedEvent;
+import com.minipay.saga.event.DepositFundSucceededEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
@@ -67,7 +67,7 @@ public class MemberMoneyProjection {
     }
 
     @EventHandler
-    public void on(OrderDepositFundSucceededEvent event) {
+    public void on(DepositFundSucceededEvent event) {
         log.info("[Projection] 충전 요청 성공 이력 저장 및 잔고 업데이트");
         MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(new MemberMoney.MemberMoneyId(event.memberMoneyId()));
         memberMoney.increaseBalance(new Money(event.amount()));
@@ -79,7 +79,7 @@ public class MemberMoneyProjection {
     }
 
     @EventHandler
-    public void on(OrderDepositFundFailedEvent event) {
+    public void on(DepositFundFailedEvent event) {
         log.error("[Projection] 충전 요청 실패 이력 저장, 사유: 입금 실패");
         MoneyHistory moneyHistory = moneyHistoryPersistencePort.readMoneyHistory(new MoneyHistory.MoneyHistoryId(event.moneyHistoryId()));
         moneyHistory.failDepositFund();

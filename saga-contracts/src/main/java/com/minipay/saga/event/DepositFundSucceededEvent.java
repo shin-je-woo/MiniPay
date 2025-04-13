@@ -3,7 +3,8 @@ package com.minipay.saga.event;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record OrderDepositFundFailedEvent(
+public record DepositFundSucceededEvent(
+        UUID fundTransactionId,
         UUID orderDepositFundId,
         UUID bankAccountId,
         UUID checkBankAccountId,
