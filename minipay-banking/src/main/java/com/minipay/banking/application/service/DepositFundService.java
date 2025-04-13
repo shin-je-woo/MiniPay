@@ -65,6 +65,7 @@ public class DepositFundService implements DepositFundUseCase {
                 new BankAccount.BankAccountId(command.getBankAccountId()),
                 new Money(command.getAmount())
         );
+        fundTransaction.success();
         fundTransactionPersistencePort.createFundTransaction(fundTransaction);
         Events.raise(FundTransactionEvent.of(EventType.MINIPAY_FUND_DEPOSITED, fundTransaction, command.getMoneyHistoryId()));
     }

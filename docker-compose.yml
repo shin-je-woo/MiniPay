@@ -26,9 +26,9 @@ services:
       - .data/axonserver/events:/axonserver/events
       - .data/axonserver/config:/axonserver/config
 
-  membership-service:
-    image: mini-pay-membership:1.0.0
-    container_name: membership-service
+  minipay-membership:
+    image: minipay-membership:1.0.0
+    container_name: minipay-membership
     ports:
       - "8081:8081"
     depends_on:
@@ -40,9 +40,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=minipay_password
       - KAFKA_CLUSTER_BOOTSTRAP_SERVERS=kafka1:19092,kafka2:19092,kafka3:19092
 
-  banking-service:
-    image: mini-pay-banking:1.0.0
-    container_name: banking-service
+  minipay-banking:
+    image: minipay-banking:1.0.0
+    container_name: minipay-banking
     ports:
       - "8082:8082"
     depends_on:
@@ -57,11 +57,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=minipay_user
       - SPRING_DATASOURCE_PASSWORD=minipay_password
       - KAFKA_CLUSTER_BOOTSTRAP_SERVERS=kafka1:19092,kafka2:19092,kafka3:19092
-      - MINIPAY_MEMBERSHIP_URL=http://membership-service:8081
+      - MINIPAY_MEMBERSHIP_URL=http://minipay-membership:8081
 
-  money-service:
-    image: mini-pay-money:1.0.0
-    container_name: money-service
+  minipay-money:
+    image: minipay-money:1.0.0
+    container_name: minipay-money
     ports:
       - "8083:8083"
     depends_on:
@@ -76,11 +76,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=minipay_user
       - SPRING_DATASOURCE_PASSWORD=minipay_password
       - KAFKA_CLUSTER_BOOTSTRAP_SERVERS=kafka1:19092,kafka2:19092,kafka3:19092
-      - MINIPAY_MEMBERSHIP_URL=http://membership-service:8081
+      - MINIPAY_MEMBERSHIP_URL=http://minipay-membership:8081
 
-  remittance-service:
-    image: mini-pay-remittance:1.0.0
-    container_name: remittance-service
+  minipay-remittance:
+    image: minipay-remittance:1.0.0
+    container_name: minipay-remittance
     ports:
       - "8084:8084"
     depends_on:
@@ -91,12 +91,12 @@ services:
       - SPRING_DATASOURCE_USERNAME=minipay_user
       - SPRING_DATASOURCE_PASSWORD=minipay_password
       - KAFKA_CLUSTER_BOOTSTRAP_SERVERS=kafka1:19092,kafka2:19092,kafka3:19092
-      - MINIPAY_MEMBERSHIP_URL=http://membership-service:8081
-      - MINIPAY_MONEY_URL=http://money-service:8083
-      - MINIPAY_BANKING_URL=http://banking-service:8082
+      - MINIPAY_MEMBERSHIP_URL=http://minipay-membership:8081
+      - MINIPAY_MONEY_URL=http://minipay-money:8083
+      - MINIPAY_BANKING_URL=http://minipay-banking:8082
 
   global-consumer:
-    image: mini-pay-global-consumer:1.0.0
+    image: minipay-global-consumer:1.0.0
     container_name: global-consumer
     depends_on:
       - zookeeper

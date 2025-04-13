@@ -2,7 +2,7 @@ plugins {
     id 'com.palantir.docker' version "${palantirDockerVersion}"
 }
 
-group = 'com.minipay.money'
+group = 'com.minipay.minipay-money'
 version = '1.0.0'
 
 dependencies {
@@ -21,7 +21,7 @@ dependencies {
 docker {
     println(tasks.bootJar.outputs.files)
     // 이미지 이름 정의
-    name rootProject.name + '-' + project.name + ":" + version
+    name project.name + ":" + version
     // 어떤 Dockerfile 을 이용해서
     dockerfile file('../Dockerfile')
     // 어떤 파일들을 Dockerfile 에 넣을 것인지
