@@ -43,4 +43,13 @@ public class ControllerExceptionAdvice {
                 Objects.requireNonNullElse(e.getMessage(), "Constraint violation")
         ));
     }
+
+    @ExceptionHandler(Exception.class)
+    ResponseEntity<ErrorResponse> handleException(Exception e) {
+        log.error(e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                Objects.requireNonNullElse(e.getMessage(), "Internal server error")
+        ));
+    }
 }
