@@ -23,7 +23,7 @@ public class DomainEventPersistenceAdapter implements DomainEventPersistencePort
     @Override
     public void save(DomainEvent domainEvent) {
         OutboxJpaEntity outboxJpaEntity = OutboxJpaEntity.builder()
-                .eventUuid(domainEvent.getEventUuid())
+                .eventId(domainEvent.getEventUuid())
                 .serializedEvent(objectMapper.writeValueAsString(domainEvent))
                 .published(false)
                 .build();
@@ -46,7 +46,7 @@ public class DomainEventPersistenceAdapter implements DomainEventPersistencePort
 
     @Override
     public void completeProcess(DomainEvent domainEvent) {
-        OutboxJpaEntity outbox = outboxRepository.findByEventUuid(domainEvent.getEventUuid());
+        OutboxJpaEntity outbox = outboxRepository.findByEventId(domainEvent.getEventUuid());
         outbox.markAsPublished();
 
         outboxRepository.save(outbox);

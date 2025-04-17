@@ -4,8 +4,10 @@ import com.minipay.banking.domain.model.FundTransaction;
 import com.minipay.banking.domain.model.MinipayBankAccount;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.util.UUID;
 
 @Getter
@@ -20,9 +22,12 @@ public class FundTransactionJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "fund_transaction_id", unique = true, nullable = false, updatable = false)
+    @JdbcTypeCode(Types.CHAR)
     private UUID fundTransactionId;
 
+    @Column(name = "bank_account_id", nullable = false, updatable = false)
+    @JdbcTypeCode(Types.CHAR)
     private UUID bankAccountId;
 
     @Enumerated(EnumType.STRING)

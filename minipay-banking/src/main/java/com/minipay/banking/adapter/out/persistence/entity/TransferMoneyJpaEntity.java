@@ -3,8 +3,10 @@ package com.minipay.banking.adapter.out.persistence.entity;
 import com.minipay.banking.domain.model.TransferMoney;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.util.UUID;
 
 @Getter
@@ -19,6 +21,8 @@ public class TransferMoneyJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "transfer_money_id", unique = true, nullable = false, updatable = false)
+    @JdbcTypeCode(Types.CHAR)
     private UUID transferMoneyId;
 
     private String srcBankName;

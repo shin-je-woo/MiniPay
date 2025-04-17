@@ -9,5 +9,5 @@ import java.util.UUID;
 public interface SpringDataOutboxRepository extends JpaRepository<OutboxJpaEntity, Long> {
 
     List<OutboxJpaEntity> findAllByPublishedFalseOrderByIdAsc();
-    OutboxJpaEntity findByEventUuid(UUID uuid);
+    OutboxJpaEntity findByEventId(UUID eventId);
 }

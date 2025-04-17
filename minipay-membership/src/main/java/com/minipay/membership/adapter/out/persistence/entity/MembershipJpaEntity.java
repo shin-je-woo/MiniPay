@@ -2,7 +2,9 @@ package com.minipay.membership.adapter.out.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 
+import java.sql.Types;
 import java.util.UUID;
 
 @Getter
@@ -17,6 +19,8 @@ public class MembershipJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "membership_id", unique = true, nullable = false, updatable = false)
+    @JdbcTypeCode(Types.CHAR)
     private UUID membershipId;
 
     private String name;

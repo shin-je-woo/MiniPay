@@ -2,9 +2,11 @@ package com.minipay.money.adapter.out.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -21,7 +23,9 @@ public class OutboxJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private UUID eventUuid;
+    @Column(name = "event_id", unique = true, nullable = false, updatable = false)
+    @JdbcTypeCode(Types.CHAR)
+    private UUID eventId;
 
     @Lob
     private String serializedEvent;

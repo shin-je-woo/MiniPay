@@ -3,8 +3,10 @@ package com.minipay.remittance.adapter.out.persistnce.entity;
 import com.minipay.remittance.domain.Remittance;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.util.UUID;
 
 @Getter
@@ -19,10 +21,16 @@ public class RemittanceJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "remittance_id", unique = true, nullable = false, updatable = false)
+    @JdbcTypeCode(Types.CHAR)
     private UUID remittanceId;
 
+    @Column(name = "sender_id", nullable = false, updatable = false)
+    @JdbcTypeCode(Types.CHAR)
     private UUID senderId;
 
+    @Column(name = "recipient_id", updatable = false)
+    @JdbcTypeCode(Types.CHAR)
     private UUID recipientId;
 
     private String destBankName;
