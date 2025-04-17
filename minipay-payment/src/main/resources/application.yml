@@ -12,6 +12,9 @@ spring:
       maximum-pool-size: 30
       connection-timeout: 5000
       validation-timeout: 5000
+  sql:
+    init:
+      mode: always
 
   jpa:
     hibernate:
