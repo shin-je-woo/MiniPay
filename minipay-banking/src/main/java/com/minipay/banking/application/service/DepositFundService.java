@@ -43,8 +43,8 @@ public class DepositFundService implements DepositFundUseCase {
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
                 .srcBankName(externalBankAccountInfo.bankName())
                 .srcAccountNumber(externalBankAccountInfo.accountNumber())
-                .destBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
-                .destAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .destBankName(MinipayBankAccount.CORPORATE_ACCOUNT.getBankName())
+                .destAccountNumber(MinipayBankAccount.CORPORATE_ACCOUNT.getAccountNumber())
                 .amount(command.getAmount())
                 .build();
         FirmBankingResult firmBankingResult = externalBankingPort.requestFirmBanking(firmBankingRequest);
@@ -68,8 +68,8 @@ public class DepositFundService implements DepositFundUseCase {
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
                 .srcBankName(bankAccount.getLinkedBankAccount().bankName().value())
                 .srcAccountNumber(bankAccount.getLinkedBankAccount().accountNumber().value())
-                .destBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
-                .destAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .destBankName(MinipayBankAccount.CORPORATE_ACCOUNT.getBankName())
+                .destAccountNumber(MinipayBankAccount.CORPORATE_ACCOUNT.getAccountNumber())
                 .amount(event.amount())
                 .build();
         return externalBankingPort.requestFirmBanking(firmBankingRequest);

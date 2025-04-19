@@ -42,8 +42,8 @@ public class WithdrawalFundService implements WithdrawalFundUseCase {
 
         // 3. 외부 은행에 펌뱅킹 요청
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
-                .srcBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
-                .srcAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .srcBankName(MinipayBankAccount.CORPORATE_ACCOUNT.getBankName())
+                .srcAccountNumber(MinipayBankAccount.CORPORATE_ACCOUNT.getAccountNumber())
                 .destBankName(command.getBankName())
                 .destAccountNumber(command.getBankAccountNumber())
                 .amount(command.getAmount())
@@ -80,8 +80,8 @@ public class WithdrawalFundService implements WithdrawalFundUseCase {
     public FirmBankingResult processWithdrawalByAxon(WithdrawalFundCreatedEvent event) {
         // 외부 은행에 펌뱅킹 요청
         FirmBankingRequest firmBankingRequest = FirmBankingRequest.builder()
-                .srcBankName(MinipayBankAccount.NORMAL_ACCOUNT.getBankName())
-                .srcAccountNumber(MinipayBankAccount.NORMAL_ACCOUNT.getAccountNumber())
+                .srcBankName(MinipayBankAccount.CORPORATE_ACCOUNT.getBankName())
+                .srcAccountNumber(MinipayBankAccount.CORPORATE_ACCOUNT.getAccountNumber())
                 .destBankName(event.withdrawalBankName())
                 .destAccountNumber(event.withdrawalAccountNumber())
                 .amount(event.amount())

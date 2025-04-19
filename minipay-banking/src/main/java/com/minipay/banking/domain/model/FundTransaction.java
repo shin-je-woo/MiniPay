@@ -1,7 +1,10 @@
 package com.minipay.banking.domain.model;
 
 import jakarta.annotation.Nullable;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.UUID;
 
@@ -28,7 +31,7 @@ public class FundTransaction {
         return new FundTransaction(
                 FundTransactionId.generate(),
                 bankAccountId,
-                MinipayBankAccount.NORMAL_ACCOUNT,
+                MinipayBankAccount.CORPORATE_ACCOUNT,
                 null,
                 FundType.DEPOSIT,
                 money,
@@ -44,7 +47,7 @@ public class FundTransaction {
         return new FundTransaction(
                 FundTransactionId.generate(),
                 bankAccountId,
-                MinipayBankAccount.NORMAL_ACCOUNT,
+                MinipayBankAccount.CORPORATE_ACCOUNT,
                 withdrawalBankAccount,
                 FundType.WITHDRAWAL,
                 money,

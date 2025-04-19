@@ -3,6 +3,7 @@ package com.minipay.payment.adapter.out.persistence.entity;
 import com.minipay.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.JdbcTypeCode;
 
 import java.math.BigDecimal;
@@ -21,22 +22,31 @@ public class PaymentJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Comment("결제 식별자")
     @Column(name = "payment_id", unique = true, nullable = false, updatable = false)
     @JdbcTypeCode(Types.CHAR)
     private UUID paymentId;
 
+    @Comment("구매자(회원) 식별자")
     @Column(name = "buyer_id", nullable = false, updatable = false)
     @JdbcTypeCode(Types.CHAR)
     private UUID buyerId;
 
+    @Comment("판매자(회원) 식별자")
     @Column(name = "seller_id", nullable = false, updatable = false)
     @JdbcTypeCode(Types.CHAR)
     private UUID sellerId;
 
+    @Comment("결제 금액")
+    @Column(name = "price", nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
 
+    @Comment("수수료율 (예: 0.015)")
+    @Column(name = "fee_rate", nullable = false, precision = 6, scale = 4)
     private BigDecimal feeRate;
 
+    @Comment("결제 상태")
     @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status", nullable = false, length = 30)
     private Payment.PaymentStatus paymentStatus;
 }

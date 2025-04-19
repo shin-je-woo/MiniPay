@@ -1,8 +1,9 @@
 package com.minipay.banking.adapter.in.web.controller;
 
-import com.minipay.banking.adapter.in.web.request.DepositFundRequest;
 import com.minipay.banking.adapter.in.web.request.WithdrawalFundRequest;
-import com.minipay.banking.application.port.in.*;
+import com.minipay.banking.application.port.in.WithdrawalFundByAxonCommand;
+import com.minipay.banking.application.port.in.WithdrawalFundCommand;
+import com.minipay.banking.application.port.in.WithdrawalFundUseCase;
 import com.minipay.common.annotation.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FundTransactionController {
 
     private final WithdrawalFundUseCase withdrawalFundUseCase;
-    private final DepositFundUseCase depositFundUseCase;
 
     @PostMapping("/fund-transactions/withdrawal")
     ResponseEntity<Void> withdrawalFund(@RequestBody WithdrawalFundRequest request) {
