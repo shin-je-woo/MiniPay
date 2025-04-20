@@ -1,10 +1,8 @@
 package com.minipay.money.adapter.in.web.controller;
 
 import com.minipay.common.annotation.WebAdapter;
-import com.minipay.money.adapter.in.web.request.CreateMoneyRequest;
-import com.minipay.money.adapter.in.web.request.DecreaseMoneyRequest;
-import com.minipay.money.adapter.in.web.request.IncreaseMoneyRequest;
-import com.minipay.money.adapter.in.web.request.RechargeMoneyRequest;
+import com.minipay.money.adapter.in.web.request.*;
+import com.minipay.money.adapter.in.web.response.MemberMoneyListResponse;
 import com.minipay.money.adapter.in.web.response.MemberMoneyResponse;
 import com.minipay.money.application.port.in.*;
 import com.minipay.money.domain.model.MemberMoney;
@@ -12,10 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @WebAdapter
-@RestController("/internal")
+@RestController
 @RequiredArgsConstructor
 public class MemberMoneyController {
 
@@ -23,7 +22,7 @@ public class MemberMoneyController {
     private final RechargeMoneyUseCase rechargeMoneyUseCase;
     private final IncreaseMoneyUseCase increaseMoneyUseCase;
     private final DecreaseMoneyUseCase decreaseMoneyUseCase;
-    private final MemberMoneyQuery memberMoneyQuery;
+    private final GetMemberMoneyUseCase getMemberMoneyUseCase;
 
     @PostMapping("/member-money/{memberMoneyId}/recharge")
     ResponseEntity<MemberMoneyResponse> requestMemberMoneyRecharge(
@@ -85,7 +84,13 @@ public class MemberMoneyController {
 
     @GetMapping("/member-money")
     ResponseEntity<MemberMoneyResponse> getMemberMoney(@RequestParam UUID membershipId) {
-        MemberMoney memberMoney = memberMoneyQuery.getMemberMoney(membershipId);
+        MemberMoney memberMoney = getMemberMoneyUseCase.getMemberMoney(membershipId);
         return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
+    }
+
+    @GetMapping("/member-money/list")
+    ResponseEntity<MemberMoneyListResponse> getMemberMoneyListByMembershipIds(@RequestParam List<UUID> membershipIds) {
+        List<MemberMoney> memberMoneyList = getMemberMoneyUseCase.getMemberMoneyList(membershipIds);
+        return ResponseEntity.ok(MemberMoneyListResponse.from(memberMoneyList));
     }
 }

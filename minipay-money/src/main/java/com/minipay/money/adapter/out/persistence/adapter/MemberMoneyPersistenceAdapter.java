@@ -9,6 +9,7 @@ import com.minipay.money.application.port.out.MemberMoneyPersistencePort;
 import com.minipay.money.domain.model.MemberMoney;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @PersistenceAdapter
@@ -57,5 +58,12 @@ public class MemberMoneyPersistenceAdapter implements MemberMoneyPersistencePort
                 .orElseThrow(() -> new DataNotFoundException("Member money not found"));
 
         return memberMoneyMapper.mapToDomain(memberMoneyJpaEntity);
+    }
+
+    @Override
+    public List<MemberMoney> readMemberMoneyListByMembershipIds(List<UUID> membershipIds) {
+        return memberMoneyRepository.findByMembershipIdIn(membershipIds).stream()
+                .map(memberMoneyMapper::mapToDomain)
+                .toList();
     }
 }
