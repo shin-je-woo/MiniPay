@@ -8,6 +8,7 @@ import com.minipay.membership.adapter.out.persistence.repository.SpringDataMembe
 import com.minipay.membership.application.port.out.MembershipPersistencePort;
 import com.minipay.membership.domain.Membership;
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
@@ -37,5 +38,12 @@ public class MembershipPersistenceAdapter implements MembershipPersistencePort {
         return membershipRepository.findByMembershipId(membershipId.value())
                 .map(membershipMapper::mapToDomain)
                 .orElseThrow(() -> new DataNotFoundException("Membership not found"));
+    }
+
+    @Override
+    public List<Membership> readMembershipByAddress(String address) {
+        return membershipRepository.findByAddress(address).stream()
+                .map(membershipMapper::mapToDomain)
+                .toList();
     }
 }

@@ -3,6 +3,7 @@ package com.minipay.membership.adapter.in.web.controller;
 import com.minipay.common.annotation.WebAdapter;
 import com.minipay.membership.adapter.in.web.request.ModifyMembershipRequest;
 import com.minipay.membership.adapter.in.web.request.RegisterMembershipRequest;
+import com.minipay.membership.adapter.in.web.response.MembershipByAddressResponse;
 import com.minipay.membership.adapter.in.web.response.MembershipResponse;
 import com.minipay.membership.application.port.in.*;
 import com.minipay.membership.domain.Membership;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @WebAdapter
@@ -18,7 +20,7 @@ import java.util.UUID;
 public class MembershipController {
 
     private final RegisterMembershipUseCase registerMembershipUseCase;
-    private final GetMembershipQuery getMembershipQuery;
+    private final GetMembershipUseCase getMembershipUseCase;
     private final ModifyMembershipUseCase modifyMembershipUseCase;
 
     @PostMapping("/membership")
@@ -37,7 +39,7 @@ public class MembershipController {
 
     @GetMapping("/membership/{membershipId}")
     public ResponseEntity<MembershipResponse> getMembership(@PathVariable UUID membershipId) {
-        Membership membership = getMembershipQuery.getMembership(membershipId);
+        Membership membership = getMembershipUseCase.getMembership(membershipId);
 
         return ResponseEntity.ok(MembershipResponse.from(membership));
     }
@@ -56,5 +58,11 @@ public class MembershipController {
         Membership membership = modifyMembershipUseCase.modifyMembership(command);
 
         return ResponseEntity.ok(MembershipResponse.from(membership));
+    }
+
+    @GetMapping("/membership")
+    public ResponseEntity<MembershipByAddressResponse> getMembershipByAddress(@RequestParam String address) {
+        List<Membership> memberships = getMembershipUseCase.getMembershipByAddress(address);
+        return ResponseEntity.ok(MembershipByAddressResponse.from(memberships));
     }
 }
