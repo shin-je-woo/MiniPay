@@ -117,6 +117,8 @@ services:
       - "8087:8087"
     environment:
       - SPRING_PROFILES_ACTIVE=local
+      - MINIPAY_MEMBERSHIP_URL=http://minipay-membership:8081
+      - MINIPAY_MONEY_URL=http://minipay-money:8083
 
   zookeeper:
     image: 'bitnami/zookeeper:3.9.2'
