@@ -3,6 +3,8 @@ package com.minipay.money.adapter.in.axon.projection;
 import com.minipay.money.application.port.out.MemberMoneyPersistencePort;
 import com.minipay.money.application.port.out.MoneyHistoryPersistencePort;
 import com.minipay.money.domain.event.MemberMoneyCreatedEvent;
+import com.minipay.money.domain.event.MemberMoneyDecreasedEvent;
+import com.minipay.money.domain.event.MemberMoneyIncreasedEvent;
 import com.minipay.money.domain.event.RechargeMoneyRequestedEvent;
 import com.minipay.money.domain.model.MemberMoney;
 import com.minipay.money.domain.model.Money;
@@ -84,5 +86,37 @@ public class MemberMoneyProjection {
         MoneyHistory moneyHistory = moneyHistoryPersistencePort.readMoneyHistory(new MoneyHistory.MoneyHistoryId(event.moneyHistoryId()));
         moneyHistory.failDepositFund();
         moneyHistoryPersistencePort.updateMoneyHistory(moneyHistory);
+    }
+
+    @EventHandler
+    public void on(MemberMoneyIncreasedEvent event) {
+        log.info("[Projection] MemberMoney 증액 및 이력 저장");
+        MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(new MemberMoney.MemberMoneyId(event.memberMoneyId()));
+        memberMoney.increaseBalance(new Money(event.amount()));
+        memberMoneyPersistencePort.updateMemberMoney(memberMoney);
+
+        MoneyHistory moneyHistory = MoneyHistory.newInstance(
+                new MemberMoney.MemberMoneyId(memberMoney.getMemberMoneyId().value()),
+                MoneyHistory.ChangeType.INCREASE,
+                new Money(event.amount())
+        );
+        moneyHistory.succeed(memberMoney);
+        moneyHistoryPersistencePort.createMoneyHistory(moneyHistory);
+    }
+
+    @EventHandler
+    public void on(MemberMoneyDecreasedEvent event) {
+        log.info("[Projection] MemberMoney 감액 및 이력 저장");
+        MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(new MemberMoney.MemberMoneyId(event.memberMoneyId()));
+        memberMoney.decreaseBalance(new Money(event.amount()));
+        memberMoneyPersistencePort.updateMemberMoney(memberMoney);
+
+        MoneyHistory moneyHistory = MoneyHistory.newInstance(
+                new MemberMoney.MemberMoneyId(memberMoney.getMemberMoneyId().value()),
+                MoneyHistory.ChangeType.DECREASE,
+                new Money(event.amount())
+        );
+        moneyHistory.succeed(memberMoney);
+        moneyHistoryPersistencePort.createMoneyHistory(moneyHistory);
     }
 }

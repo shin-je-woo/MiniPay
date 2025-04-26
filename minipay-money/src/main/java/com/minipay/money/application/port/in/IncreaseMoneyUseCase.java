@@ -4,4 +4,5 @@ import com.minipay.money.domain.model.MemberMoney;
 
 public interface IncreaseMoneyUseCase {
     MemberMoney increaseMoney(IncreaseMoneyCommand command);
+    void increaseMoneyByAxon(IncreaseMoneyCommand command);
 }

@@ -19,58 +19,7 @@ import java.util.UUID;
 public class MemberMoneyController {
 
     private final RegisterMemberMoneyUseCase registerMemberMoneyUseCase;
-    private final RechargeMoneyUseCase rechargeMoneyUseCase;
-    private final IncreaseMoneyUseCase increaseMoneyUseCase;
-    private final DecreaseMoneyUseCase decreaseMoneyUseCase;
     private final GetMemberMoneyUseCase getMemberMoneyUseCase;
-
-    @PostMapping("/member-money/{memberMoneyId}/recharge")
-    ResponseEntity<MemberMoneyResponse> requestMemberMoneyRecharge(
-            @PathVariable UUID memberMoneyId, @RequestBody RechargeMoneyRequest request
-    ) {
-        RequestMoneyRechargeCommand command = RequestMoneyRechargeCommand.builder()
-                .memberMoneyId(memberMoneyId)
-                .amount(request.amount())
-                .build();
-        MemberMoney memberMoney = rechargeMoneyUseCase.requestMoneyRecharge(command);
-        return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
-    }
-
-    @PostMapping("/member-money/{memberMoneyId}/recharge-axon")
-    ResponseEntity<Void> requestMemberMoneyRechargeByAxon(
-            @PathVariable UUID memberMoneyId, @RequestBody RechargeMoneyRequest request
-    ) {
-        RequestMoneyRechargeCommand command = RequestMoneyRechargeCommand.builder()
-                .memberMoneyId(memberMoneyId)
-                .amount(request.amount())
-                .build();
-        rechargeMoneyUseCase.requestMoneyRechargeByAxon(command);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/member-money/{memberMoneyId}/increase")
-    ResponseEntity<MemberMoneyResponse> increaseMemberMoney(
-            @PathVariable UUID memberMoneyId, @RequestBody IncreaseMoneyRequest request
-    ) {
-        IncreaseMoneyCommand command = IncreaseMoneyCommand.builder()
-                .memberMoneyId(memberMoneyId)
-                .amount(request.amount())
-                .build();
-        MemberMoney memberMoney = increaseMoneyUseCase.increaseMoney(command);
-        return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
-    }
-
-    @PostMapping("/member-money/{memberMoneyId}/decrease")
-    ResponseEntity<MemberMoneyResponse> decreaseMemberMoney(
-            @PathVariable UUID memberMoneyId, @RequestBody DecreaseMoneyRequest request
-    ) {
-        DecreaseMoneyCommand command = DecreaseMoneyCommand.builder()
-                .memberMoneyId(memberMoneyId)
-                .amount(request.amount())
-                .build();
-        MemberMoney memberMoney = decreaseMoneyUseCase.decreaseMoney(command);
-        return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
-    }
 
     @PostMapping("/member-money/axon")
     ResponseEntity<Void> createMemberMoney(@RequestBody CreateMoneyRequest request) {

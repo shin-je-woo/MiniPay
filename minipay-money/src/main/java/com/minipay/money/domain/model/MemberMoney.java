@@ -97,6 +97,9 @@ public class MemberMoney {
         }
 
         this.balance = this.balance.subtract(money);
+        if (this.balance.isNegative()) {
+            throw new DomainRuleException("감액하려는 금액이 잔고보다 큽니다.");
+        }
     }
 
     /**

@@ -1,8 +1,13 @@
 package com.minipay.money.domain.aggregate;
 
+import com.minipay.common.exception.DomainRuleException;
 import com.minipay.money.adapter.in.axon.command.CreateMemberMoneyCommand;
+import com.minipay.money.adapter.in.axon.command.DecreaseMemberMoneyCommand;
+import com.minipay.money.adapter.in.axon.command.IncreaseMemberMoneyCommand;
 import com.minipay.money.adapter.in.axon.command.RequestRechargeMoneyCommand;
 import com.minipay.money.domain.event.MemberMoneyCreatedEvent;
+import com.minipay.money.domain.event.MemberMoneyDecreasedEvent;
+import com.minipay.money.domain.event.MemberMoneyIncreasedEvent;
 import com.minipay.money.domain.event.RechargeMoneyRequestedEvent;
 import com.minipay.money.domain.model.MemberMoney;
 import com.minipay.money.domain.model.Money;
@@ -68,5 +73,43 @@ public class MemberMoneyAggregate {
                 command.bankAccountId(),
                 command.amount()
         ));
+    }
+
+    @CommandHandler
+    public void on(IncreaseMemberMoneyCommand command) {
+        log.info("IncreaseMemberMoneyCommand Handler");
+        AggregateLifecycle.apply(new MemberMoneyIncreasedEvent(
+                command.memberMoneyId(),
+                command.amount()
+        ));
+    }
+
+    @EventSourcingHandler
+    public void on(MemberMoneyIncreasedEvent event) {
+        log.info("MemberMoneyIncreasedEvent Handler");
+        this.memberMoney.increaseBalance(new Money(event.amount()));
+    }
+
+    @CommandHandler
+    public void on(DecreaseMemberMoneyCommand command) {
+        log.info("DecreaseMemberMoneyCommand Handler");
+
+        Money currentBalance = this.memberMoney.getBalance();
+        Money decreaseAmount = new Money(command.amount());
+        if (currentBalance.value().compareTo(decreaseAmount.value()) < 0) {
+            throw new DomainRuleException(String.format("잔액 부족: 현재 잔액 %s, 차감 요청 금액 %s",
+                    currentBalance.value(), decreaseAmount.value()));
+        }
+
+        AggregateLifecycle.apply(new MemberMoneyDecreasedEvent(
+                command.memberMoneyId(),
+                command.amount()
+        ));
+    }
+
+    @EventSourcingHandler
+    public void on(MemberMoneyDecreasedEvent event) {
+        log.info("MemberMoneyDecreasedEvent Handler");
+        this.memberMoney.decreaseBalance(new Money(event.amount()));
     }
 }

@@ -2,6 +2,7 @@ package com.minipay.money.application.service;
 
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.exception.BusinessException;
+import com.minipay.money.adapter.in.axon.command.DecreaseMemberMoneyCommand;
 import com.minipay.money.application.port.in.DecreaseMoneyAfterBankingCommand;
 import com.minipay.money.application.port.in.DecreaseMoneyCommand;
 import com.minipay.money.application.port.in.DecreaseMoneyUseCase;
@@ -12,6 +13,7 @@ import com.minipay.money.domain.model.MemberMoney;
 import com.minipay.money.domain.model.Money;
 import com.minipay.money.domain.model.MoneyHistory;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -24,6 +26,7 @@ public class DecreaseMoneyService implements DecreaseMoneyUseCase {
     private final MemberMoneyPersistencePort memberMoneyPersistencePort;
     private final MoneyHistoryPersistencePort moneyHistoryPersistencePort;
     private final MembershipServicePort membershipServicePort;
+    private final CommandGateway commandGateway;
 
     @Override
     public MemberMoney decreaseMoney(DecreaseMoneyCommand command) {
@@ -36,6 +39,11 @@ public class DecreaseMoneyService implements DecreaseMoneyUseCase {
         UUID bankAccountId = command.getBankAccountId();
         MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoneyByBankAccountId(bankAccountId);
         executeDecreaseMoney(memberMoney, new Money(command.getAmount()));
+    }
+
+    @Override
+    public void decreaseMoneyByAxon(DecreaseMoneyCommand command) {
+        commandGateway.send(new DecreaseMemberMoneyCommand(command.getMemberMoneyId(), command.getAmount()));
     }
 
     private MemberMoney executeDecreaseMoney(MemberMoney memberMoney, Money decreaseAmount) {
