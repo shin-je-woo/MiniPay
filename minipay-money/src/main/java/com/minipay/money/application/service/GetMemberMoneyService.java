@@ -13,7 +13,7 @@ import java.util.UUID;
 @UseCase
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class GetMemberMoneyUseCaseService implements GetMemberMoneyUseCase {
+public class GetMemberMoneyService implements GetMemberMoneyUseCase {
 
     private final MemberMoneyPersistencePort memberMoneyPersistencePort;
 
