@@ -31,7 +31,7 @@ public class BankAccountAggregate {
     public BankAccountAggregate(CreateBankAccountCommand command) {
         log.info("CreateBankAccountCommand Handler");
 
-        BankAccount createdBankAccount = BankAccount.newInstance(
+        BankAccount createdBankAccount = BankAccount.newInstanceWithoutEvent(
                 new BankAccount.MembershipId(command.membershipId()),
                 new ExternalBankAccount(
                         new ExternalBankAccount.BankName(command.bankName()),

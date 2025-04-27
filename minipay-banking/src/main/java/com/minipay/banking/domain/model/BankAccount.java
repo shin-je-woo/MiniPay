@@ -29,6 +29,13 @@ public class BankAccount {
         return bankAccount;
     }
 
+    public static BankAccount newInstanceWithoutEvent(
+            MembershipId membershipId,
+            ExternalBankAccount externalBankAccount
+    ) {
+        return new BankAccount(BankAccountId.generate(), membershipId, externalBankAccount, LinkedStatus.VALID);
+    }
+
     public static BankAccount withId(
             BankAccountId bankAccountId,
             MembershipId membershipId,
