@@ -1,4 +1,4 @@
-package com.minipay.money.adapter.out.service;
+package com.minipay.money.adapter.out.service.membership;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

@@ -36,3 +36,8 @@ spring:
 minipay:
   membership:
     url: ${MINIPAY_MEMBERSHIP_URL}
+  banking:
+    url: ${MINIPAY_BANKING_URL}
+
+app:
+  generate-initial-data: false

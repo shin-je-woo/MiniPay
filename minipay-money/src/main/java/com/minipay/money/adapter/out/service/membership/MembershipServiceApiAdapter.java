@@ -1,4 +1,4 @@
-package com.minipay.money.adapter.out.service;
+package com.minipay.money.adapter.out.service.membership;
 
 import com.minipay.common.annotation.MiniPayServiceAdapter;
 import com.minipay.money.application.port.out.MembershipServicePort;

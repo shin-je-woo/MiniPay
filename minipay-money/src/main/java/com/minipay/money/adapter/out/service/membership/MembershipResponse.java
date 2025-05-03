@@ -1,4 +1,4 @@
-package com.minipay.money.adapter.out.service;
+package com.minipay.money.adapter.out.service.membership;
 
 import java.util.UUID;
 
