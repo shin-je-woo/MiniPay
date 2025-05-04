@@ -3,7 +3,9 @@ package com.minipay.remittance.adapter.out.service.membership;
 import com.minipay.common.annotation.MiniPayServiceAdapter;
 import com.minipay.remittance.application.port.out.MembershipServicePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @MiniPayServiceAdapter
@@ -14,7 +16,9 @@ public class MembershipServiceApiAdapter implements MembershipServicePort {
 
     @Override
     public boolean isValidMembership(UUID membershipId) {
-        MembershipResponse membershipResponse = membershipFeignClient.getMembership(membershipId).getBody();
-        return membershipResponse.isValid();
+        return Optional.ofNullable(membershipFeignClient.getMembership(membershipId))
+                .map(ResponseEntity::getBody)
+                .map(MembershipResponse::isValid)
+                .orElse(false);
     }
 }

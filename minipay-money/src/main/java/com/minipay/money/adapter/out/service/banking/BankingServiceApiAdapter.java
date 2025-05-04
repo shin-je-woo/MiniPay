@@ -6,7 +6,9 @@ import com.minipay.money.application.port.out.BankingServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @MiniPayServiceAdapter
@@ -20,13 +22,13 @@ public class BankingServiceApiAdapter implements BankingServicePort {
         return Optional.ofNullable(bankingFeignClient.getBankAccountsByBankName(bankName))
                 .map(ResponseEntity::getBody)
                 .map(BankAccountListResponse::bankAccounts)
-                .map(bankAccounts -> bankAccounts.stream()
-                        .map(bankAccountResponse -> new BankAccountInfo(
-                                bankAccountResponse.bankAccountId(),
-                                bankAccountResponse.membershipId()
-                        ))
-                        .toList())
-                .orElse(List.of());
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(Objects::nonNull)
+                .map(bankAccountResponse -> new BankAccountInfo(
+                        bankAccountResponse.bankAccountId(),
+                        bankAccountResponse.membershipId())
+                )
+                .toList();
     }
-
 }

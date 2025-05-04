@@ -3,8 +3,11 @@ package com.minipay.banking.adapter.out.service;
 import com.minipay.banking.application.port.out.MembershipServicePort;
 import com.minipay.common.annotation.MiniPayServiceAdapter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @MiniPayServiceAdapter
@@ -15,14 +18,19 @@ public class MembershipServiceApiAdapter implements MembershipServicePort {
 
     @Override
     public boolean isValidMembership(UUID membershipId) {
-        MembershipResponse membershipResponse = membershipFeignClient.getMembership(membershipId).getBody();
-        return membershipResponse.isValid();
+        return Optional.ofNullable(membershipFeignClient.getMembership(membershipId))
+                .map(ResponseEntity::getBody)
+                .map(MembershipResponse::isValid)
+                .orElse(false);
     }
 
     @Override
     public List<UUID> getMembershipIdsByAddress(String address) {
-        MembershipByAddressResponse membershipByAddressResponse = membershipFeignClient.getMembershipByAddress(address).getBody();
-        return membershipByAddressResponse.memberships().stream()
+        return Optional.ofNullable(membershipFeignClient.getMembershipByAddress(address))
+                .map(ResponseEntity::getBody)
+                .map(MembershipByAddressResponse::memberships)
+                .orElse(Collections.emptyList())
+                .stream()
                 .map(MembershipResponse::membershipId)
                 .toList();
     }

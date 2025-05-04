@@ -3,9 +3,9 @@ package com.minipay.query.adapter.out.service.membership;
 import com.minipay.common.annotation.MiniPayServiceAdapter;
 import com.minipay.query.application.port.out.MembershipServicePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @MiniPayServiceAdapter
 @RequiredArgsConstructor
@@ -15,8 +15,12 @@ public class MembershipServiceApiAdapter implements MembershipServicePort {
 
     @Override
     public List<UUID> getMembershipIdsByAddress(String address) {
-        MembershipByAddressResponse membershipByAddressResponse = membershipFeignClient.getMembershipByAddress(address).getBody();
-        return membershipByAddressResponse.memberships().stream()
+        return Optional.ofNullable(membershipFeignClient.getMembershipByAddress(address))
+                .map(ResponseEntity::getBody)
+                .map(MembershipByAddressResponse::memberships)
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(Objects::nonNull)
                 .map(MembershipResponse::membershipId)
                 .toList();
     }

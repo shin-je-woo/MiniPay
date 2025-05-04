@@ -1,12 +1,14 @@
 package com.minipay.remittance.adapter.out.service.money;
 
 import com.minipay.common.annotation.MiniPayServiceAdapter;
+import com.minipay.common.exception.DataNotFoundException;
 import com.minipay.remittance.application.port.out.MoneyInfo;
 import com.minipay.remittance.application.port.out.MoneyServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
 @MiniPayServiceAdapter
@@ -17,12 +19,14 @@ public class MoneyServiceApiAdapter implements MoneyServicePort {
 
     @Override
     public MoneyInfo getMoneyInfo(UUID membershipId) {
-        MemberMoneyResponse memberMoneyResponse = moneyFeignClient.getMemberMoney(membershipId).getBody();
-        return MoneyInfo.builder()
-                .memberMoneyId(memberMoneyResponse.memberMoneyId())
-                .balance(memberMoneyResponse.balance())
-                .bankAccountId(memberMoneyResponse.bankAccountId())
-                .build();
+        return Optional.ofNullable(moneyFeignClient.getMemberMoney(membershipId))
+                .map(ResponseEntity::getBody)
+                .map(memberMoneyResponse -> new MoneyInfo(
+                        memberMoneyResponse.memberMoneyId(),
+                        memberMoneyResponse.bankAccountId(),
+                        memberMoneyResponse.balance()
+                ))
+                .orElseThrow(() -> new DataNotFoundException("Member money not found for membership id: " + membershipId));
     }
 
     @Override
