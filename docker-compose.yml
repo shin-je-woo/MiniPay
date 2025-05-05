@@ -120,6 +120,8 @@ services:
       - SPRING_PROFILES_ACTIVE=local
       - MINIPAY_MEMBERSHIP_URL=http://minipay-membership:8081
       - MINIPAY_MONEY_URL=http://minipay-money:8083
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
 
   zookeeper:
     image: 'bitnami/zookeeper:3.9.2'

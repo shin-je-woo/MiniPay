@@ -7,6 +7,6 @@ aws:
 
 minipay:
   membership:
-    url: ${MINIPAY_MEMBERSHIP_URL}
+    url: mock
   money:
-    url: ${MINIPAY_MONEY_URL}
+    url: mock
