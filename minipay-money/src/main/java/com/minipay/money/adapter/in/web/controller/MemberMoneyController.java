@@ -32,14 +32,23 @@ public class MemberMoneyController {
     }
 
     @GetMapping("/member-money")
-    ResponseEntity<MemberMoneyResponse> getMemberMoney(@RequestParam UUID membershipId) {
-        MemberMoney memberMoney = getMemberMoneyUseCase.getMemberMoney(membershipId);
+    ResponseEntity<MemberMoneyResponse> getMemberMoneyByMembershipId(@RequestParam UUID membershipId) {
+        MemberMoney memberMoney = getMemberMoneyUseCase.getMemberMoneyByMembershipId(new MemberMoney.MembershipId(membershipId));
+        return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
+    }
+
+    @GetMapping("/member-money/{memberMoneyId}")
+    ResponseEntity<MemberMoneyResponse> getMemberMoney(@PathVariable UUID memberMoneyId) {
+        MemberMoney memberMoney = getMemberMoneyUseCase.getMemberMoney(new MemberMoney.MemberMoneyId(memberMoneyId));
         return ResponseEntity.ok(MemberMoneyResponse.from(memberMoney));
     }
 
     @GetMapping("/member-money/list")
     ResponseEntity<MemberMoneyListResponse> getMemberMoneyListByMembershipIds(@RequestParam List<UUID> membershipIds) {
-        List<MemberMoney> memberMoneyList = getMemberMoneyUseCase.getMemberMoneyList(membershipIds);
+        List<MemberMoney.MembershipId> membershipIdList = membershipIds.stream()
+                .map(MemberMoney.MembershipId::new)
+                .toList();
+        List<MemberMoney> memberMoneyList = getMemberMoneyUseCase.getMemberMoneyList(membershipIdList);
         return ResponseEntity.ok(MemberMoneyListResponse.from(memberMoneyList));
     }
 }

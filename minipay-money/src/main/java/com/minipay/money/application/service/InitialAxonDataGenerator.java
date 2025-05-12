@@ -33,7 +33,7 @@ public class InitialAxonDataGenerator {
 
     private final BankingServicePort bankingServicePort;
     private final GetMemberMoneyUseCase getMemberMoneyUseCase;
-    private final IncreaseMoneyUseCase increaseMoneyUseCase;
+    private final RechargeMoneyUseCase rechargeMoneyUseCase;
     private final RegisterMemberMoneyUseCase registerMemberMoneyUseCase;
     private final ObjectProvider<InitialAxonDataGenerator> initialDataGeneratorProvider;
 
@@ -59,11 +59,11 @@ public class InitialAxonDataGenerator {
                 );
                 registerMemberMoneyUseCase.registerMemberMoneyByAxon(registerMemberMoneyCommand);
                 MemberMoney memberMoney = pollingMemberMoney(bankAccountInfo.membershipId());
-                IncreaseMoneyCommand increaseMoneyCommand = new IncreaseMoneyCommand(
+                RequestMoneyRechargeCommand requestMoneyRechargeCommand = new RequestMoneyRechargeCommand(
                         memberMoney.getMemberMoneyId().value(),
                         generateRandomAmount()
                 );
-                increaseMoneyUseCase.increaseMoneyByAxon(increaseMoneyCommand);
+                rechargeMoneyUseCase.requestMoneyRechargeByAxon(requestMoneyRechargeCommand);
             });
         });
     }
@@ -80,7 +80,7 @@ public class InitialAxonDataGenerator {
         while (retry < 10) {
             try {
                 Thread.sleep(100);
-                return getMemberMoneyUseCase.getMemberMoney(membershipId);
+                return getMemberMoneyUseCase.getMemberMoneyByMembershipId(new MemberMoney.MembershipId(membershipId));
             } catch (DataNotFoundException | InterruptedException e) {
                 log.info("pollingMemberMoney membershipId = {}, retry count = {}", membershipId, ++retry);
             }

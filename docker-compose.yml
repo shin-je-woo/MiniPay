@@ -117,6 +117,10 @@ services:
     ports:
       - "8087:8087"
     environment:
+      - AXON_AXONSERVER_SERVERS=axon-server:8124
+      - AXON_SERIALIZER_EVENTS=jackson
+      - AXON_SERIALIZER_MESSAGES=jackson
+      - AXON_SERIALIZER_GENERAL=xstream
       - SPRING_PROFILES_ACTIVE=local
       - MINIPAY_MEMBERSHIP_URL=http://minipay-membership:8081
       - MINIPAY_MONEY_URL=http://minipay-money:8083

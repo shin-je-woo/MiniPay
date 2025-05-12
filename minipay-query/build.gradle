@@ -8,7 +8,9 @@ version = '1.0.0'
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.axonframework:axon-spring-boot-starter:${axonVersion}"
     implementation project(':common')
+    implementation project(':saga-contracts')
 
     implementation platform('software.amazon.awssdk:bom:2.29.45')
     implementation 'software.amazon.awssdk:dynamodb-enhanced'

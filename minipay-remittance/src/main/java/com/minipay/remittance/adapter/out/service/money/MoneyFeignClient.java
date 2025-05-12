@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface MoneyFeignClient {
 
     @GetMapping("/member-money")
-    ResponseEntity<MemberMoneyResponse> getMemberMoney(@RequestParam UUID membershipId);
+    ResponseEntity<MemberMoneyResponse> getMemberMoneyByMembershipId(@RequestParam UUID membershipId);
 
     @PostMapping("/member-money/{memberMoneyId}/recharge")
     ResponseEntity<MemberMoneyResponse> requestMemberMoneyRecharge(

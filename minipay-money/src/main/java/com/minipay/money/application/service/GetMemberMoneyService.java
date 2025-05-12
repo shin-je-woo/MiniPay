@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @UseCase
 @Transactional(readOnly = true)
@@ -18,12 +17,17 @@ public class GetMemberMoneyService implements GetMemberMoneyUseCase {
     private final MemberMoneyPersistencePort memberMoneyPersistencePort;
 
     @Override
-    public MemberMoney getMemberMoney(UUID membershipId) {
+    public MemberMoney getMemberMoney(MemberMoney.MemberMoneyId memberMoneyId) {
+        return memberMoneyPersistencePort.readMemberMoney(memberMoneyId);
+    }
+
+    @Override
+    public MemberMoney getMemberMoneyByMembershipId(MemberMoney.MembershipId membershipId) {
         return memberMoneyPersistencePort.readMemberMoneyByMembershipId(membershipId);
     }
 
     @Override
-    public List<MemberMoney> getMemberMoneyList(List<UUID> membershipIds) {
+    public List<MemberMoney> getMemberMoneyList(List<MemberMoney.MembershipId> membershipIds) {
         return memberMoneyPersistencePort.readMemberMoneyListByMembershipIds(membershipIds);
     }
 }

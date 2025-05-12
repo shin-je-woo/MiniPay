@@ -16,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @UseCase
 @Transactional
 @RequiredArgsConstructor
@@ -30,13 +28,14 @@ public class DecreaseMoneyService implements DecreaseMoneyUseCase {
 
     @Override
     public MemberMoney decreaseMoney(DecreaseMoneyCommand command) {
-        MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(new MemberMoney.MemberMoneyId(command.getMemberMoneyId()));
+        MemberMoney.MemberMoneyId memberMoneyId = new MemberMoney.MemberMoneyId(command.getMemberMoneyId());
+        MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoney(memberMoneyId);
         return executeDecreaseMoney(memberMoney, new Money(command.getAmount()));
     }
 
     @Override
     public void decreaseMoneyAfterBanking(DecreaseMoneyAfterBankingCommand command) {
-        UUID bankAccountId = command.getBankAccountId();
+        MemberMoney.BankAccountId bankAccountId = new MemberMoney.BankAccountId(command.getBankAccountId());
         MemberMoney memberMoney = memberMoneyPersistencePort.readMemberMoneyByBankAccountId(bankAccountId);
         executeDecreaseMoney(memberMoney, new Money(command.getAmount()));
     }

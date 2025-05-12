@@ -1,6 +1,7 @@
 package com.minipay.query.adapter.out.dynamodb;
 
-import org.springframework.stereotype.Repository;
+import com.minipay.query.application.port.out.InsertMoneySumPort;
+import org.springframework.stereotype.Component;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
@@ -11,39 +12,34 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
-public class MoneySumByAddressRepository {
+@Component
+public class MoneySumDynamodbAdapter implements InsertMoneySumPort {
 
     private final DynamoDbTable<MoneySumByAddress> table;
 
-    public MoneySumByAddressRepository(DynamoDbEnhancedClient enhancedClient) {
+    public MoneySumDynamodbAdapter(DynamoDbEnhancedClient enhancedClient) {
         this.table = enhancedClient.table("money_sum_by_address", TableSchema.fromBean(MoneySumByAddress.class));
     }
 
-    public void insertMoneySumByAddress(String address, BigDecimal changeAmount, UUID membershipId) {
-        String currentDate = LocalDate.now().toString();
-
-        insertRawChange(address, currentDate, changeAmount, membershipId);
-        increaseDailySummary(address, currentDate, changeAmount);
-        increaseTotalSummary(address, changeAmount);
-    }
-
-    private void insertRawChange(String address, String date, BigDecimal amount, UUID membershipId) {
-        String pk = String.format("ADDR#%s#DATE#%s", address, date);
+    @Override
+    public void insertMoneyChange(String address, BigDecimal changeAmount, LocalDate changeDate, UUID membershipId) {
+        String pk = String.format("ADDR#%s#DATE#%s", address, changeDate);
         String sk = membershipId.toString();
 
-        MoneySumByAddress moneySumByAddress = new MoneySumByAddress(pk, sk, amount);
+        MoneySumByAddress moneySumByAddress = new MoneySumByAddress(pk, sk, changeAmount);
         table.putItem(moneySumByAddress);
     }
 
-    private void increaseDailySummary(String address, String date, BigDecimal amount) {
-        String pk = String.format("ADDR#%s#DATE#%s", address, date);
+    @Override
+    public void upsertDailySummary(String address, BigDecimal changeAmount, LocalDate changeDate) {
+        String pk = String.format("ADDR#%s#DATE#%s", address, changeDate);
         String sk = "SUMMARY";
 
-        updateOrInsertAmount(pk, sk, amount);
+        updateOrInsertAmount(pk, sk, changeAmount);
     }
 
-    private void increaseTotalSummary(String address, BigDecimal amount) {
+    @Override
+    public void upsertTotalSummary(String address, BigDecimal amount) {
         String pk = String.format("ADDR#%s", address);
         String sk = "TOTAL";
 

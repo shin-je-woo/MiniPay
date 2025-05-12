@@ -19,7 +19,7 @@ public class MoneyServiceApiAdapter implements MoneyServicePort {
 
     @Override
     public MoneyInfo getMoneyInfo(UUID membershipId) {
-        return Optional.ofNullable(moneyFeignClient.getMemberMoney(membershipId))
+        return Optional.ofNullable(moneyFeignClient.getMemberMoneyByMembershipId(membershipId))
                 .map(ResponseEntity::getBody)
                 .map(memberMoneyResponse -> new MoneyInfo(
                         memberMoneyResponse.memberMoneyId(),

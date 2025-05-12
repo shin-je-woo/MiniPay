@@ -45,24 +45,27 @@ public class MemberMoneyPersistenceAdapter implements MemberMoneyPersistencePort
     }
 
     @Override
-    public MemberMoney readMemberMoneyByMembershipId(UUID membershipId) {
-        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyRepository.findByMembershipId(membershipId)
+    public MemberMoney readMemberMoneyByMembershipId(MemberMoney.MembershipId membershipId) {
+        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyRepository.findByMembershipId(membershipId.value())
                 .orElseThrow(() -> new DataNotFoundException("Member money not found"));
 
         return memberMoneyMapper.mapToDomain(memberMoneyJpaEntity);
     }
 
     @Override
-    public MemberMoney readMemberMoneyByBankAccountId(UUID bankAccountId) {
-        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyRepository.findByBankAccountId(bankAccountId)
+    public MemberMoney readMemberMoneyByBankAccountId(MemberMoney.BankAccountId bankAccountId) {
+        MemberMoneyJpaEntity memberMoneyJpaEntity = memberMoneyRepository.findByBankAccountId(bankAccountId.value())
                 .orElseThrow(() -> new DataNotFoundException("Member money not found"));
 
         return memberMoneyMapper.mapToDomain(memberMoneyJpaEntity);
     }
 
     @Override
-    public List<MemberMoney> readMemberMoneyListByMembershipIds(List<UUID> membershipIds) {
-        return memberMoneyRepository.findByMembershipIdIn(membershipIds).stream()
+    public List<MemberMoney> readMemberMoneyListByMembershipIds(List<MemberMoney.MembershipId> membershipIds) {
+        List<UUID> membershipIdList = membershipIds.stream()
+                .map(MemberMoney.MembershipId::value)
+                .toList();
+        return memberMoneyRepository.findByMembershipIdIn(membershipIdList).stream()
                 .map(memberMoneyMapper::mapToDomain)
                 .toList();
     }
