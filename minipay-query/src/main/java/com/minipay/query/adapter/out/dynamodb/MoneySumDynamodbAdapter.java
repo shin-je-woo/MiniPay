@@ -1,6 +1,10 @@
 package com.minipay.query.adapter.out.dynamodb;
 
+import com.minipay.query.adapter.in.axon.dto.QueryMoneySumByAddress;
 import com.minipay.query.application.port.out.InsertMoneySumPort;
+import com.minipay.query.application.port.out.GetMoneySumPort;
+import com.minipay.query.domain.MoneySumByRegion;
+import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -13,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class MoneySumDynamodbAdapter implements InsertMoneySumPort {
+public class MoneySumDynamodbAdapter implements InsertMoneySumPort, GetMoneySumPort {
 
     private final DynamoDbTable<MoneySumByAddress> table;
 
@@ -61,5 +65,28 @@ public class MoneySumDynamodbAdapter implements InsertMoneySumPort {
                             table.putItem(newItem);
                         }
                 );
+    }
+
+    @QueryHandler
+    public MoneySumByRegion query(QueryMoneySumByAddress query) {
+        return getMoneySumByAddress(query.address());
+    }
+
+    @Override
+    public MoneySumByRegion getMoneySumByAddress(String address) {
+        String pk = String.format("ADDR#%s", address);
+        String sk = "TOTAL";
+
+        Key key = Key.builder()
+                .partitionValue(pk)
+                .sortValue(sk)
+                .build();
+
+        return Optional.ofNullable(table.getItem(r -> r.key(key)))
+                .map(moneySumByAddress -> MoneySumByRegion.newInstance(
+                        new MoneySumByRegion.RegionName(address),
+                        new MoneySumByRegion.MoneySum(moneySumByAddress.getBalance())
+                ))
+                .orElseThrow(() -> new IllegalStateException("getMoneySumByAddress에 해당하는 Query 데이터가 없습니다."));
     }
 }

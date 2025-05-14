@@ -1,7 +1,7 @@
 package com.minipay.query.application.port.in;
 
-import java.math.BigDecimal;
+import com.minipay.query.domain.MoneySumByRegion;
 
 public interface GetMoneySumQueryUseCase {
-    BigDecimal getMoneySumByAddress(GetMoneySumByAddressQuery query);
+    MoneySumByRegion getMoneySumByAddress(GetMoneySumByAddressQuery query);
 }
