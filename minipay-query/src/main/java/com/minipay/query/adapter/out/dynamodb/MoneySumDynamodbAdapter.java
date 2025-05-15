@@ -1,8 +1,9 @@
 package com.minipay.query.adapter.out.dynamodb;
 
+import com.minipay.query.adapter.in.axon.dto.QueryDailyMoneySumByAddress;
 import com.minipay.query.adapter.in.axon.dto.QueryMoneySumByAddress;
-import com.minipay.query.application.port.out.InsertMoneySumPort;
 import com.minipay.query.application.port.out.GetMoneySumPort;
+import com.minipay.query.application.port.out.InsertMoneySumPort;
 import com.minipay.query.domain.MoneySumByRegion;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ public class MoneySumDynamodbAdapter implements InsertMoneySumPort, GetMoneySumP
         String pk = String.format("ADDR#%s#DATE#%s", address, changeDate);
         String sk = "SUMMARY";
 
-        updateOrInsertAmount(pk, sk, changeAmount);
+        upsertAmount(pk, sk, changeAmount);
     }
 
     @Override
@@ -47,10 +48,46 @@ public class MoneySumDynamodbAdapter implements InsertMoneySumPort, GetMoneySumP
         String pk = String.format("ADDR#%s", address);
         String sk = "TOTAL";
 
-        updateOrInsertAmount(pk, sk, amount);
+        upsertAmount(pk, sk, amount);
     }
 
-    private void updateOrInsertAmount(String pk, String sk, BigDecimal amount) {
+    @Override
+    public MoneySumByRegion getMoneySumByAddress(String address) {
+        String pk = String.format("ADDR#%s", address);
+        String sk = "TOTAL";
+
+        Key key = Key.builder()
+                .partitionValue(pk)
+                .sortValue(sk)
+                .build();
+
+        return getMoneySumByRegion(key, address);
+    }
+
+    @Override
+    public MoneySumByRegion getDailyMoneySumByAddress(String address, LocalDate date) {
+        String pk = String.format("ADDR#%s#DATE#%s", address, date);
+        String sk = "SUMMARY";
+
+        Key key = Key.builder()
+                .partitionValue(pk)
+                .sortValue(sk)
+                .build();
+
+        return getMoneySumByRegion(key, address);
+    }
+
+    @QueryHandler
+    public MoneySumByRegion query(QueryMoneySumByAddress query) {
+        return getMoneySumByAddress(query.address());
+    }
+
+    @QueryHandler
+    public MoneySumByRegion query(QueryDailyMoneySumByAddress query) {
+        return getDailyMoneySumByAddress(query.address(), query.date());
+    }
+
+    private void upsertAmount(String pk, String sk, BigDecimal amount) {
         Key key = Key.builder().partitionValue(pk).sortValue(sk).build();
 
         Optional.ofNullable(table.getItem(r -> r.key(key)))
@@ -67,26 +104,12 @@ public class MoneySumDynamodbAdapter implements InsertMoneySumPort, GetMoneySumP
                 );
     }
 
-    @QueryHandler
-    public MoneySumByRegion query(QueryMoneySumByAddress query) {
-        return getMoneySumByAddress(query.address());
-    }
-
-    @Override
-    public MoneySumByRegion getMoneySumByAddress(String address) {
-        String pk = String.format("ADDR#%s", address);
-        String sk = "TOTAL";
-
-        Key key = Key.builder()
-                .partitionValue(pk)
-                .sortValue(sk)
-                .build();
-
+    private MoneySumByRegion getMoneySumByRegion(Key key, String address) {
         return Optional.ofNullable(table.getItem(r -> r.key(key)))
                 .map(moneySumByAddress -> MoneySumByRegion.newInstance(
                         new MoneySumByRegion.RegionName(address),
                         new MoneySumByRegion.MoneySum(moneySumByAddress.getBalance())
                 ))
-                .orElseThrow(() -> new IllegalStateException("getMoneySumByAddress에 해당하는 Query 데이터가 없습니다."));
+                .orElseThrow(() -> new IllegalStateException("Query 데이터가 없습니다."));
     }
 }
