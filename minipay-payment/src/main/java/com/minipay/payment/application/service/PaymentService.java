@@ -2,6 +2,7 @@ package com.minipay.payment.application.service;
 
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.exception.BusinessException;
+import com.minipay.payment.application.port.in.CompletePaymentCommand;
 import com.minipay.payment.application.port.in.CreatePaymentCommand;
 import com.minipay.payment.application.port.in.PaymentUseCase;
 import com.minipay.payment.application.port.out.MembershipServicePort;
@@ -35,5 +36,15 @@ public class PaymentService implements PaymentUseCase {
         );
         paymentPersistencePort.createPayment(payment);
         return payment;
+    }
+
+    @Override
+    public void completePayment(CompletePaymentCommand command) {
+        Payment payment = paymentPersistencePort.readPayment(new Payment.PaymentId(command.getPaymentId()));
+        payment.completePayment(
+                new Money(command.getPaidAmount()),
+                new Money(command.getFeeAmount())
+        );
+        paymentPersistencePort.updatePayment(payment);
     }
 }

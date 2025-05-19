@@ -41,7 +41,7 @@ public class PaymentJpaEntity {
     @Column(name = "price", nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
 
-    @Comment("수수료율 (예: 0.015)")
+    @Comment("수수료율 (예: 0.25)")
     @Column(name = "fee_rate", nullable = false, precision = 6, scale = 4)
     private BigDecimal feeRate;
 
@@ -49,4 +49,12 @@ public class PaymentJpaEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false, length = 30)
     private Payment.PaymentStatus paymentStatus;
+
+    @Comment("정산 금액")
+    @Column(name = "paid_amount", precision = 19, scale = 2)
+    private BigDecimal paidAmount;
+
+    @Comment("수수료 금액")
+    @Column(name = "fee_amount", precision = 19, scale = 2)
+    private BigDecimal feeAmount;
 }

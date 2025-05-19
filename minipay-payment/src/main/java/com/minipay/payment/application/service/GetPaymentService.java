@@ -18,6 +18,6 @@ public class GetPaymentService implements GetPaymentUseCase {
 
     @Override
     public List<Payment> getPayments(Payment.PaymentStatus paymentStatus) {
-        return paymentPersistencePort.getPayments(paymentStatus);
+        return paymentPersistencePort.readPayments(paymentStatus);
     }
 }

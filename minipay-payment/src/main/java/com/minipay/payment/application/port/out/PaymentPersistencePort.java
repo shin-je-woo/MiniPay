@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface PaymentPersistencePort {
     void createPayment(Payment payment);
-    List<Payment> getPayments(Payment.PaymentStatus paymentStatus);
+    Payment readPayment(Payment.PaymentId paymentId);
+    List<Payment> readPayments(Payment.PaymentStatus paymentStatus);
+    void updatePayment(Payment payment);
 }

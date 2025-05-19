@@ -15,7 +15,9 @@ public class PaymentMapper {
                 new Payment.MembershipId(payment.getSellerId()),
                 new Money(payment.getPrice()),
                 new Payment.FeeRate(payment.getFeeRate()),
-                payment.getPaymentStatus()
+                payment.getPaymentStatus(),
+                payment.getPaidAmount() != null ? new Money(payment.getPaidAmount()) : null,
+                payment.getFeeAmount() != null ? new Money(payment.getFeeAmount()) : null
         );
     }
 
@@ -27,6 +29,21 @@ public class PaymentMapper {
                 .price(payment.getPrice().value())
                 .feeRate(payment.getFeeRate().value())
                 .paymentStatus(payment.getPaymentStatus())
+                .paidAmount(payment.getPaidAmount() != null ? payment.getPaidAmount().value() : null)
+                .feeAmount(payment.getFeeAmount() != null ? payment.getFeeAmount().value() : null)
+                .build();
+    }
+
+    public PaymentJpaEntity mapToExistingJpaEntity(Payment payment, Long jpaEntityId) {
+        return PaymentJpaEntity.builder()
+                .id(jpaEntityId)
+                .buyerId(payment.getBuyerId().value())
+                .sellerId(payment.getSellerId().value())
+                .price(payment.getPrice().value())
+                .feeRate(payment.getFeeRate().value())
+                .paymentStatus(payment.getPaymentStatus())
+                .paidAmount(payment.getPaidAmount() != null ? payment.getPaidAmount().value() : null)
+                .feeAmount(payment.getFeeAmount() != null ? payment.getFeeAmount().value() : null)
                 .build();
     }
 }

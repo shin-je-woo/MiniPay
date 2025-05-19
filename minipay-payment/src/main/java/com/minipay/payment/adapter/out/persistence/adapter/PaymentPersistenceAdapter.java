@@ -1,6 +1,7 @@
 package com.minipay.payment.adapter.out.persistence.adapter;
 
 import com.minipay.common.annotation.PersistenceAdapter;
+import com.minipay.common.exception.DataNotFoundException;
 import com.minipay.payment.adapter.out.persistence.entity.PaymentJpaEntity;
 import com.minipay.payment.adapter.out.persistence.mapper.PaymentMapper;
 import com.minipay.payment.adapter.out.persistence.repository.SpringDataPaymentRepository;
@@ -24,9 +25,25 @@ public class PaymentPersistenceAdapter implements PaymentPersistencePort {
     }
 
     @Override
-    public List<Payment> getPayments(Payment.PaymentStatus paymentStatus) {
+    public Payment readPayment(Payment.PaymentId paymentId) {
+        return paymentRepository.findByPaymentId(paymentId.value())
+                .map(paymentMapper::mapToDomain)
+                .orElseThrow(() -> new DataNotFoundException("Payment not found"));
+    }
+
+    @Override
+    public List<Payment> readPayments(Payment.PaymentStatus paymentStatus) {
         return paymentRepository.findAllByPaymentStatus(paymentStatus).stream()
                 .map(paymentMapper::mapToDomain)
                 .toList();
+    }
+
+    @Override
+    public void updatePayment(Payment payment) {
+        PaymentJpaEntity existingEntity = paymentRepository.findByPaymentId(payment.getPaymentId().value())
+                .orElseThrow(() -> new DataNotFoundException("Payment not found"));
+
+        PaymentJpaEntity paymentJpaEntity = paymentMapper.mapToExistingJpaEntity(payment, existingEntity.getId());
+        paymentRepository.save(paymentJpaEntity);
     }
 }

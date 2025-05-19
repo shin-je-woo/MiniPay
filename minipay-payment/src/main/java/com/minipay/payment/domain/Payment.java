@@ -20,7 +20,9 @@ public class Payment {
     private final MembershipId sellerId;
     private final Money price;
     private final FeeRate feeRate;
-    private final PaymentStatus paymentStatus;
+    private PaymentStatus paymentStatus;
+    private Money paidAmount;
+    private Money feeAmount;
 
     // Factory
     public static Payment newInstance(
@@ -29,7 +31,7 @@ public class Payment {
             Money price,
             FeeRate feeRate
     ) {
-        return new Payment(PaymentId.generate(), buyerId, sellerId, price, feeRate, PaymentStatus.CREATED);
+        return new Payment(PaymentId.generate(), buyerId, sellerId, price, feeRate, PaymentStatus.CREATED, null, null);
     }
 
     public static Payment withId(
@@ -38,9 +40,11 @@ public class Payment {
             MembershipId sellerId,
             Money price,
             FeeRate feeRate,
-            PaymentStatus paymentStatus
+            PaymentStatus paymentStatus,
+            Money paidAmount,
+            Money feeAmount
     ) {
-        return new Payment(paymentId, buyerId, sellerId, price, feeRate, paymentStatus);
+        return new Payment(paymentId, buyerId, sellerId, price, feeRate, paymentStatus, paidAmount, feeAmount);
     }
 
     // VO
@@ -78,5 +82,20 @@ public class Payment {
         CREATED,
         PAID,
         OVERDUE
+    }
+
+    public void completePayment(Money paidAmount, Money feeAmount) {
+        if (this.paymentStatus != PaymentStatus.CREATED) {
+            throw new DomainRuleException("Payment is already completed or overdue");
+        }
+        if (paidAmount == null || feeAmount == null) {
+            throw new DomainRuleException("Paid amount and fee amount must not be null");
+        }
+        if (this.price.subtract(paidAmount).isNegative()) {
+            throw new DomainRuleException("Paid amount is less than price");
+        }
+        this.paymentStatus = PaymentStatus.PAID;
+        this.paidAmount = paidAmount;
+        this.feeAmount = feeAmount;
     }
 }
