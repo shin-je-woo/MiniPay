@@ -1,10 +1,9 @@
-package com.minipay.payment.application.port.out;
+package com.minipay.payment.application.port.in;
 
 import com.minipay.payment.domain.Payment;
 
 import java.util.List;
 
-public interface PaymentPersistencePort {
-    void createPayment(Payment payment);
+public interface GetPaymentUseCase {
     List<Payment> getPayments(Payment.PaymentStatus paymentStatus);
 }

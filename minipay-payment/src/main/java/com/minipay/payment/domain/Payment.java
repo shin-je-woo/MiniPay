@@ -32,6 +32,17 @@ public class Payment {
         return new Payment(PaymentId.generate(), buyerId, sellerId, price, feeRate, PaymentStatus.CREATED);
     }
 
+    public static Payment withId(
+            PaymentId paymentId,
+            MembershipId buyerId,
+            MembershipId sellerId,
+            Money price,
+            FeeRate feeRate,
+            PaymentStatus paymentStatus
+    ) {
+        return new Payment(paymentId, buyerId, sellerId, price, feeRate, paymentStatus);
+    }
+
     // VO
     public record PaymentId(UUID value) {
         public PaymentId {
@@ -57,7 +68,7 @@ public class Payment {
             if (value == null) {
                 throw new DomainRuleException("fee rate must not be null");
             }
-            if (value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(BigDecimal.ONE) > 0) {
+            if (value.compareTo(BigDecimal.ZERO) < 0 || value.compareTo(BigDecimal.TEN) > 0) {
                 throw new DomainRuleException("fee rate must be between 0 and 1");
             }
         }

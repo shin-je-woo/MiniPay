@@ -8,6 +8,8 @@ import com.minipay.payment.application.port.out.PaymentPersistencePort;
 import com.minipay.payment.domain.Payment;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @PersistenceAdapter
 @RequiredArgsConstructor
 public class PaymentPersistenceAdapter implements PaymentPersistencePort {
@@ -19,5 +21,12 @@ public class PaymentPersistenceAdapter implements PaymentPersistencePort {
     public void createPayment(Payment payment) {
         PaymentJpaEntity paymentJpaEntity = paymentMapper.mapToJpaEntity(payment);
         paymentRepository.save(paymentJpaEntity);
+    }
+
+    @Override
+    public List<Payment> getPayments(Payment.PaymentStatus paymentStatus) {
+        return paymentRepository.findAllByPaymentStatus(paymentStatus).stream()
+                .map(paymentMapper::mapToDomain)
+                .toList();
     }
 }
