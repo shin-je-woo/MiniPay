@@ -21,6 +21,7 @@ spring:
       ddl-auto: update
     database: mysql
     open-in-view: false
+    defer-datasource-initialization: true
 
   kafka:
     bootstrap-servers: ${KAFKA_CLUSTER_BOOTSTRAP_SERVERS}
