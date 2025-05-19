@@ -130,6 +130,15 @@ services:
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
 
+  minipay-settlement:
+    image: minipay-settlement:1.0.0
+    container_name: minipay-settlement
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/settlement?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=minipay_user
+      - SPRING_DATASOURCE_PASSWORD=minipay_password
+
   zookeeper:
     image: 'bitnami/zookeeper:3.9.2'
     container_name: zookeeper
