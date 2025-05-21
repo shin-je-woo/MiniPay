@@ -138,6 +138,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/settlement?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=minipay_user
       - SPRING_DATASOURCE_PASSWORD=minipay_password
+      - MINIPAY_PAYMENT_URL=http://minipay-payment:8085
 
   zookeeper:
     image: 'bitnami/zookeeper:3.9.2'
