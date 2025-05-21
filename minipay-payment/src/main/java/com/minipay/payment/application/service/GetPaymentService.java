@@ -17,7 +17,7 @@ public class GetPaymentService implements GetPaymentUseCase {
     private final PaymentPersistencePort paymentPersistencePort;
 
     @Override
-    public List<Payment> getPayments(Payment.PaymentStatus paymentStatus) {
-        return paymentPersistencePort.readPayments(paymentStatus);
+    public List<Payment> getPaymentsPaged(int page, int size, Payment.PaymentStatus paymentStatus) {
+        return paymentPersistencePort.readPaymentsPaged(page, size, paymentStatus);
     }
 }

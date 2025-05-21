@@ -38,8 +38,12 @@ public class PaymentController {
     }
 
     @GetMapping("/payments")
-    ResponseEntity<PaymentListResponse> getPayments(@RequestParam Payment.PaymentStatus paymentStatus) {
-        List<Payment> payments = getPaymentUseCase.getPayments(paymentStatus);
+    ResponseEntity<PaymentListResponse> getPayments(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam Payment.PaymentStatus paymentStatus
+    ) {
+        List<Payment> payments = getPaymentUseCase.getPaymentsPaged(page, size, paymentStatus);
         return ResponseEntity.ok(PaymentListResponse.from(payments));
     }
 

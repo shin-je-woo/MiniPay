@@ -8,6 +8,9 @@ import com.minipay.payment.adapter.out.persistence.repository.SpringDataPaymentR
 import com.minipay.payment.application.port.out.PaymentPersistencePort;
 import com.minipay.payment.domain.Payment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -32,8 +35,9 @@ public class PaymentPersistenceAdapter implements PaymentPersistencePort {
     }
 
     @Override
-    public List<Payment> readPayments(Payment.PaymentStatus paymentStatus) {
-        return paymentRepository.findAllByPaymentStatus(paymentStatus).stream()
+    public List<Payment> readPaymentsPaged(int page, int size, Payment.PaymentStatus paymentStatus) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return paymentRepository.findAllByPaymentStatus(pageable, paymentStatus).stream()
                 .map(paymentMapper::mapToDomain)
                 .toList();
     }
