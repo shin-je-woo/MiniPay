@@ -10,6 +10,7 @@ import com.minipay.common.event.DomainEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @PersistenceAdapter
@@ -26,6 +27,7 @@ public class DomainEventPersistenceAdapter implements DomainEventPersistencePort
                 .eventId(domainEvent.getEventUuid())
                 .serializedEvent(objectMapper.writeValueAsString(domainEvent))
                 .published(false)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         outboxRepository.save(outboxJpaEntity);

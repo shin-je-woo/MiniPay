@@ -61,6 +61,7 @@ public class WithdrawalFundService implements WithdrawalFundUseCase {
                 ),
                 new Money(command.getAmount())
         );
+        fundTransaction.success();
         fundTransactionPersistencePort.createFundTransaction(fundTransaction);
         Events.raise(FundTransactionEvent.of(EventType.MINIPAY_FUND_WITHDRAWN, fundTransaction));
     }

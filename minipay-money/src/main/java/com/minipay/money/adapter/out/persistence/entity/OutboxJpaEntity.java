@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Types;
 import java.time.LocalDateTime;
@@ -17,7 +15,6 @@ import java.util.UUID;
 @Table(name = "outbox")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 public class OutboxJpaEntity {
 
     @Id
@@ -31,7 +28,7 @@ public class OutboxJpaEntity {
 
     @Comment("직렬화된 이벤트 본문")
     @Lob
-    @Column(name = "serialized_event", nullable = false)
+    @Column(name = "serialized_event", nullable = false, columnDefinition = "MEDIUMTEXT")
     private String serializedEvent;
 
     @Comment("이벤트 발행 여부")
@@ -39,7 +36,6 @@ public class OutboxJpaEntity {
     private boolean published;
 
     @Comment("이벤트 생성 일시")
-    @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
