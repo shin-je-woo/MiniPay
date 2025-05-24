@@ -47,7 +47,7 @@ public class BankAccountController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("bank-accounts/{bankAccountId}")
+    @GetMapping("/bank-accounts/{bankAccountId}")
     ResponseEntity<BankAccountResponse> getBankAccount(@PathVariable UUID bankAccountId) {
         BankAccount bankAccount = getBankAccountUseCase.getBankAccount(new BankAccount.BankAccountId(bankAccountId));
         return ResponseEntity.ok(BankAccountResponse.from(bankAccount));

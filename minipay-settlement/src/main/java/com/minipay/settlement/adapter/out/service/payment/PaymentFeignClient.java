@@ -1,9 +1,10 @@
-package com.minipay.settlement.adapter.out.service;
+package com.minipay.settlement.adapter.out.service.payment;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @FeignClient(name = "payment-service", url = "${minipay.payment.url}")
 public interface PaymentFeignClient {
@@ -14,4 +15,7 @@ public interface PaymentFeignClient {
             @RequestParam int size,
             @RequestParam String paymentStatus
     );
+
+    @PostMapping("/payments/{paymentId}/complete")
+    ResponseEntity<Void> completePayment(@PathVariable UUID paymentId, @RequestBody CompletePaymentRequest request);
 }

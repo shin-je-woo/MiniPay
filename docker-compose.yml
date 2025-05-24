@@ -139,6 +139,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=minipay_user
       - SPRING_DATASOURCE_PASSWORD=minipay_password
       - MINIPAY_PAYMENT_URL=http://minipay-payment:8085
+      - MINIPAY_MONEY_URL=http://minipay-money:8083
+      - MINIPAY_BANKING_URL=http://minipay-banking:8082
 
   zookeeper:
     image: 'bitnami/zookeeper:3.9.2'

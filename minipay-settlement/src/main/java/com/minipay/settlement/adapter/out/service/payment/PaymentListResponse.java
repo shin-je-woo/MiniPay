@@ -1,4 +1,4 @@
-package com.minipay.settlement.adapter.out.service;
+package com.minipay.settlement.adapter.out.service.payment;
 
 import java.util.List;
 

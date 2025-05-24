@@ -48,7 +48,7 @@ public class PaymentController {
     }
 
     @PostMapping("/payments/{paymentId}/complete")
-    ResponseEntity<Void> completePayment(@RequestParam UUID paymentId, @RequestBody CompletePaymentRequest request) {
+    ResponseEntity<Void> completePayment(@PathVariable UUID paymentId, @RequestBody CompletePaymentRequest request) {
         CompletePaymentCommand command = CompletePaymentCommand.builder()
                 .paymentId(paymentId)
                 .paidAmount(request.paidAmount())

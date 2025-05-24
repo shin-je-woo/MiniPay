@@ -27,3 +27,7 @@ spring:
 minipay:
   payment:
     url: ${MINIPAY_PAYMENT_URL}
+  money:
+    url: ${MINIPAY_MONEY_URL}
+  banking:
+    url: ${MINIPAY_BANKING_URL}

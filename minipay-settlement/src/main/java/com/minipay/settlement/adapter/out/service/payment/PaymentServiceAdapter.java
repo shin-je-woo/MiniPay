@@ -1,4 +1,4 @@
-package com.minipay.settlement.adapter.out.service;
+package com.minipay.settlement.adapter.out.service.payment;
 
 import com.minipay.common.annotation.MiniPayServiceAdapter;
 import com.minipay.settlement.port.out.PaymentInfo;
@@ -6,9 +6,11 @@ import com.minipay.settlement.port.out.PaymentServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @MiniPayServiceAdapter
 @RequiredArgsConstructor
@@ -32,5 +34,12 @@ public class PaymentServiceAdapter implements PaymentServicePort {
                         ))
                         .toList())
                 .orElse(Collections.emptyList());
+    }
+
+    @Override
+    public boolean markPaymentSettled(UUID paymentId, BigDecimal settlementAmount, BigDecimal feeAmount) {
+        CompletePaymentRequest request = new CompletePaymentRequest(settlementAmount, feeAmount);
+        ResponseEntity<Void> response = paymentFeignClient.completePayment(paymentId, request);
+        return response.getStatusCode().is2xxSuccessful();
     }
 }

@@ -2,3 +2,5 @@ SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/settlement?useSSL=false&allowP
 SPRING_DATASOURCE_USERNAME=minipay_user
 SPRING_DATASOURCE_PASSWORD=minipay_password
 MINIPAY_PAYMENT_URL=localhost:8085
+MINIPAY_MONEY_URL=localhost:8083
+MINIPAY_BANKING_URL=localhost:8082
