@@ -4,6 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @FeignClient(name = "payment-service", url = "${minipay.payment.url}")
@@ -13,6 +14,8 @@ public interface PaymentFeignClient {
     ResponseEntity<PaymentListResponse> getPayments(
             @RequestParam int page,
             @RequestParam int size,
+            @RequestParam LocalDate fromDate,
+            @RequestParam LocalDate toDate,
             @RequestParam String paymentStatus
     );
 

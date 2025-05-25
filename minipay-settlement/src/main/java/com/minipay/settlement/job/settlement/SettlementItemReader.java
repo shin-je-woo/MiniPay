@@ -1,4 +1,4 @@
-package com.minipay.settlement.job;
+package com.minipay.settlement.job.settlement;
 
 import com.minipay.settlement.port.out.PaymentInfo;
 import com.minipay.settlement.port.out.PaymentServicePort;
@@ -7,9 +7,11 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStream;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +22,11 @@ import java.util.List;
 public class SettlementItemReader implements ItemReader<PaymentInfo>, ItemStream {
 
     private final PaymentServicePort paymentServicePort;
+    @Value("#{jobParameters['settlementStartDate']}")
+    private LocalDate settlementStartDate;
+    @Value("#{jobParameters['settlementEndDate']}")
+    private LocalDate settlementEndDate;
+
 
     private static final int PAGE_SIZE = 10;
     private int currentPage = 0;
@@ -44,7 +51,10 @@ public class SettlementItemReader implements ItemReader<PaymentInfo>, ItemStream
     }
 
     private void getNextPageOfPayments() {
-        List<PaymentInfo> paymentInfos = paymentServicePort.getUnpaidPaymentsPaged(currentPage, PAGE_SIZE);
+        List<PaymentInfo> paymentInfos = paymentServicePort.getUnpaidPaymentsPaged(
+                currentPage, PAGE_SIZE,
+                settlementStartDate, settlementEndDate
+        );
 
         if (CollectionUtils.isEmpty(paymentInfos)) {
             hasMorePayments = false;

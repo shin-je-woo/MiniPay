@@ -1,4 +1,4 @@
-package com.minipay.settlement.job;
+package com.minipay.settlement.job.settlement;
 
 import com.minipay.settlement.port.out.BankingServicePort;
 import com.minipay.settlement.port.out.PaymentServicePort;

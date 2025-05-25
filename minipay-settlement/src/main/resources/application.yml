@@ -17,6 +17,19 @@ spring:
       initialize-schema: never
     job:
       enabled: false
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO
+          jobStore:
+            isClustered: true
+            clusterCheckinInterval: 10000
+            misfireThreshold: 60000
   jpa:
     hibernate:
       ddl-auto: update

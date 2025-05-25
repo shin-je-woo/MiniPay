@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +21,8 @@ public class PaymentServiceAdapter implements PaymentServicePort {
     private static final String  UNPAID_STATUS = "CREATED";
 
     @Override
-    public List<PaymentInfo> getUnpaidPaymentsPaged(int page, int size) {
-        return Optional.ofNullable(paymentFeignClient.getPayments(page, size, UNPAID_STATUS))
+    public List<PaymentInfo> getUnpaidPaymentsPaged(int page, int size, LocalDate fromDate, LocalDate toDate) {
+        return Optional.ofNullable(paymentFeignClient.getPayments(page, size, fromDate, toDate, UNPAID_STATUS))
                 .map(ResponseEntity::getBody)
                 .map(paymentListResponse -> paymentListResponse.payments().stream()
                         .map(paymentResponse -> new PaymentInfo(

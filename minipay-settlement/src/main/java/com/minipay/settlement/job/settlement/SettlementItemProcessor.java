@@ -1,4 +1,4 @@
-package com.minipay.settlement.job;
+package com.minipay.settlement.job.settlement;
 
 import com.minipay.settlement.port.out.*;
 import jakarta.annotation.Nonnull;
