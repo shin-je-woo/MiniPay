@@ -26,6 +26,14 @@ services:
       - .data/axonserver/events:/axonserver/events
       - .data/axonserver/config:/axonserver/config
 
+  minipay-gateway:
+    image: minipay-gateway:1.0.0
+    container_name: minipay-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+
   minipay-membership:
     image: minipay-membership:1.0.0
     container_name: minipay-membership
