@@ -1,0 +1,6 @@
+MINIPAY_MEMBERSHIP_URL=http://localhost:8081
+MINIPAY_BANKING_URL=http://localhost:8082
+MINIPAY_MONEY_URL=http://localhost:8083
+MINIPAY_REMITTANCE_URL=http://localhost:8084
+MINIPAY_PAYMENT_URL=http://localhost:8085
+MINIPAY_QUERY_URL=http://localhost:8086

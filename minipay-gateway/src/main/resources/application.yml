@@ -1,2 +1,16 @@
 server:
   port: 8080
+
+minipay:
+  membership:
+    url: ${MINIPAY_MEMBERSHIP_URL}
+  banking:
+    url: ${MINIPAY_BANKING_URL}
+  money:
+    url: ${MINIPAY_MONEY_URL}
+  remittance:
+    url: ${MINIPAY_REMITTANCE_URL}
+  payment:
+    url: ${MINIPAY_PAYMENT_URL}
+  query:
+    url: ${MINIPAY_QUERY_URL}
