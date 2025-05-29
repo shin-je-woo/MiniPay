@@ -22,6 +22,10 @@ public class RegisterMembershipCommand extends SelfValidating<RegisterMembership
 
     @NotNull
     @NotBlank
+    private final String password;
+
+    @NotNull
+    @NotBlank
     private final String address;
 
     @AssertTrue
@@ -30,9 +34,10 @@ public class RegisterMembershipCommand extends SelfValidating<RegisterMembership
     private final boolean isCorp;
 
     @Builder
-    public RegisterMembershipCommand(String name, String email, String address, boolean isValid, boolean isCorp) {
+    public RegisterMembershipCommand(String name, String email, String password, String address, boolean isValid, boolean isCorp) {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.address = address;
         this.isValid = isValid;
         this.isCorp = isCorp;

@@ -1,7 +1,10 @@
 package com.minipay.membership.domain;
 
 import com.minipay.common.exception.DomainRuleException;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -17,6 +20,7 @@ public class Membership {
     private final boolean isCorp;
     private MembershipName name;
     private MembershipEmail email;
+    private MembershipPassword password;
     private MembershipAddress address;
 
     // Factory
@@ -25,9 +29,10 @@ public class Membership {
             Boolean isCorp,
             MembershipName name,
             MembershipEmail email,
+            MembershipPassword password,
             MembershipAddress address
     ) {
-        return new Membership(MembershipId.generate(), isValid, isCorp, name, email, address);
+        return new Membership(MembershipId.generate(), isValid, isCorp, name, email, password, address);
     }
 
     public static Membership withId(
@@ -36,9 +41,10 @@ public class Membership {
             boolean isCorp,
             MembershipName name,
             MembershipEmail email,
+            MembershipPassword password,
             MembershipAddress address
     ) {
-        return new Membership(membershipId, isValid, isCorp, name, email, address);
+        return new Membership(membershipId, isValid, isCorp, name, email, password, address);
     }
 
     //VO
@@ -66,6 +72,30 @@ public class Membership {
         public MembershipEmail {
             if (!StringUtils.hasText(value) || !value.matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
                 throw new DomainRuleException("membershipEmail value is not matched email format");
+            }
+        }
+    }
+
+    /**
+     * 비밀번호는 10자 이상 16자 이하, 최소 하나의 영문 대소문자, 숫자, 특수문자를 포함해야 합니다.
+     */
+    public record MembershipRawPassword(String value) {
+        public MembershipRawPassword {
+            if (!StringUtils.hasText(value)
+                    || !value.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+{}\\[\\]:;<>,.?~\\\\/\\-]).{10,16}$")) {
+                throw new DomainRuleException("Password must be 10~16 chars with letters, numbers, and special characters.");
+            }
+        }
+
+        public String hash(PasswordManager passwordManager) {
+            return passwordManager.hash(value);
+        }
+    }
+
+    public record MembershipPassword(String hashed) {
+        public MembershipPassword {
+            if (!StringUtils.hasText(hashed)) {
+                throw new DomainRuleException("Hashed password cannot be empty");
             }
         }
     }

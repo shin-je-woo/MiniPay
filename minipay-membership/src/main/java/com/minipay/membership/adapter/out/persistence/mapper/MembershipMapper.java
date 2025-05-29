@@ -14,6 +14,7 @@ public class MembershipMapper {
                 membershipJpaEntity.isCorp(),
                 new Membership.MembershipName(membershipJpaEntity.getName()),
                 new Membership.MembershipEmail(membershipJpaEntity.getEmail()),
+                new Membership.MembershipPassword(membershipJpaEntity.getPassword()),
                 new Membership.MembershipAddress(membershipJpaEntity.getAddress())
         );
     }
@@ -23,6 +24,7 @@ public class MembershipMapper {
                 .membershipId(membership.getMembershipId().value())
                 .name(membership.getName().value())
                 .email(membership.getEmail().value())
+                .password(membership.getPassword().hashed())
                 .address(membership.getAddress().value())
                 .isValid(membership.isValid())
                 .isCorp(membership.isCorp())

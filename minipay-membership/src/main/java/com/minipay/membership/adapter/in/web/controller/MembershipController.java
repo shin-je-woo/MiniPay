@@ -23,11 +23,12 @@ public class MembershipController {
     private final GetMembershipUseCase getMembershipUseCase;
     private final ModifyMembershipUseCase modifyMembershipUseCase;
 
-    @PostMapping("/membership")
+    @PostMapping("/membership/sign-up")
     public ResponseEntity<MembershipResponse> registerMembership(@RequestBody RegisterMembershipRequest request) {
         RegisterMembershipCommand command = RegisterMembershipCommand.builder()
                 .name(request.name())
                 .email(request.email())
+                .password(request.password())
                 .address(request.address())
                 .isValid(true)
                 .isCorp(request.isCorp())

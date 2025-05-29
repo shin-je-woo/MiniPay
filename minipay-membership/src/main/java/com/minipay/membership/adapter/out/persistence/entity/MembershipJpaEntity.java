@@ -33,6 +33,10 @@ public class MembershipJpaEntity {
     @Column(name = "email", unique = true, nullable = false, length = 100)
     private String email;
 
+    @Comment("회원 비밀번호")
+    @Column(name = "password", unique = true, nullable = false, length = 60)
+    private String password;
+
     @Comment("회원 주소")
     @Column(name = "address", nullable = false, length = 100)
     private String address;
