@@ -22,5 +22,10 @@ public class PasswordManagerConfig {
         public String hash(String rawPassword) {
             return bCryptPasswordEncoder.encode(rawPassword);
         }
+
+        @Override
+        public boolean matches(String rawPassword, String hashedPassword) {
+            return bCryptPasswordEncoder.matches(rawPassword, hashedPassword);
+        }
     }
 }

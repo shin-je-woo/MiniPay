@@ -9,5 +9,6 @@ import java.util.UUID;
 
 public interface SpringDataMembershipRepository extends JpaRepository<MembershipJpaEntity, Long> {
     Optional<MembershipJpaEntity> findByMembershipId(UUID memberId);
+    Optional<MembershipJpaEntity> findByEmail(String email);
     List<MembershipJpaEntity> findByAddress(String address);
 }

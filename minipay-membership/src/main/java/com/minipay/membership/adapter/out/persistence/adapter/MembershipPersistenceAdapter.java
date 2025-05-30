@@ -41,8 +41,15 @@ public class MembershipPersistenceAdapter implements MembershipPersistencePort {
     }
 
     @Override
-    public List<Membership> readMembershipByAddress(String address) {
-        return membershipRepository.findByAddress(address).stream()
+    public Membership readMembershipByEmail(Membership.MembershipEmail email) {
+        return membershipRepository.findByEmail(email.value())
+                .map(membershipMapper::mapToDomain)
+                .orElseThrow(() -> new DataNotFoundException("Membership not found"));
+    }
+
+    @Override
+    public List<Membership> readMembershipByAddress(Membership.MembershipAddress address) {
+        return membershipRepository.findByAddress(address.value()).stream()
                 .map(membershipMapper::mapToDomain)
                 .toList();
     }

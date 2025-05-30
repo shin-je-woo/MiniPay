@@ -1,6 +1,7 @@
 package com.minipay.membership.adapter.in.web.controller;
 
 import com.minipay.common.annotation.WebAdapter;
+import com.minipay.membership.adapter.in.web.request.LoginMembershipRequest;
 import com.minipay.membership.adapter.in.web.request.ModifyMembershipRequest;
 import com.minipay.membership.adapter.in.web.request.RegisterMembershipRequest;
 import com.minipay.membership.adapter.in.web.response.MembershipByAddressResponse;
@@ -22,6 +23,7 @@ public class MembershipController {
     private final RegisterMembershipUseCase registerMembershipUseCase;
     private final GetMembershipUseCase getMembershipUseCase;
     private final ModifyMembershipUseCase modifyMembershipUseCase;
+    private final LoginMembershipUseCase loginMembershipUseCase;
 
     @PostMapping("/membership/sign-up")
     public ResponseEntity<MembershipResponse> registerMembership(@RequestBody RegisterMembershipRequest request) {
@@ -37,6 +39,18 @@ public class MembershipController {
 
         return ResponseEntity.ok(MembershipResponse.from(membership));
     }
+
+    @PostMapping("/membership/login")
+    public ResponseEntity<MembershipResponse> loginMembership(@RequestBody LoginMembershipRequest request) {
+        LoginMembershipCommand command = LoginMembershipCommand.builder()
+                .email(request.email())
+                .password(request.password())
+                .build();
+        Membership membership = loginMembershipUseCase.login(command);
+
+        return ResponseEntity.ok(MembershipResponse.from(membership));
+    }
+
 
     @GetMapping("/membership/{membershipId}")
     public ResponseEntity<MembershipResponse> getMembership(@PathVariable UUID membershipId) {

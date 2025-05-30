@@ -98,6 +98,10 @@ public class Membership {
                 throw new DomainRuleException("Hashed password cannot be empty");
             }
         }
+
+        public boolean matches(MembershipRawPassword rawPassword, PasswordManager passwordManager) {
+            return passwordManager.matches(rawPassword.value(), hashed);
+        }
     }
 
     public record MembershipAddress(String value) {

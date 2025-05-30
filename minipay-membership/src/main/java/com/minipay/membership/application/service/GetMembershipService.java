@@ -24,6 +24,6 @@ public class GetMembershipService implements GetMembershipUseCase {
 
     @Override
     public List<Membership> getMembershipByAddress(String address) {
-        return membershipPersistencePort.readMembershipByAddress(address);
+        return membershipPersistencePort.readMembershipByAddress(new Membership.MembershipAddress(address));
     }
 }

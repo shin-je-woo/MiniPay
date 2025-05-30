@@ -7,6 +7,7 @@ import java.util.List;
 public interface MembershipPersistencePort {
     Membership createMembership(Membership membership);
     Membership readMembership(Membership.MembershipId membershipId);
+    Membership readMembershipByEmail(Membership.MembershipEmail email);
     Membership updateMembership(Membership membership);
-    List<Membership> readMembershipByAddress(String address);
+    List<Membership> readMembershipByAddress(Membership.MembershipAddress address);
 }
