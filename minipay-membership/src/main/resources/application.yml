@@ -28,6 +28,13 @@ spring:
     producer:
       acks: all
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+      connect-timeout: 5000
+      password: ${REDIS_PASSWORD}
+
 minipay:
   token:
     secret: ${JWT_SECRET}

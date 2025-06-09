@@ -21,6 +21,7 @@ services:
   redis:
     container_name: redis
     image: redis
+    command: redis-server --requirepass passwd
     ports:
       - 6379:6379
     environment:
@@ -67,6 +68,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=minipay_password
       - KAFKA_CLUSTER_BOOTSTRAP_SERVERS=kafka1:19092,kafka2:19092,kafka3:19092
       - JWT_SECRET=4NF9XQVvKsdU6BME1uQR7pYxMdd5MZA6R8eBDQpKlvE
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=passwd
 
   minipay-banking:
     image: minipay-banking:1.0.0

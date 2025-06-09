@@ -41,14 +41,14 @@ public class MembershipController {
     }
 
     @PostMapping("/membership/login")
-    public ResponseEntity<String> loginMembership(@RequestBody LoginMembershipRequest request) {
+    public ResponseEntity<LoginMembershipResult> loginMembership(@RequestBody LoginMembershipRequest request) {
         LoginMembershipCommand command = LoginMembershipCommand.builder()
                 .email(request.email())
                 .password(request.password())
                 .build();
-        String accessToken = loginMembershipUseCase.login(command);
+        LoginMembershipResult loginMembershipResult = loginMembershipUseCase.login(command);
 
-        return ResponseEntity.ok(accessToken);
+        return ResponseEntity.ok(loginMembershipResult);
     }
 
     @GetMapping("/membership/{membershipId}")

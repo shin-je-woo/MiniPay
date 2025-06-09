@@ -3,6 +3,7 @@ package com.minipay.membership.application.service;
 import com.minipay.common.annotation.UseCase;
 import com.minipay.common.exception.BusinessException;
 import com.minipay.membership.application.port.in.LoginMembershipCommand;
+import com.minipay.membership.application.port.in.LoginMembershipResult;
 import com.minipay.membership.application.port.in.LoginMembershipUseCase;
 import com.minipay.membership.application.port.out.MembershipPersistencePort;
 import com.minipay.membership.application.port.out.TokenProvider;
@@ -21,7 +22,7 @@ public class LoginMembershipService implements LoginMembershipUseCase {
     private final TokenProvider tokenProvider;
 
     @Override
-    public String login(LoginMembershipCommand command) {
+    public LoginMembershipResult login(LoginMembershipCommand command) {
         Membership membership = membershipPersistencePort.readMembershipByEmail(new Membership.MembershipEmail(command.getEmail()));
         Membership.MembershipRawPassword rawPassword = new Membership.MembershipRawPassword(command.getPassword());
 
@@ -29,6 +30,9 @@ public class LoginMembershipService implements LoginMembershipUseCase {
             throw new BusinessException("Invalid password for membership with email: " + command.getEmail());
         }
 
-        return tokenProvider.createAccessToken(membership.getMembershipId().value());
+        String accessToken = tokenProvider.createAccessToken(membership.getMembershipId().value());
+        String refreshToken = tokenProvider.createRefreshToken(membership.getMembershipId().value());
+
+        return new LoginMembershipResult(accessToken, refreshToken);
     }
 }

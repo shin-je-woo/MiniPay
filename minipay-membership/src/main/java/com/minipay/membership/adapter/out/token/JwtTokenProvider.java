@@ -14,6 +14,7 @@ import java.util.UUID;
 public class JwtTokenProvider implements TokenProvider {
 
     private final TokenProperties tokenProperties;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public String createAccessToken(UUID membershipId) {
@@ -26,5 +27,12 @@ public class JwtTokenProvider implements TokenProvider {
                 .expiration(new Date(System.currentTimeMillis() + tokenProperties.getAccessExpirationTime()))
                 .signWith(tokenProperties.getSecretKey())
                 .compact();
+    }
+
+    @Override
+    public String createRefreshToken(UUID membershipId) {
+        String refreshToken = UUID.randomUUID().toString();
+        refreshTokenRepository.save(refreshToken, membershipId);
+        return refreshToken;
     }
 }
