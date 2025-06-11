@@ -5,6 +5,7 @@ import com.minipay.common.exception.BusinessException;
 import com.minipay.membership.application.port.in.LoginMembershipCommand;
 import com.minipay.membership.application.port.in.LoginMembershipResult;
 import com.minipay.membership.application.port.in.LoginMembershipUseCase;
+import com.minipay.membership.application.port.in.ReIssueTokenCommand;
 import com.minipay.membership.application.port.out.MembershipPersistencePort;
 import com.minipay.membership.application.port.out.TokenProvider;
 import com.minipay.membership.domain.Membership;
@@ -30,8 +31,21 @@ public class LoginMembershipService implements LoginMembershipUseCase {
             throw new BusinessException("Invalid password for membership with email: " + command.getEmail());
         }
 
-        String accessToken = tokenProvider.createAccessToken(membership.getMembershipId().value());
-        String refreshToken = tokenProvider.createRefreshToken(membership.getMembershipId().value());
+        String accessToken = tokenProvider.createAccessToken(membership.getMembershipId());
+        String refreshToken = tokenProvider.createRefreshToken();
+        tokenProvider.saveRefreshToken(refreshToken, membership.getMembershipId());
+
+        return new LoginMembershipResult(accessToken, refreshToken);
+    }
+
+    @Override
+    public LoginMembershipResult reIssueToken(ReIssueTokenCommand command) {
+        Membership.MembershipId membershipId = tokenProvider.getMembershipIdByRefreshToken(command.getRefreshToken())
+                .orElseThrow(() -> new BusinessException("Invalid refresh token: %s".formatted(command.getRefreshToken())));
+        String accessToken = tokenProvider.createAccessToken(membershipId);
+        String refreshToken = tokenProvider.createRefreshToken();
+        tokenProvider.saveRefreshToken(refreshToken, membershipId);
+        tokenProvider.deleteRefreshToken(command.getRefreshToken());
 
         return new LoginMembershipResult(accessToken, refreshToken);
     }

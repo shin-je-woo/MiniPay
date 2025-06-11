@@ -1,6 +1,5 @@
 package com.minipay.membership.adapter.out.redis;
 
-import com.minipay.common.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -22,10 +21,8 @@ public class RedisOperator {
                 TimeUnit.MILLISECONDS);
     }
 
-    public String get(String key) {
-        return Optional.ofNullable(redisTemplate.opsForValue().get(key))
-                .orElseThrow(() -> new DataNotFoundException("Redis data not found for key: " + key))
-                .toString();
+    public Optional<Object> get(String key) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get(key));
     }
 
     public boolean exists(String key) {
