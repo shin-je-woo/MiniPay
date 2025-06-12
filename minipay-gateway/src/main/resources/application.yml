@@ -2,6 +2,9 @@ server:
   port: 8080
 
 minipay:
+  token:
+    secret: ${JWT_SECRET}
+    token-type: Bearer
   membership:
     url: ${MINIPAY_MEMBERSHIP_URL}
   banking:

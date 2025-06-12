@@ -53,6 +53,7 @@ services:
       - MINIPAY_REMITTANCE_URL=http://minipay-remittance:8084
       - MINIPAY_PAYMENT_URL=http://minipay-payment:8085
       - MINIPAY_QUERY_URL=http://minipay-query:8086
+      - JWT_SECRET=4NF9XQVvKsdU6BME1uQR7pYxMdd5MZA6R8eBDQpKlvE
 
   minipay-membership:
     image: minipay-membership:1.0.0
