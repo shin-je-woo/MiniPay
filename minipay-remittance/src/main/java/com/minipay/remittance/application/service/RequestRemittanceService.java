@@ -8,8 +8,6 @@ import com.minipay.remittance.application.port.out.*;
 import com.minipay.remittance.domain.Money;
 import com.minipay.remittance.domain.Remittance;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -23,7 +21,6 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
     private final MembershipServicePort membershipServicePort;
     private final MoneyServicePort moneyServicePort;
     private final BankingServicePort bankingServicePort;
-    private final ObjectProvider<RequestRemittanceService> requestRemittanceServiceProvider;
 
     @Override
     public void requestRemittance(RequestRemittanceCommand command) {
@@ -61,7 +58,7 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
                 new Remittance.Recipient(command.getRecipientId(), command.getDestBankName(), command.getDestBankAccountNumber()),
                 new Money(command.getAmount())
         );
-        requestRemittanceServiceProvider.getObject().saveRemittance(remittance);
+        remittancePersistencePort.createRemittance(remittance);
         return remittance;
     }
 
@@ -92,15 +89,7 @@ public class RequestRemittanceService implements RequestRemittanceUseCase {
 
     private void handleFailure(Remittance remittance, String errorMessage) {
         remittance.fail();
-        requestRemittanceServiceProvider.getObject().saveRemittance(remittance);
+        remittancePersistencePort.updateRemittance(remittance);
         throw new BusinessException(errorMessage);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected void saveRemittance(Remittance remittance) {
-        switch (remittance.getRemittanceStatus()) {
-            case REQUESTED -> remittancePersistencePort.createRemittance(remittance);
-            case FAILED -> remittancePersistencePort.updateRemittance(remittance);
-        }
     }
 }
